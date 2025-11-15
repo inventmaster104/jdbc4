@@ -7,7 +7,7 @@ public class WorkDetails extends EmployeeBasicDetails {
     int reports_submitted;
 
 
-// write a code tat allows the user to write the skills he needs and how much salary he wats to pay for the skills
+    // write a code tat allows the user to write the skills he needs and how much salary he wats to pay for the skills
     public WorkDetails(  int reports_submitted, int salary, String employee_type, String department, int id, String skills, int work_hour,int attendance){
         super( salary, employee_type, department, id, skills);
         this.attendance=attendance;

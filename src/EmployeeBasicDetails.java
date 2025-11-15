@@ -1,3 +1,4 @@
+// write a method that lets the employee enter his bank accoutn if he gets accepted.
 public class EmployeeBasicDetails {
     private String table_name;//investigata whether this variable should be written here
     private int id;
@@ -22,14 +23,21 @@ public class EmployeeBasicDetails {
     private String department;
     private char gender;
     private String qualification;
-    private int salary;
+    private double salary;
+    private int bank_account;
+    private String email_address;
+    String password;
+
+
+    String name=first_name+middle_name+last_name;
 
 public EmployeeBasicDetails(){
 
 }
+
 public EmployeeBasicDetails(int id, String first_name, String middle_name, String last_name, int birth_day, int birth_month, int birth_year,
                           int phone_number, String marital_status, String address, String employee_type, String skills, int postal_code,
-                            String department, char gender, String qualification){// this is called during registration
+                            String department, char gender, String qualification, String email_address){// this is called during registration
 this.id=id;
 this.first_name=first_name;
 this.middle_name=middle_name;
@@ -47,7 +55,7 @@ this.department=department;
 this.gender=gender;
 this.qualification=qualification;
 }
-public EmployeeBasicDetails(int start_date,int start_month, int start_year, int salary){
+public EmployeeBasicDetails(int start_date,int start_month, int start_year, double salary){
     // this is called only if the employee has successfully been accepted
     this.start_date=start_date;
     this.start_month=start_month;
@@ -70,7 +78,7 @@ public EmployeeBasicDetails(int start_date,int start_month, int start_year, int 
 
     public void setid(int id) {
         this.id = id;}
-        public int getid(){
+        public int getId(){
             return id;
         }
         public void setTable_name(String table_name){
@@ -91,6 +99,14 @@ public EmployeeBasicDetails(int start_date,int start_month, int start_year, int 
         public String getLast_name(){
     return last_name;
         }
+        public void setPassword(String password){
+    this.password=password;
+        }
+
+
+    public String getPassword() {
+        return password;
+    }
 
     public void setId(int id) {
         this.id = id;
@@ -156,7 +172,7 @@ public EmployeeBasicDetails(int start_date,int start_month, int start_year, int 
         this.qualification = qualification;
     }
 
-    public void setSalary(int salary) {
+    public void setSalary(double salary) {
         this.salary = salary;
     }
 
@@ -220,7 +236,7 @@ public EmployeeBasicDetails(int start_date,int start_month, int start_year, int 
     public String getQualification(){
     return qualification;
     }
-    public int getSalary(){
+    public double getSalary(){
     return salary;
     }
     public EmployeeBasicDetails(int salary,  String employee_type, String department, int id, String skills) {
@@ -228,7 +244,12 @@ this.employee_type=employee_type;
 this.department=department;
 this.id=id;
 this.skills=skills;
-    }}
+
+    }
+    public void display() {
+        System.out.println("ID: " + id + " | Name: " + name + " | Department: " + department + " | Salary: " + salary);
+    }
+    }
         // write the left setters and getters.
 
 

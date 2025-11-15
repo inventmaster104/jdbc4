@@ -16,16 +16,17 @@ public class test {
         then it will retrieve the data for you from the database.
          */
         System.out.print("Hello, choose what you want to do from the following\n");
-        System.out.println("retrieve employee data");
-        System.out.println("add employee");
-        System.out.println("delete table");
-        System.out.println("create table");
-        System.out.println("delete employee data");
-        System.out.println("edit your data");
-        String manipulate_data=input.nextLine();
-        db.dtcConnectmethod(manipulate_data);
+        System.out.println("retrieve employee data");//;only accessible to the manager
+        System.out.println("add employee");//;only accessible to the manager
+        System.out.println("delete table");//;only accessible to the manager
+        System.out.println("create table");//only accessible to the manager
+        System.out.println("delete employee data");//;only accessible to the manager
+        System.out.println("edit your data"); //parts of it accessible to the manager, and employee
+        System.out.println("add column data");// only accessible to the manager
+       // String manipulate_data=input.nextLine();
+       // db.dtcConnectmethod(manipulate_data);
         // write  a code to launch registration fo ra single department. set limits of applications and and time range
-        // fornth =e attendance. give permission for teh employee ot live the work place.
+        // fornthe attendance. give permission for teh employee ot live the work place.
         //the code must differentiate between the password of the admin and the employees
         //
         System.out.print("operation successful");
