@@ -25,9 +25,10 @@ public class test {
         System.out.println("delete employee data");//;only accessible to the manager
         System.out.println("edit your data"); //parts of it accessible to the manager, and employee
         System.out.println("add column data");// only accessible to the manager
+        // the two below lines are to manipulate employee data. to check them remove the comment symbol.
        // String manipulate_data=input.nextLine();
        // db.dtcConnectmethod(manipulate_data);
-        elogin.login();
+       // elogin.login();// this is for login purpose
 
         // write  a code to launch registration fo ra single department. set limits of applications and and time range
         // fornthe attendance. give permission for teh employee ot live the work place.
