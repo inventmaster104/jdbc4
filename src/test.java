@@ -9,6 +9,8 @@ import java.util.Scanner;
 public class test {
     public static void main(String[] args) throws SQLException{
         DataBaseConnector db=new DataBaseConnector();
+        Employee_Login elogin=new Employee_Login();
+
        // EmployeeBasicDetails basic_detail=new EmployeeBasicDetails();
         Scanner input=new Scanner(System.in);
         /*type retrieve data in order to access the basic details of employees. then it will
@@ -25,6 +27,8 @@ public class test {
         System.out.println("add column data");// only accessible to the manager
        // String manipulate_data=input.nextLine();
        // db.dtcConnectmethod(manipulate_data);
+        elogin.login();
+
         // write  a code to launch registration fo ra single department. set limits of applications and and time range
         // fornthe attendance. give permission for teh employee ot live the work place.
         //the code must differentiate between the password of the admin and the employees

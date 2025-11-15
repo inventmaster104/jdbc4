@@ -2,21 +2,40 @@
 //write code to prevent duplicate creation of tables rows or  columns
 
 
+import java.io.InputStream;
+import java.io.Reader;
+import java.math.BigDecimal;
+import java.net.URL;
 import java.sql.ResultSet;
 
 import java.sql.Connection;
+import java.util.Calendar;
+import java.util.Map;
 import java.util.Scanner;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import java.sql.*;
 public class DataBaseConnector {
-
+    private String loginpassw="";
+    private String loginEmail="";
+    private String query;
    // write a code to accept an update from teh user
     EmployeeBasicDetails mp=new EmployeeBasicDetails();
     Scanner scanner=new Scanner(System.in);
 
-
+public void setloginpassw(String pasw){
+    loginpassw=pasw;
+    }
+public String getLoginpassw(){
+    return loginpassw;
+}
+public void setLoginEmail(String loginEmail){
+    this.loginEmail=loginEmail;
+}
+public String getLoginEmail(){
+    return loginEmail;
+}
 // write a code to create a table
     public void dtcConnectmethod(String value){
         String url="jdbc:mysql://localhost:3306/jdbcTOP";
@@ -26,6 +45,7 @@ public class DataBaseConnector {
         try {
             Connection connection = DriverManager.getConnection(url, username, password);
             Statement statement = connection.createStatement();
+
 
             // ResultSet resultSet=statement.executeQuery();
 
@@ -51,7 +71,12 @@ public class DataBaseConnector {
                 String sqldrop = "drop table " + "worktime"; //+"table_name" emplbasicDetails"; concatenate the table name
                 statement.executeUpdate(sqldrop);
             } else if (value.equals("edit your data")) {// worked
-                String edit = "update employee_basic_details set Last_Name= 'Dejene' where id=2345";
+                System.out.print("what do you want to edit? ");// list of choices
+                String data_type=scanner.nextLine();
+                System.out.print("Type the edited version: ");
+                String edited=scanner.nextLine();
+                String edit = "update employee_basic_details set Email_Address='"+edited+"' where id=4978";
+                //String edit = "update employee_basic_details set"+" "+data_type+"= '"+edited+"' where id=2345";
                 statement.executeUpdate(edit);
             } else if (value.equals("delete employee data")) {// checked. it deletes the data for a single employee. identfy th =e dah trh empoyee can edit
                 String delete_emp_data = "delete from employee_basic_details where id=2010";
@@ -93,29 +118,35 @@ public class DataBaseConnector {
                 statement.executeUpdate(sqlt);
 
             } else if (value.equals("retrieve employee data")) {
-                String login = mp.getPassword();
 
                 // String retrieve="select * from"+mp.getTable_name();
                 String retrieve = "select * from employee_basic_details";
-                ResultSet resultSet = statement.executeQuery(retrieve);
+                ResultSet resultSet =  statement.executeQuery(retrieve);
                 final var metaData = resultSet.getMetaData();
-                if (login.length() != 0) {
+                resultSet = statement.executeQuery(retrieve);
+                //the below code  is checked for functioning.
+                if (loginpassw.length() != 0) {// this code may result in an error when the password is inserted and data retrieving is called, so add another parramter if needed
                     String passdtb="";
-                    String temp_passw = mp.getPassword();
                     while (resultSet.next()) {
 
-                        if (login.equals(resultSet.getString("Email_Address"))) {
-                            passdtb = resultSet.getString("Password");
-                        }
-                    }
-                    if (passdtb.equals(temp_passw)){
-                        System.out.println("access granted");
-                    }
-                    else{
-                        System.out.println("access denied");
-                    }
-                }
+                        if (loginEmail.equals(resultSet.getString("Email_Address"))) {
+                            passdtb = resultSet.getString("Password");}}
 
+
+
+                  //  System.out.println(passdtb);
+                   // System.out.println(temp_passw);
+                    if (passdtb.equals(loginpassw)){
+                        System.out.println("Access Granted");
+                    }
+                    else if(passdtb.length()==0){
+                        System.out.println("you are not an employee of this company yet! ");
+                    }
+                else{
+                    System.out.println("Access Denied");
+                    }}
+
+else{
     System.out.print("Type the id or type NEXT to continue");
 
     String temp_in=scanner.nextLine();
@@ -136,11 +167,17 @@ public class DataBaseConnector {
             if (intake.equals("YES")) {
 
                 for (int i = 1; i <= metaData.getColumnCount(); i++) {
+                    if (metaData.getColumnName(i).equals("Password")){
+                        continue;
+                    }
                     System.out.print(resultSet.getMetaData().getColumnName(i) + "   ");
                 }
                 System.out.println();
                 while (resultSet.next()) {
                     for (int i = 1; i <= metaData.getColumnCount(); i++) {
+                        if (metaData.getColumnName(i).equals("Password")){
+                            continue;
+                        }
                         System.out.print(resultSet.getObject(i) + "\t");
                     }
 
@@ -152,7 +189,10 @@ else {
 
             if(req_id==resultSet.getInt("id")){
                 for(int i=1;i<=metaData.getColumnCount();i++){
-           System.out.println(metaData.getColumnName(i)+"   "+resultSet.getObject(i)+"\t"); }}}}
+                    if (metaData.getColumnName(i).equals("Password")){
+                        continue;
+                    }
+           System.out.println(metaData.getColumnName(i)+"   "+resultSet.getObject(i)+"\t"); }}}}}
   /*  switch (temp_in){
         case "id":
             while (resultSet.next()){

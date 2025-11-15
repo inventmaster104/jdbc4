@@ -1,4 +1,5 @@
 // write a method that lets the employee enter his bank accoutn if he gets accepted.
+// this class has the potential to be an abstract class
 public class EmployeeBasicDetails {
     private String table_name;//investigata whether this variable should be written here
     private int id;
@@ -187,6 +188,9 @@ public EmployeeBasicDetails(int start_date,int start_month, int start_year, doub
     public void setStart_year(int start_year) {
         this.start_year = start_year;
     }
+    public void setEmail_address(String email_address){
+    this.email_address=email_address;
+    }
 
 
     public int getBirth_day() {
@@ -220,6 +224,9 @@ public EmployeeBasicDetails(int start_date,int start_month, int start_year, doub
     public String getEmployee_type(){
     return employee_type;
 
+    }
+    public String getEmail_address(){
+    return email_address;
     }
     public String getSkills(){
         return skills;
