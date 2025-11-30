@@ -1,5 +1,6 @@
 // write a method that lets the employee enter his bank accoutn if he gets accepted.
 // this class has the potential to be an abstract class
+import java.util.Scanner;
 public class EmployeeBasicDetails {
     private String table_name;//investigata whether this variable should be written here
     private int id;
@@ -9,7 +10,7 @@ public class EmployeeBasicDetails {
     private int birth_day;
     private int birth_month;
     private int birth_year;
-    private int phone_number;
+    private String phone_number;
     private String marital_status;
     private String address;
     private int start_date;
@@ -28,6 +29,8 @@ public class EmployeeBasicDetails {
     private int bank_account;
     private String email_address;
     String password;
+    int MaximumAge;
+    int MinimumAge;
 
 
     String name=first_name+middle_name+last_name;
@@ -36,10 +39,10 @@ public EmployeeBasicDetails(){
 
 }
 
-public EmployeeBasicDetails(int id, String first_name, String middle_name, String last_name, int birth_day, int birth_month, int birth_year,
-                          int phone_number, String marital_status, String address, String employee_type, String skills, int postal_code,
-                            String department, char gender, String qualification, String email_address){// this is called during registration
-this.id=id;
+public EmployeeBasicDetails( String first_name, String middle_name, String last_name, int birth_day, int birth_month, int birth_year,
+                          String phone_number, String marital_status, String address, String employee_type, String skills, int postal_code,
+                             char gender, String qualification, String email_address,String password, String department){// this is called during registration
+//this.id;
 this.first_name=first_name;
 this.middle_name=middle_name;
 this.last_name=last_name;
@@ -52,9 +55,10 @@ this.address=address;
 this.employee_type=employee_type;
 this.skills=skills;
 this.postal_code=postal_code;
-this.department=department;
+//this.department=department; to be set by teh admin
 this.gender=gender;
 this.qualification=qualification;
+this.password=password;
 }
 public EmployeeBasicDetails(int start_date,int start_month, int start_year, double salary){
     // this is called only if the employee has successfully been accepted
@@ -64,11 +68,26 @@ public EmployeeBasicDetails(int start_date,int start_month, int start_year, doub
 
     this.salary=salary;
 }
+public EmployeeBasicDetails(int MaximumAge, int MinimumAge){
+    this.MaximumAge=MaximumAge;
+this.MinimumAge=MinimumAge;}
  public EmployeeBasicDetails(int end_date, int end_month, int end_year){
     // this is called when the employee wants to leave
      this.end_date=end_date;
      this.end_month=end_month;
      this.end_year=end_year;
+ }
+ public int getMaximumAge(){
+    return MaximumAge;
+ }
+ public int getMinimumAge(){
+    return MinimumAge;
+ }
+ public void setMaximumAge(int agemax){
+    MaximumAge=agemax;
+ }
+ public void setMinimumAge(int agemin){
+    MinimumAge=agemin;
  }
     public void setFirst_name(String first_name){
         this.first_name = first_name;}
@@ -137,7 +156,7 @@ public EmployeeBasicDetails(int start_date,int start_month, int start_year, doub
         this.department = department;
     }
 
-    public void setPhone_number(int phone_number) {
+    public void setPhone_number(String phone_number) {
         this.phone_number = phone_number;
     }
 
@@ -203,7 +222,7 @@ public EmployeeBasicDetails(int start_date,int start_month, int start_year, doub
     return birth_year;
     }
 
-    public int getPhone_number() {
+    public String getPhone_number() {
         return phone_number;
     }
     public String getMarital_status(){
@@ -256,6 +275,23 @@ this.skills=skills;
     public void display() {
         System.out.println("ID: " + id + " | Name: " + name + " | Department: " + department + " | Salary: " + salary);
     }
+    //public static void main(String [] args){
+    //Scanner scanner=new Scanner(System.in);
+   // EmployeeBasicDetails registration=new EmployeeBasicDetails();
+       // System.out.print("Enter your first name: ");
+//registration.first_name=scanner.nextLine();
+        //System.out.print("Enter your middle name: ");
+        //registration.middle_name=scanner.nextLine();
+      //  System.out.print("Enter your last name: ");
+//registration.last_name=scanner.nextLine();
+       // System.out.print("Enter your birth date: ");
+      //  registration.birth_day=scanner.nextInt();
+     //   registration.birth_month=scanner.nextInt();
+     //   registration.birth_year=scanner.nextInt();
+      //  System.out.print("Enter your phone number: ");
+     //   registration.phone_number=scanner.nextLine();
+
+   // }
     }
         // write the left setters and getters.
 

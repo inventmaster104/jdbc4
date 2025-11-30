@@ -15,7 +15,7 @@ public class WorkDetails extends EmployeeBasicDetails {
         this.reports_submitted=reports_submitted;
 
     }
-    EmployeeManager epm=new EmployeeManager();
+    EmployeeAdmin epm=new EmployeeAdmin();
 
     public int salaryCalculator() {
         int temp_holder=0;

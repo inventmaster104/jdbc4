@@ -10,13 +10,21 @@ public class test {
     public static void main(String[] args) throws SQLException{
         DataBaseConnector db=new DataBaseConnector();
         Employee_Login elogin=new Employee_Login();
-
+EmployeeAdmin check=new EmployeeAdmin();
+check.registerEmployee();
        // EmployeeBasicDetails basic_detail=new EmployeeBasicDetails();
-        Scanner input=new Scanner(System.in);
+        //Scanner input=new Scanner(System.in);
+
         /*type retrieve data in order to access the basic details of employees. then it will
         ask you whether you want to access the data of all the employees or a single employee.
         then it will retrieve the data for you from the database.
          */
+        // Login system
+        System.out.println("Choose what you want to do with your data: ");
+        System.out.println("edit my name");
+       // String employeein=input.nextLine();
+      //  elogin.access_data();
+        /*--------------------------------------------------------------------*/
         System.out.print("Hello, choose what you want to do from the following\n");
         System.out.println("retrieve employee data");//;only accessible to the manager
         System.out.println("add employee");//;only accessible to the manager
