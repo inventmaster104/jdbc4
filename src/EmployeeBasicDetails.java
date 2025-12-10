@@ -28,14 +28,20 @@ public class EmployeeBasicDetails {
     private double salary;
     private int bank_account;
     private String email_address;
-    String password;
-    int MaximumAge;
-    int MinimumAge;
+    private String password;
+    private int MaximumAge;
+    private int MinimumAge;
 
 
     String name=first_name+middle_name+last_name;
 
 public EmployeeBasicDetails(){
+
+}
+//the below constructor is for login purpose
+public EmployeeBasicDetails(String password, String email_address){
+    this.password=password;
+    this.email_address=email_address;
 
 }
 

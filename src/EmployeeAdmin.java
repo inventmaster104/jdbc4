@@ -17,6 +17,10 @@ public class EmployeeAdmin {
     public void setRegistrationData(){// to be accessed only by the admin
         Admintype.dtcConnectmethod(adminSetRetriever,"set adminsetdata");
     }
+    // the below method is to see the admin set data for registration and other stuff
+    public void seeAdminSetData(){
+        Admintype.dtcConnectmethod(adminSetRetriever,"retrieve adminsetdata");
+    }
 public void Openregistration(){
     registrationButton="Open Registration";
 }
@@ -82,7 +86,7 @@ public void Openregistration(){
             }
 
             while(Integer.parseInt(birth_date)<1 || Integer.parseInt(birth_date)>30){
-                System.out.print("Invalid date! ");
+                System.out.print("Invalid date! Enter a valid entry");
                 birth_date=scanner.nextLine();
             }
 
@@ -135,8 +139,10 @@ public void Openregistration(){
                 System.out.print("Confirm password: ");
                 confirmpassword=scanner.nextLine();
             }*/
+            PasswordHash hashp=new PasswordHash();
+            String hashedpassword=hashp.encode(password);
             EmployeeBasicDetails adminVersion=new EmployeeBasicDetails( first_name, middle_name, last_name, Integer.parseInt(birth_date), Integer.parseInt(birth_month), Integer.parseInt(birth_year),
-            phone_number, marital_status,address,employee_type, skills,postal_code, gender, qualification, email_address,password,department);
+            phone_number, marital_status,address,employee_type, skills,postal_code, gender, qualification, email_address,hashedpassword,department);
 
 
             Admintype.dtcConnectmethod(adminVersion,"add employee");
@@ -159,18 +165,18 @@ employee, id,start date, month,year
     // Check for duplicate ID
        // for (EmployeeBasicDetails emp : employees) {
       //  if (emp.getId() == e.getId()) {
-       //     System.out.println("❌ Employee ID already exists!");
+       //     System.out.println(" Employee ID already exists!");
       //      return;
      //   }
    // }
 
       //  employees.add(e);
-       // System.out.println("✅ Employee added successfully!");
+       // System.out.println(" Employee added successfully!");
 //}
 
 //public void viewAllEmployees() {
    // if (employees.isEmpty()) {
-     //   System.out.println("⚠️ No employees found.");
+     //   System.out.println("️ No employees found.");
        // return;
    // }
   //  System.out.println("\n--- Employee List ---");
@@ -187,11 +193,11 @@ employee, id,start date, month,year
               //  e.setLast_name(newLast_Name);
                // e.setDepartment(newDepartment);
               //  e.setSalary(newSalary);
-               // System.out.println("✅ Employee updated successfully!");
+               // System.out.println(" Employee updated successfully!");
               //  return;
            // }
        // }
-      //  System.out.println("❌ Employee not found!");
+      //  System.out.println("Employee not found!");
    // }
 
     //public void deleteEmployee(int id) {

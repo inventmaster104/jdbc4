@@ -1,3 +1,7 @@
+/*when the java code runs, first it has to retrieve a simple boolean data from the database to
+set the sign up button visible or not
+ */
+
 import java.sql.ResultSet;
 
 import java.sql.Connection;
@@ -7,13 +11,31 @@ import java.sql.Statement;
 import java.sql.*;
 import java.util.Scanner;
 public class test {
+    static EmployeeBasicDetails basic_detail=new EmployeeBasicDetails();
+    static DataBaseConnector db=new DataBaseConnector();
+    public static void employeemanipulate(){
+         Scanner input=new Scanner(System.in);
+       // String employeein=input.nextLine();
+        System.out.print("Hello, choose what you want to do from the following\n");
+        System.out.println("retrieve employee data");//;only accessible to the manager
+        System.out.println("add employee");//;only accessible to the manager
+        System.out.println("delete table");//;only accessible to the manager
+        System.out.println("create table");//only accessible to the manager
+        System.out.println("delete employee data");//;only accessible to the manager
+        System.out.println("edit your data"); //parts of it accessible to the manager, and employee
+        System.out.println("add column data");
+          String manipulate_data=input.nextLine();
+          db.dtcConnectmethod(basic_detail,manipulate_data);
+    }
+
     public static void main(String[] args) throws SQLException{
-        DataBaseConnector db=new DataBaseConnector();
+
         Employee_Login elogin=new Employee_Login();
 EmployeeAdmin check=new EmployeeAdmin();
-check.registerEmployee();
-       // EmployeeBasicDetails basic_detail=new EmployeeBasicDetails();
-        //Scanner input=new Scanner(System.in);
+//check.registerEmployee();
+        test.employeemanipulate();
+
+       // Scanner input=new Scanner(System.in);
 
         /*type retrieve data in order to access the basic details of employees. then it will
         ask you whether you want to access the data of all the employees or a single employee.
@@ -22,7 +44,7 @@ check.registerEmployee();
         // Login system
         System.out.println("Choose what you want to do with your data: ");
         System.out.println("edit my name");
-       // String employeein=input.nextLine();
+      //  String employeein=input.nextLine();
       //  elogin.access_data();
         /*--------------------------------------------------------------------*/
         System.out.print("Hello, choose what you want to do from the following\n");
@@ -34,8 +56,8 @@ check.registerEmployee();
         System.out.println("edit your data"); //parts of it accessible to the manager, and employee
         System.out.println("add column data");// only accessible to the manager
         // the two below lines are to manipulate employee data. to check them remove the comment symbol.
-       // String manipulate_data=input.nextLine();
-       // db.dtcConnectmethod(manipulate_data);
+      //  String manipulate_data=input.nextLine();
+      //  db.dtcConnectmethod(basic_detail,manipulate_data);
        // elogin.login();// this is for login purpose
 
         // write  a code to launch registration fo ra single department. set limits of applications and and time range

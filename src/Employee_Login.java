@@ -1,27 +1,42 @@
-
 import javax.xml.crypto.Data;
 import java.util.Scanner;
-public class Employee_Login {
+public class Employee_Login{
+
+
+    static String emal;
+    String loginerror;
 //DataBaseConnector mp= new DataBaseConnector();
     Scanner scanner =new Scanner(System.in);
     DataBaseConnector employee_manipulated=new DataBaseConnector();
     EmployeeBasicDetails empmanager =new EmployeeBasicDetails();
+
     // logging in
-    public void login(){
-        System.out.print("Enter your email: ");
-        String email=scanner.nextLine();
-        while ( email.length()<11 ||  (!email.substring(email.length()-10).equals("@yahoo.com") && !email.substring(email.length()-10).equals("@gmail.com"))
+    public String error(){
+        return loginerror;
+    }
+    public String login(String email,String password){
+
+       // System.out.print("Enter your email: ");
+       //email.scanner.nextLine();
+        if ( email.length()<11 ||  (!email.substring(email.length()-10).equals("@yahoo.com") && !email.substring(email.length()-10).equals("@gmail.com"))
                 || email.contains(" ")){
-            System.out.print("invalid email address! Enter a valid email address: ");
-            email=scanner.nextLine();
+
+
+            loginerror="invalid email address! Enter a valid email address ";
+          return loginerror;
+
         }
-            employee_manipulated.setLoginEmail(email);
-        System.out.print("Enter your password: ");
-        String password=scanner.nextLine();
-        employee_manipulated.setloginpassw(password);
+        else{
+            employee_manipulated.dtcConnectmethod(new EmployeeBasicDetails(password,email), "retrieve data for login");
+            return employee_manipulated.getLoginvalue();
+        }
+
+           // employee_manipulated.setLoginEmail(email);
+       //  password=scanner.nextLine();
+        //employee_manipulated.setloginpassw(password);
 
         // write code to retrieve data from database and check whether the password inserted and the email match
-    employee_manipulated.dtcConnectmethod(empmanager, "retrieve employee data");
+
     }// this method should be of return type to allow the user to access his account.
 
 public void access_data() {

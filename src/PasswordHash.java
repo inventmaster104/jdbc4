@@ -8,7 +8,7 @@ public class PasswordHash {
 public String encode(String passw){
     Encoder encode=Base64.getEncoder();
     String encodedpassw=encode.encodeToString(passw.getBytes(StandardCharsets.UTF_8));
-    System.out.println("the encoded password is: "+encodedpassw);
+  //  System.out.println("the encoded password is: "+encodedpassw);
 return encodedpassw;
 }
 public String decode(String dtbpassw){
