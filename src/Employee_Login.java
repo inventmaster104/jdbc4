@@ -2,7 +2,7 @@ import javax.xml.crypto.Data;
 import java.util.Scanner;
 public class Employee_Login{
 
-
+private String adminChecker;
     static String emal;
     String loginerror;
 //DataBaseConnector mp= new DataBaseConnector();
@@ -28,6 +28,7 @@ public class Employee_Login{
         }
         else{
             employee_manipulated.dtcConnectmethod(new EmployeeBasicDetails(password,email), "retrieve data for login");
+            adminChecker=employee_manipulated.getAdminChecker();
             return employee_manipulated.getLoginvalue();
         }
 
@@ -38,6 +39,8 @@ public class Employee_Login{
         // write code to retrieve data from database and check whether the password inserted and the email match
 
     }// this method should be of return type to allow the user to access his account.
+public String getAdminChecker(){
+        return adminChecker;}
 
 public void access_data() {
     employee_manipulated.dtcConnectmethod(empmanager, "edit your data");

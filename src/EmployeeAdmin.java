@@ -142,7 +142,7 @@ public void Openregistration(){
             PasswordHash hashp=new PasswordHash();
             String hashedpassword=hashp.encode(password);
             EmployeeBasicDetails adminVersion=new EmployeeBasicDetails( first_name, middle_name, last_name, Integer.parseInt(birth_date), Integer.parseInt(birth_month), Integer.parseInt(birth_year),
-            phone_number, marital_status,address,employee_type, skills,postal_code, gender, qualification, email_address,hashedpassword,department);
+            phone_number, marital_status,address,employee_type, skills,postal_code, gender, qualification, email_address,hashedpassword);
 
 
             Admintype.dtcConnectmethod(adminVersion,"add employee");

@@ -15,6 +15,7 @@ public class test {
     static DataBaseConnector db=new DataBaseConnector();
     public static void employeemanipulate(){
          Scanner input=new Scanner(System.in);
+
        // String employeein=input.nextLine();
         System.out.print("Hello, choose what you want to do from the following\n");
         System.out.println("retrieve employee data");//;only accessible to the manager
@@ -24,6 +25,9 @@ public class test {
         System.out.println("delete employee data");//;only accessible to the manager
         System.out.println("edit your data"); //parts of it accessible to the manager, and employee
         System.out.println("add column data");
+        db.dtcConnectmethod(basic_detail,"retrieve table name");
+        String[] ch=db.getChoosetable();
+
           String manipulate_data=input.nextLine();
           db.dtcConnectmethod(basic_detail,manipulate_data);
     }
@@ -33,7 +37,7 @@ public class test {
         Employee_Login elogin=new Employee_Login();
 EmployeeAdmin check=new EmployeeAdmin();
 //check.registerEmployee();
-        test.employeemanipulate();
+     //   test.employeemanipulate();
 
        // Scanner input=new Scanner(System.in);
 
@@ -44,7 +48,7 @@ EmployeeAdmin check=new EmployeeAdmin();
         // Login system
         System.out.println("Choose what you want to do with your data: ");
         System.out.println("edit my name");
-      //  String employeein=input.nextLine();
+        //String employeein=input.nextLine();
       //  elogin.access_data();
         /*--------------------------------------------------------------------*/
         System.out.print("Hello, choose what you want to do from the following\n");
@@ -64,6 +68,7 @@ EmployeeAdmin check=new EmployeeAdmin();
         // fornthe attendance. give permission for teh employee ot live the work place.
         //the code must differentiate between the password of the admin and the employees
         //
+        db.dtcConnectmethod(basic_detail,"retriev employee datal");
         System.out.print("operation successful");
         // write code for taking inputs here
 

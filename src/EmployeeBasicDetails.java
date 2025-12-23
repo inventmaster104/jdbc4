@@ -27,7 +27,7 @@ public class EmployeeBasicDetails {
     private String qualification;
     private double salary;
     private int bank_account;
-    private String email_address;
+    private String email_address="";
     private String password;
     private int MaximumAge;
     private int MinimumAge;
@@ -47,7 +47,7 @@ public EmployeeBasicDetails(String password, String email_address){
 
 public EmployeeBasicDetails( String first_name, String middle_name, String last_name, int birth_day, int birth_month, int birth_year,
                           String phone_number, String marital_status, String address, String employee_type, String skills, int postal_code,
-                             char gender, String qualification, String email_address,String password, String department){// this is called during registration
+                             char gender, String qualification, String email_address,String password){// this is called during registration
 //this.id;
 this.first_name=first_name;
 this.middle_name=middle_name;
@@ -65,6 +65,7 @@ this.postal_code=postal_code;
 this.gender=gender;
 this.qualification=qualification;
 this.password=password;
+this.email_address=email_address;
 }
 public EmployeeBasicDetails(int start_date,int start_month, int start_year, double salary){
     // this is called only if the employee has successfully been accepted
