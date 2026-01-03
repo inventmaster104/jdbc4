@@ -1,10 +1,8 @@
-// for registration purpose, create a new table so that current employees and registering employees will not get mixed.
+package ProjectEMS;// for registration purpose, create a new table so that current employees and registering employees will not get mixed.
 // make mysql give them temporary id and if the total number of employees reached, let it announce an error, which then triggers
 // actions to be undertaken like saying the registration has ended.
 
 
-
-import java.util.ArrayList;
 
 import java.util.Scanner;
 public class EmployeeAdmin {
@@ -25,7 +23,7 @@ public void Openregistration(){
     registrationButton="Open Registration";
 }
 
-     //   private ArrayList<EmployeeBasicDetails> employees = new ArrayList<>();
+     //   private ArrayList<ProjectEMS.EmployeeBasicDetails> employees = new ArrayList<>();
         private final int MAX_EMPLOYEES = 30;//  consider changing this from final status
         static int count=0;
 //EMPLOYEE REGISTRATION
@@ -141,19 +139,20 @@ public void Openregistration(){
             }*/
             PasswordHash hashp=new PasswordHash();
             String hashedpassword=hashp.encode(password);
-            EmployeeBasicDetails adminVersion=new EmployeeBasicDetails( first_name, middle_name, last_name, Integer.parseInt(birth_date), Integer.parseInt(birth_month), Integer.parseInt(birth_year),
+            /*ProjectEMS.EmployeeBasicDetails adminVersion=new ProjectEMS.EmployeeBasicDetails( first_name, middle_name, last_name, Integer.parseInt(birth_date), Integer.parseInt(birth_month), Integer.parseInt(birth_year),
             phone_number, marital_status,address,employee_type, skills,postal_code, gender, qualification, email_address,hashedpassword);
 
 
             Admintype.dtcConnectmethod(adminVersion,"add employee");
-            return adminVersion;
+            return adminVersion;*/
         }
         else {
             System.out.println("❌ Registration closed! Maximum " + MAX_EMPLOYEES + " employees allowed.");
             return null;
 
         }
-       }public static void acceptEmployee(){
+       return null;// this is just for checking. the method is not supposed to return null
+    }public static void acceptEmployee(){
 /*salary set,
 employee, id,start date, month,year
   */
@@ -163,7 +162,7 @@ employee, id,start date, month,year
     }
 
     // Check for duplicate ID
-       // for (EmployeeBasicDetails emp : employees) {
+       // for (ProjectEMS.EmployeeBasicDetails emp : employees) {
       //  if (emp.getId() == e.getId()) {
        //     System.out.println(" Employee ID already exists!");
       //      return;
@@ -180,13 +179,13 @@ employee, id,start date, month,year
        // return;
    // }
   //  System.out.println("\n--- Employee List ---");
-   // for(EmployeeBasicDetails e : employees){
+   // for(ProjectEMS.EmployeeBasicDetails e : employees){
      //   e.display();
    // }
 //}
 // make the below code so that specific employe data can be updated
    // public void updateEmployee(int id, String newFirstName,String newMiddleName,String newLast_Name , String newDepartment, double newSalary) {
-       // for (EmployeeBasicDetails e : employees) {
+       // for (ProjectEMS.EmployeeBasicDetails e : employees) {
           //  if (e.getId() == id) {
               //  e.setFirst_name(newFirstName);
               //  e.setMiddle_name(newMiddleName);
@@ -201,7 +200,7 @@ employee, id,start date, month,year
    // }
 
     //public void deleteEmployee(int id) {
-       // for (EmployeeBasicDetails e : employees) {
+       // for (ProjectEMS.EmployeeBasicDetails e : employees) {
           //  if (e.getId() == id) {
               //  employees.remove(e);
                // System.out.println("🗑 Employee deleted successfully!");

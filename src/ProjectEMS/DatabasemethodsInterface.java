@@ -1,3 +1,5 @@
+package ProjectEMS;
+
 public interface DatabasemethodsInterface {
     EmployeeBasicDetails det=new EmployeeBasicDetails();
     DataBaseConnector con=new DataBaseConnector();

@@ -1,3 +1,5 @@
+package ProjectEMS;
+
 public class WorkDetails extends EmployeeBasicDetails {
     int attendance;
     String employee_type;

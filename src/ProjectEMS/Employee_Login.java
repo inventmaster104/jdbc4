@@ -1,11 +1,14 @@
-import javax.xml.crypto.Data;
+package ProjectEMS;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 public class Employee_Login{
 
-private String adminChecker;
+public String adminChecker="Not Admin";
     static String emal;
     String loginerror;
-//DataBaseConnector mp= new DataBaseConnector();
+//ProjectEMS.DataBaseConnector mp= new ProjectEMS.DataBaseConnector();
     Scanner scanner =new Scanner(System.in);
     DataBaseConnector employee_manipulated=new DataBaseConnector();
     EmployeeBasicDetails empmanager =new EmployeeBasicDetails();
@@ -92,8 +95,16 @@ for (int i=1;i<count;i++){
 }
 public void save(){
 
-        DataBaseConnector employee_updated= new DataBaseConnector();
+        ProjectEMS.DataBaseConnector employee_updated= new ProjectEMS.DataBaseConnector();
 
     }
 }*/
-}}
+}
+public String date(){
+    DateTimeFormatter dtf= DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+    LocalDateTime now=LocalDateTime.now();
+    String time=dtf.format(now);
+    return time;}
+
+
+}

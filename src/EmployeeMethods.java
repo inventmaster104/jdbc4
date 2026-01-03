@@ -1,3 +1,5 @@
+import ProjectEMS.EmployeeBasicDetails;
+
 public interface EmployeeMethods {
      EmployeeBasicDetails eType=new EmployeeBasicDetails();// in case i need it.
     default void evaluatePerformance(){

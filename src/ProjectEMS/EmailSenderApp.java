@@ -1,26 +1,26 @@
-//import javax.mail.*;
+package ProjectEMS;//import javax.mail.*;
 //import javax.mail.internet.*;
 
 
 import jakarta.mail.*;
-import jakarta.mail.internet.InternetAddress;
-import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.*;
+
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ArrayList.*;
-import java.util.Properties;
+import java.util.*;
 
 public class EmailSenderApp {
 
     // Database configuration
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/email_system";
-    private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "";
+   static String url="jdbc:mysql://localhost:3306/jdbcTOP";
+   static String username="root";
+   static String password="KawqbBON89!!GA.HELLO";
+   // private static final String DB_URL = "jdbc:mysql://localhost:3306/email_system";
+   // private static final String DB_USER = "root";
+   // private static final String DB_PASSWORD = "";
 
     // Email configuration - USE YOUR GMAIL APP PASSWORD
-    private static final String SENDER_EMAIL = "cyclone6527@gmail.com";
+    private static final String SENDER_EMAIL = "cyclone6527@gmail.com";// this is admin email
     private static final String SENDER_PASSWORD = "ndnj jebb xokk tlqo";
 
     public static void main(String[] args) {
@@ -30,7 +30,12 @@ public class EmailSenderApp {
         try {
             // Get emails from database
             System.out.println("Connecting to database...");
-            List<String> recipients = getEmailsFromMySQL();
+            List<String> recipients =new ArrayList<>();
+            recipients.add("ayelealazar887@gmail.com");
+
+
+
+            //  List<String> recipients = getEmailsFromMySQL();
 
             if (recipients.isEmpty()) {
                 System.out.println(" No emails found in database.");
@@ -64,9 +69,9 @@ public class EmailSenderApp {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
             // Connect to database
-            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+            try (Connection conn = DriverManager.getConnection(url, username,password);
                  Statement stmt = conn.createStatement();
-                 ResultSet rs = stmt.executeQuery("SELECT email FROM contacts")) {
+                 ResultSet rs = stmt.executeQuery("select Email_Address from employee_basic_details ")) {
 
                 while (rs.next()) {
                     emails.add(rs.getString("email"));

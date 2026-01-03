@@ -1,22 +1,36 @@
-// write a mysql code to add applicants
+package ProjectEMS;// write a mysql code to add applicants
 //write code to prevent duplicate creation of tables rows or  columns
 // must delete teh phone number from the database because its datatype is not stri
-import py4j.GatewayServer;
-import java.io.InputStream;
-import java.io.Reader;
-import java.math.BigDecimal;
-import java.net.URL;
+
 import java.sql.ResultSet;
 
 import java.sql.Connection;
-import java.util.Calendar;
-import java.util.Map;
 import java.util.Scanner;
-import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import java.sql.*;
-public class DataBaseConnector implements  DatabasemethodsInterface{
+public class DataBaseConnector implements DatabasemethodsInterface {
+    private String task;
+    private String chek="Not Special";
+    private static int loginid;
+    private double totalTime;
+    private String time;
+    private String startTime;
+    private String endTime;
+    static String name;
+    private String [] AsetData=new String[0];
+    private String tempAdmin="";
+    private String[] ewordData=new String[0];
+    private int maxData=0;
+    private int maxApp=0;
+private String totalA;
+    int count=0;
+    private String [] Etitles=new String[0];
+    private String vacanyadd="";
+    private String[] Atitles=new String[0];
+    private String sqladmin="";
+    private int minYear;
+    private int Ayear=0;
     private String [] empdatas=new String[0];
     private String id;// to allow the admin to set an employee id to search spceific employee
     private String registrationst;
@@ -30,7 +44,7 @@ public class DataBaseConnector implements  DatabasemethodsInterface{
     private static String result="unsuccessful, please try again";
     private String colDatatype;
     private String ColumnLength;
-    private String adminChecker;
+    private String adminChecker="Not admin";
     private String loginvalue;
     private String loginpassw="";
     private String loginEmail="";
@@ -44,14 +58,17 @@ public class DataBaseConnector implements  DatabasemethodsInterface{
     private String [][][] idemailname=new String[0][0][0];
     private String registrationCheck;
     private String temp_in="";// to take input from the admin about his employee view choice
+    private boolean admintrue=true;
+    private String edited="";
+    private String data_type="";
 
    // write a code to accept an update from teh user
 
-   // EmployeeAdmin adminversion=new EmployeeAdmin();
-    //EmployeeBasicDetails mp=adminversion.registerEmployee();
+   // ProjectEMS.EmployeeAdmin adminversion=new ProjectEMS.EmployeeAdmin();
+    //ProjectEMS.EmployeeBasicDetails mp=adminversion.registerEmployee();
     Scanner scanner=new Scanner(System.in);
     PasswordHash hashpasdword=new PasswordHash();
-
+EmployeeBasicDetails dt=new EmployeeBasicDetails();
 public void setloginpassw(String pasw){
     loginpassw=pasw;
     }
@@ -65,6 +82,19 @@ public String getLoginEmail(){
     return loginEmail;
 }
 // write a code to create a table
+    private String editData(String id, String datatype, String edited){
+        this.edited=edited;
+        this.data_type=datatype;
+    try{int n=Integer.parseInt(edited);
+    double d=Double.parseDouble(edited);
+        String edit = "update employee_work_details set"+" "+data_type+"= "+edited+" where id="+id;
+        return edit;
+    }
+    catch(IllegalArgumentException e){ String edit = "update employee_work_details set"+" "+data_type+"= '"+edited+"' where id="+id;
+        return edit;}
+
+
+    }
     public void dtcConnectmethod(EmployeeBasicDetails mp, String value){
 
         String url="jdbc:mysql://localhost:3306/jdbcTOP";
@@ -88,16 +118,18 @@ public String getLoginEmail(){
                         "Start_Date_Year,Employee_Type, Skills,Postal_Code,Department,Gender,Qualifications,Salary,Password,Email_Address) " +
                         "VALUES(02375, 'amanuel', 'shuge','grandf',12,9,1974,0963677822,'Male'," +
                         "'Addis_Ababa_4k',2,3,2024,'Fulltime','repairing computers',1234,'Electrical engineering','M','Highschool graduate', 1300,'" + hashpasdword.encode("12345f") + "', 'naruto@gmail.com')";
-                String sqladmin = "INSERT INTO employee_basic_details(First_Name, Middle_Name,Last_Name,Day_of_Birth," +
-                        "Month_of_Birth,Year_of_Birth,Phone_Number,Marital_Status,Address,Start_Date_Day,Start_Date_Month," +
-                        "Start_Date_Year,Employee_Type, Skills,Postal_Code,Department,Gender,Qualifications, Email_Address, Password) " +
-                        "VALUES('" + mp.getFirst_name() + "','" + mp.getMiddle_name() + "','" + mp.getLast_name() + "'," + mp.getBirth_day() + "," + mp.getBirth_month() + ","
-                        + mp.getBirth_year() + "," + mp.getPhone_number() + ",'" + mp.getMarital_status() + "','" + mp.getAddress() + "'," + mp.getStart_date() + "," + mp.getStart_month() + "," +
-                        mp.getStart_year() + ",'" + mp.getEmployee_type() + "','" + mp.getSkills() + "'," + mp.getPostal_code() + ",'" + mp.getDepartment() + "','" + mp.getGender() + "','" +
-                        mp.getQualification() + "','" + mp.getEmail_address() + "','" + mp.getPassword() + "')";// this code is for admin to accept employee, so change the lower case to upper case whn needed
-              /*  String sqlRegistration="INSERT INTO `applicant basic details`(`Id`,`First Name`, `Middle Name`, `Last Name`, Email, `Phone_Number`,Address, " +
-                        "`Day of Birth`, `Month of Birth`, `Year of Birth`, `Marital Status`, Gender,Password,Certificates,`Total Applicants`) VALUES("+"23"+", '"+mp.getFirst_name()+"', '"+mp.getMiddle_name()+"', '"+mp.getLast_name()+"', '"+mp.getEmail_address()+"', '"+mp.getPhone_number()+"', '"+
-                        mp.getAddress()+"', "+mp.getBirth_day()+", "+mp.getBirth_month()+", "+mp.getBirth_year()+", '"+mp.getMarital_status()+"', '"+mp.getGender()+"','"+mp.getPassword()+"', '"+mp.getQualification()+"', "+ "1"+")";//WRITE A CODE OF automatic id provider
+               if(admintrue==true){ if (chek.equals("special")){
+                   sqladmin = "INSERT INTO special_table(`First_Name`, `Middle_Name`, `Last_Name`, `Day_of_Birth`,`Month_of_Birth`,`Year_of_Birth`, Phone_Number, " +
+                           "Marital_Status, Employee_Type, Skills, Postal_Code,Country,City,Kebele, Gender,Qualifications,Email_Address,Password) VALUES("+"'"+mp.getFirst_name()+"', '"+mp.getMiddle_name()+"', '"+mp.getLast_name()+"', "+mp.getBirth_day()+", "+mp.getBirth_month()+", "+
+                           mp.getBirth_year()+", '"+mp.getPhone_number()+"', '"+mp.getMarital_status()+"', '"+mp.getEmployee_type()+"', '"+mp.getSkills()+"', "+mp.getPostal_code()+",'"+mp.getCountry()+"', '"+mp.getCity()+"', '"+mp.getKebele()+"','"+mp.getGender()+"','"+mp.getQualification()+"','"+mp.getEmail_address()+"','"+  mp.getPassword()+"')";count=1;}
+               else{sqladmin = "INSERT INTO employee_basic_details(`First_Name`, `Middle_Name`, `Last_Name`, `Day_of_Birth`,`Month_of_Birth`,`Year_of_Birth`, Phone_Number, " +
+                       "Marital_Status, Employee_Type, Skills, Postal_Code,Country,City,Kebele, Gender,Qualifications,Email_Address,Password) VALUES("+"'"+mp.getFirst_name()+"', '"+mp.getMiddle_name()+"', '"+mp.getLast_name()+"', "+mp.getBirth_day()+", "+mp.getBirth_month()+", "+
+                       mp.getBirth_year()+", '"+mp.getPhone_number()+"', '"+mp.getMarital_status()+"', '"+mp.getEmployee_type()+"', '"+mp.getSkills()+"', "+mp.getPostal_code()+",'"+mp.getCountry()+"', '"+mp.getCity()+"', '"+mp.getKebele()+"','"+mp.getGender()+"','"+mp.getQualification()+"','"+mp.getEmail_address()+"','"+  mp.getPassword()+"')";count=1;}}
+                   // this code is for admin to accept employee, so change the lower case to upper case whn needed
+               else  {sqladmin="INSERT INTO `applicant basic details`(`First Name`, `Middle Name`, `Last Name`, `Day of Birth`,`Month of Birth`,`Year of Birth`, Phone_Number, " +
+                        "Marital_Status, Employee_Type, Skills, Postal_Code,Country,City,Kebele, Gender,Qualifications,Email,Password) VALUES("+"'"+mp.getFirst_name()+"', '"+mp.getMiddle_name()+"', '"+mp.getLast_name()+"', "+mp.getBirth_day()+", "+mp.getBirth_month()+", "+
+                        mp.getBirth_year()+", '"+mp.getPhone_number()+"', '"+mp.getMarital_status()+"', '"+mp.getEmployee_type()+"', '"+mp.getSkills()+"', "+mp.getPostal_code()+",'"+mp.getCountry()+"', '"+mp.getCity()+"', '"+mp.getKebele()+"','"+mp.getGender()+"','"+mp.getQualification()+"','"+mp.getEmail_address()+"','"+  mp.getPassword()+"')";}
+
                 //"(Deptid int not NULL, Department varchar(40), primary key(Deptid))";*/
                 PasswordHash hashobject = new PasswordHash();
                 // String retrieve="select * from"+mp.getTable_name();
@@ -105,8 +137,12 @@ public String getLoginEmail(){
                 ResultSet resultSet = statement.executeQuery(retriever);
                 final var metaData = resultSet.getMetaData();
                 resultSet = statement.executeQuery(retriever);
+
                 statement.executeUpdate(sqladmin);
-                result = "added successfully";
+
+
+                if(count==1){result = "added successfully";}else{result="registered successfully";}
+
                 //the below code  is checked for functioning.
               /*  if(mp.getPassword().length() != 0) {// this code may result in an error when the password is inserted and data retrieving is called, so add another parramter if needed
                    // String adminEmail="naruto@gmail.com";
@@ -132,7 +168,208 @@ public String getLoginEmail(){
 
                 }
             }*/
-            } else if (value.equals(registrationst)) {
+            }
+            else if(value.equals("add task")){
+                String sql="INSERT INTO tasks(Task, employee_Id, Title, Description,Due_Date,Status) VALUES('"+task+"',"+id+")";
+                statement.executeUpdate(sql);
+            }
+            else if(value.equals("setTotalTime")){
+                System.out.println("set calculate time check");
+                String tot="update attendance_details set Total_Time="+totalTime+" where End_Time='"+endTime+"'";
+                statement.executeUpdate(tot);
+            }
+            else if(value.equals("calculate time")){
+
+                if (!(adminChecker.equals("Admin"))){//i changed the statement from id checker to string checker
+                    id=String.valueOf(loginid);
+                }
+                String calc="select * from attendance_details where Id='"+id+"'";
+                ResultSet resultSet=statement.executeQuery(calc);
+                while(resultSet.next()){
+                    String stime=resultSet.getString("Start_Time");
+                    String etime=resultSet.getString("End_Time");
+                    double Y1=Double.parseDouble(stime.substring(0,4));
+                    double M1=Double.parseDouble(stime.substring(5,7));
+                    double D1=Double.parseDouble(stime.substring(8,10)) ;
+                    double h1=Double.parseDouble(stime.substring(11,13));
+                    double m1=Double.parseDouble(stime.substring(14,16))/60.0;
+                    double s1=Double.parseDouble(stime.substring(17))/3600.0;
+
+                    double Y2=Double.parseDouble(etime.substring(0,4));
+                    double M2=Double.parseDouble(etime.substring(5,7));
+                    double D2=Double.parseDouble(etime.substring(8,10)) ;
+                    double h2=Double.parseDouble(etime.substring(11,13));
+                    double m2=Double.parseDouble(etime.substring(14,16))/60.0;
+                    double s2=Double.parseDouble(etime.substring(17))/3600.0;
+                    if(Y1==Y2 && D1==D2 && M1==M2){
+                        totalTime+=(h2-h1)+(m2-m1)+(s2-s1);
+                        System.out.println("calculate time check");
+                    }
+
+                }
+                dtcConnectmethod(new EmployeeBasicDetails(),"setTotalTime");
+
+            }
+            else if(value.equals("addWorkDetails")){
+                System.out.println(id);
+                String sql="INSERT INTO employee_work_details(id) VALUES("+Integer.parseInt(id)+")";
+                statement.executeUpdate(sql);
+            }
+            else if(value.equals("getEid")){
+                String sql="select Id from employee_basic_details where Email_Address='"+mp.getEmail_address()+"'";
+                ResultSet resultSet=statement.executeQuery(sql);
+                while(resultSet.next()){
+                    id=String.valueOf(resultSet.getInt("Id"));
+                }
+            }else if(value.equals("getStartTime")){
+                String sql="select Start_Time from attendance_details";
+                ResultSet resultSet=statement.executeQuery(sql);
+                while(resultSet.next()){
+                    startTime=resultSet.getString("Start_Time");
+                }
+            }
+            else if(value.equals("setTime")){
+                System.out.println(startTime);
+                if(time.equals("Start")){String etimesql="INSERT INTO attendance_details(Id,Start_Time) VALUES("+loginid+",'"+startTime+"')";
+                statement.executeUpdate(etimesql);
+                }
+
+                if(time.equals("End")){
+                    System.out.println("the end time is: "+endTime);
+                    System.out.println("The start time is: "+startTime);
+                    dtcConnectmethod(new EmployeeBasicDetails(),"getStartTime");
+                    String stimesql="update attendance_details set End_Time='"+endTime+"' where Start_Time='"+startTime+"'";
+                    statement.executeUpdate(stimesql);
+                }
+
+
+            }
+            else if(value.equals("setWorkDetails")){
+                String data_type="";
+                String edited="";
+                String edits="update employee_work_details set "+data_type+"='"+edited+"' where id="+id;
+                String edit = "update employee_work_details set"+" "+data_type+"= "+edited+" where id="+id;
+                double i1=mp.getSalary();int i2=mp.getStart_date(); int i3=mp.getStart_month(); int i4=mp.getStart_year(); int i5=mp.getEnd_date();
+                int i6= mp.getEnd_month(); int i7=mp.getEnd_year(); String dpt=mp.getDepartment();
+              /*  String set="INSERT INTO employee_work_details(id,Salary,Start_Date, Start_Month,Start_Year, End_Date,End_Month,End_Year,Department) " +
+                        "VALUES("+Integer.parseInt(id)+","+mp.getSalary()+","+mp.getStart_date()+","+mp.getStart_month()+","+mp.getStart_year()+","+mp.getEnd_date()+","+
+                        mp.getEnd_month() +","+mp.getEnd_year()+",'"+mp.getDepartment()+"'"+")";*/
+               if(i1!=0){
+                   edited=String.valueOf(i1);
+                   data_type="Salary";
+                   statement.executeUpdate(editData(id,data_type,edited));
+               }
+                if(i2!=0){
+                    edited=String.valueOf(i2);
+                    data_type="Start_Date";
+                    statement.executeUpdate(editData(id,data_type,edited));
+                }
+                if(i3!=0){
+                    edited=String.valueOf(i3);
+                    data_type="Start_Month";
+                    statement.executeUpdate(editData(id,data_type,edited));
+                }
+                if(i4!=0){
+                    edited=String.valueOf(i4);
+                    data_type="Start_Year";
+                    statement.executeUpdate(editData(id,data_type,edited));
+                }
+                if(i5!=0){
+                    edited=String.valueOf(i5);
+                    data_type="End_Date";
+                    statement.executeUpdate(editData(id,data_type,edited));
+                }
+                if(i6!=0){
+                    edited=String.valueOf(i6);
+                    data_type="End_Month";
+                    statement.executeUpdate(editData(id,data_type,edited));
+                }
+                if(i7!=0){
+                    edited=String.valueOf(i7);
+                    data_type="End_Year";
+                    statement.executeUpdate(editData(id,data_type,edited));
+                }
+                if(dpt.length()!=0){
+                    edited=dpt;
+                    data_type="Department";
+                    statement.executeUpdate(editData(id,data_type,edited));
+                }
+
+                result="set successfully";
+            }
+            else if(value.equals("getsetMaxApplications")){
+                maxData=0;
+                String sql="select MaxApplications from admin_set_data where Id=1";
+                ResultSet resultSet= statement.executeQuery(sql);
+                while (resultSet.next()){
+                    maxData=resultSet.getInt("MaxApplications");
+                }
+
+            }
+            else if(value.equals("setMaxApplications")){
+
+                String sql="update admin_set_data set MaxApplications="+maxApp+" where Id=1";
+               statement.executeUpdate(sql);
+               result="successfully set";
+
+            }
+            else if (value.equals("getMaxApplications")){
+                String sql="select count(Email) from `applicant basic details`";
+                ResultSet resultSet=statement.executeQuery(sql);
+                while(resultSet.next()){totalA=resultSet.getString("count(Email)");}
+
+            }
+            else if(value.equals("setAdminTitles")){
+                String sql="insert into admin_set_data(Vacancies) VALUES(+'"+vacanyadd+"')";
+                statement.executeUpdate(sql);
+                result="successfully added";
+
+            }
+            else if(value.equals("get all E titles")){
+                Atitles=new String[0];
+                String sql="select AllTitles from admin_set_data";
+                ResultSet resultSet=statement.executeQuery(sql);
+                while(resultSet.next()){
+                    if((resultSet.getString("AllTitles")==null)){
+                        continue;
+                    }
+                    else{
+                        String[] temp=new String[Atitles.length+1];
+                        for(int i=0;i<Atitles.length;i++){
+                            temp[i]=Atitles[i];
+                        }
+                        temp[Atitles.length]=resultSet.getString("AllTitles");
+                        Atitles=temp;
+                    }
+                }
+            }
+            else if(value.equals("getAdminTitles")){
+                Etitles=new String[0];
+                String sql="select Vacancies from admin_set_data";
+                ResultSet resultSet=statement.executeQuery(sql);
+                while(resultSet.next()){
+                    if((resultSet.getString("Vacancies")==null)){
+                        continue;
+                    }
+                    else{
+                        String[] temp=new String[Etitles.length+1];
+                        for(int i=0;i<Etitles.length;i++){
+                            temp[i]=Etitles[i];
+                        }
+                        temp[Etitles.length]=resultSet.getString("Vacancies");
+                        Etitles=temp;
+                    }
+                }
+
+            }else if(value.equals("get maxYear")){
+                Ayear=0;
+                String sql="select Max_Applicant_Year from admin_set_data where Id=1";
+                ResultSet resultSet=statement.executeQuery(sql);
+                while(resultSet.next()){
+                    Ayear=resultSet.getInt("Max_Applicant_Year");
+                }
+            }
+            else if (value.equals(registrationst)) {
 
                 String sql = "select RegistrationStatus from admin_set_data where Id=1";
                 String s1 = "";
@@ -204,7 +441,9 @@ public String getLoginEmail(){
 
             } else if (value.equals("update employee")) {
 
-            } else if (value.equals("delete employee data")) {// checked. it deletes the data for a single employee. identfy th =e dah trh empoyee can edit
+            }
+
+                    else if (value.equals("delete applicant/employee data")) {// checked. it deletes the data for a single employee. identfy th =e dah trh empoyee can edit
                 if (takenemail != null) {
                     if (takenemail.length() != 0) {
                         String delete_emp_data = "delete from `applicant basic details` where Email='" + takenemail + "'";
@@ -219,6 +458,7 @@ public String getLoginEmail(){
 
                 }
             } else if (value.equals("retrieve table name")) {
+
                 String retrieve = "select * from admin_set_data";
                 ResultSet resultSet = statement.executeQuery(retrieve);
                 final var metaData = resultSet.getMetaData();
@@ -229,9 +469,14 @@ public String getLoginEmail(){
                     for (int i = 1; i <= metaData.getColumnCount(); i++) {
                         if (metaData.getColumnName(i).equals("TableName")) {
                             String[] newtable = new String[count];
-                            String[] temptable = tableNames;
-                            tableNames = newtable;
-                            for (int j = 0; j < tableNames.length; j++) {
+                            String[] temptable = new String[tableNames.length+1];
+                            //tableNames = newtable;
+                            for (int m=0;m<tableNames.length;m++){
+                                temptable[m]=tableNames[m];
+                            }
+                            temptable[tableNames.length]=metaData.getColumnName(i);
+                            tableNames=temptable;
+                           /* for (int j = 0; j < tableNames.length; j++) {
                                 if (j == (tableNames.length - 1)) {
                                     tableNames[j] = resultSet.getString("TableName") + "   ";
                                     System.out.println(tableNames[j]);
@@ -240,7 +485,7 @@ public String getLoginEmail(){
                                 }
 
                             }
-                            count += 1;
+                            count += 1;*/
                         }
                     }
                 }
@@ -311,7 +556,43 @@ public String getLoginEmail(){
                 String sqlset = "INSERT INTO Admin_Set_Data(Max_Applicant_No,Min_Applicant_No,Age_Limit) VALUES(" + Integer.parseInt(ageMa) + ","
                         + Integer.parseInt(ageMi) + ", " + Integer.parseInt(agelimit) + ")";
                 statement.executeUpdate(sqlset);
-            } else if (value.equals("applcnto data")) {
+            }
+            // retrieving section
+            else if(value.equals("retrieve workDetails")){
+                ewordData=new String[0];
+                ecolumnNames=new String[0];
+                String sql="select * from employee_work_details where id="+id;
+                ResultSet resultSet=statement.executeQuery(sql);
+                final var metaData=resultSet.getMetaData();
+                while(resultSet.next()){
+                    for(int i=1;i<metaData.getColumnCount();i++){
+                        if (metaData.getColumnName(i).equals("CV")){
+                            continue;
+                        }
+                        else{String col=metaData.getColumnName(i);
+                            Object data=resultSet.getObject(i);
+                            String dta=""+data;
+                            String[] temp=new String[ecolumnNames.length+1];
+                            for(int j=0;j<ecolumnNames.length;j++){
+                            temp[j]=ecolumnNames[j];
+                            }
+                            temp[ecolumnNames.length]=col;
+                            ecolumnNames=temp;
+                            String[] temp2=new String[ewordData.length+1];
+                            for (int k=0;k<ewordData.length;k++){
+                                temp2[k]=ewordData[k];
+                            }
+                            temp2[ewordData.length]=dta;
+                            ewordData=temp2;
+                        }
+
+
+                    }
+
+                }
+            }
+            else if (value.equals("applcnto data")) {
+                applicantdt=new String[0];
                 System.out.println("hello");
                 String retrieve = "select * from `applicant basic details`";
                 ResultSet resultSet = statement.executeQuery(retrieve);
@@ -333,7 +614,12 @@ public String getLoginEmail(){
                             if (metaData.getColumnName(i).equals("Id")) {
                                 continue;
                             } else {
-                                applicantdt[i] = String.valueOf(resultSet.getObject(i));
+                                String temp[] =new String[applicantdt.length+1];
+                                for (int j=0;j<applicantdt.length;j++){
+                                    temp[j]=applicantdt[j];
+                                   }
+                                temp[applicantdt.length]=String.valueOf(resultSet.getObject(i));
+                                applicantdt=temp;
                             }
 
                         }
@@ -347,13 +633,33 @@ public String getLoginEmail(){
                     mp.setMaximumAge(resultSet.getInt("Max_Applicant_Year"));
                 }
 
-            } else if (value.equals("retrieve employee data for deleting")) {
+            }
+            else if (value.equals("adminSetDt")){
+                AsetData=new String[0];
+                String sql="select * from Admin_Set_Data";
+                ResultSet resultSet=statement.executeQuery(sql);
+                final var metaData=resultSet.getMetaData();
+                while(resultSet.next()){
+
+                     if (tempAdmin.equals("getDepartment")&& resultSet.getString("Department")!=null){
+                         String temp[]= new String[AsetData.length+1];
+                         for (int j=0;j<AsetData.length;j++){
+                           temp[j]=AsetData[j];
+                         }
+                         temp[AsetData.length]=resultSet.getString("Department");
+                         AsetData=temp;}
+
+
+                }
+            }else if (value.equals("retrieve employee data for deleting")) {
+                Names=new String[0];
+                employeeEml=new String[0];
                 String retrieve = "select * from employee_basic_details";
                 ResultSet resultSet = statement.executeQuery(retrieve);
                 final var metaData = resultSet.getMetaData();
                 while (resultSet.next()) {
                     //to retrieve the name and id of all employees
-                    String name = resultSet.getString("First_Name") + " " + resultSet.getString("Middle_Name") + " " + resultSet.getString("Last_Name");
+                    String name =( (String)(resultSet.getObject("First_Name"))) + " " + resultSet.getString("Middle_Name") + " " + resultSet.getString("Last_Name");
                     String eml = resultSet.getString("Email_Address");
                     String[] n = new String[Names.length + 1];// to initiallize the arrays name and email
                     for (int i = 0; i < Names.length; i++) {
@@ -361,14 +667,17 @@ public String getLoginEmail(){
                     }
                     n[Names.length] = name;
                     Names = n;
-                    String[] e = new String[Emails.length + 1];
-                    for (int i = 0; i < Emails.length; i++) {
-                        e[i] = Emails[i];
+                    String[] e = new String[employeeEml.length + 1];
+                    for (int i = 0; i < employeeEml.length; i++) {
+                        e[i] = employeeEml[i];
                     }
-                    e[Emails.length] = eml;
-                    Emails = e;
+                    e[employeeEml.length] = eml;
+                    employeeEml = e;
                 }
-            } else if (value.equals("retrieve applicant")) {
+            }
+            else if (value.equals("retrieve applicant")) {
+                Names=new String[0];
+                Emails=new String[0];
                 String retrieve = "select * from `applicant basic details`";
                 ResultSet resultSet = statement.executeQuery(retrieve);
                 final var metaData = resultSet.getMetaData();
@@ -405,15 +714,16 @@ public String getLoginEmail(){
 
                         if (mp.getEmail_address().equals(resultSet.getString("Email_Address"))) {
                             passdtb = resultSet.getString("Password");
+                            name=resultSet.getString("First_Name");
+
 
 
                             if (hashobject.decode(passdtb).equals(mp.getPassword())) {
                                 loginvalue = "Access Granted";
-                                int checkidentity = resultSet.getInt("Id");
-                                if (checkidentity == 3421) {
-                                    adminChecker = "RealAdmin";
-                                    //System.out.println(hashpasdword.decode(adminPassw));
-                                }
+                                loginid = resultSet.getInt("Id");
+                                adminChecker=resultSet.getString("Employee_Type");
+
+
                             }
 
                         }
@@ -427,25 +737,101 @@ public String getLoginEmail(){
                     }
                 }
             }
+            else if(value.equals("retrieve work details")){
+                ecolumnNames=new String[0];
+                ewordData=new String[0];
+                boolean check=true;
+                String sql="select * from employee_work_details";
+                ResultSet resultSet=statement.executeQuery(sql);
+                final var metaData=resultSet.getMetaData();
+                while(resultSet.next()){
+
+                    for(int i=2;i<metaData.getColumnCount();i++){
+                        if (resultSet.getObject(i)==null){
+
+
+                            String[] temp=new String[ewordData.length+1];
+                            for (int k=0;k<ewordData.length;k++){
+                                temp[k]=ewordData[k];
+                            }
+                            temp[ewordData.length]="None";
+                            ewordData=temp;
+
+                        }
+                        else{
+                            String[] temp=new String[ewordData.length+1];
+                            for (int k=0;k<ewordData.length;k++){
+                               temp[k]=ewordData[k];
+                            }
+                            temp[ewordData.length]=String.valueOf(resultSet.getObject(i));
+                            ewordData=temp;
+
+                        }
+if (check==true){String coln=metaData.getColumnName(i);
+
+    String[] c=new String[ecolumnNames.length+1];
+
+    for (int a=0;a<ecolumnNames.length;a++){
+        c[a]=ecolumnNames[a];
+    }
+    if(coln.equals("CV") || coln.equals("Id")){
+        continue;
+    }
+    else{c[ecolumnNames.length]=coln;
+        ecolumnNames=c;
+    }}
+
+
+
+
+
+
+
+
+                    }check=false;
+                }
+            }
             //the below else if is to retrieve data of registered employee, but it is not complete yet.
             else if (value.equals("retrieve applicant data")) {
+                Emails=new String[0];
+                Names=new String[0];
+                String[] t=new String[0];
+                Emails=t;
               /*  ecolumnNames=clearData();
                 ids=clearData();
                 empdatas=clearData();
                 viewEmployeeName=clearData();*/
 
-                String retrieve = "select * from employee_basic_details";
+                String retrieve = "select * from `applicant basic details`";
                 ResultSet resultSet = statement.executeQuery(retrieve);
                 while (resultSet.next()) {
-                    if (resultSet.getString("Email").equals("")) {
-                        String pass = resultSet.getString("Password");
+
+                        String pass = resultSet.getString("Email");
+                    System.out.println("hi");
+
+                        String fname=resultSet.getString("First Name");
+                        String middlename=resultSet.getString("Middle Name");
+                        String lastname=resultSet.getString("Last Name");
+                    String[] tempe=new String[Emails.length+1];
+                    String[] namee=new String[Names.length+1];
+                    for (int i=0;i<Emails.length;i++){
+                        tempe[i]=Emails[i];
+
+                        namee[i]=Names[i];
                     }
+
+                    tempe[Emails.length]=pass;
+                    namee[Names.length]=fname+" "+middlename+" "+lastname;
+                    Names=namee;
+                    Emails=tempe;
+
                 }
 
             } else if (value.equals("retriev employee datal")) {
-                ecolumnNames=clearData();
-                ids=clearData();
-                empdatas=clearData();
+                employeeEml=new String[0];
+                ecolumnNames=new String[0];
+                ids=new String[0];
+                empdatas=new String[0];
                 viewEmployeeName=clearData();
                 String retrieve = "select * from employee_basic_details";
                 ResultSet resultSet = statement.executeQuery(retrieve);
@@ -633,7 +1019,68 @@ return adminChecker;}
     public String [] getEmpdatas(){
     return empdatas;
     }
+    public int getAdminsetMaxYear(){
+    return Ayear;
+    }
+    public int getMinYear(){
+    return minYear;
+    }
+    public void setAdmintrue(boolean admintrue){
+    this.admintrue=admintrue;
+    }
+    public String[] getAtitles(){
+
+    return Atitles;
+    }
+    public void setVacanyadd(String add){
+    vacanyadd=add;
+    }
+    public String[] getEtitles(){
+
+    return  Etitles;
+    }
+    public void setMaxApp(int maxApp){
+    this.maxApp=maxApp;}
+    public String gettotalA(){
+
+    return  totalA;
+    }
+    public String[] getAsetData(){
+    return AsetData;
+    }
+    public void setTempAdmin(String t){
+    tempAdmin=t;
+    }
+    public int getMaxData(){
+    return maxData;
+    }
+    public String [] getEwordData(){
+    return ewordData;
+    }
+public String getloginName(){
+    return name;
 }
+public String getEndTime(){
+    return endTime;
+}
+public void setStartTime(String time){
+    startTime=time;
+}
+public void setEndTime(String time){
+    endTime=time;
+}
+public void setTime(String time){
+    this.time=time;
+}
+public void setChek(String c){
+    chek=c;
+}
+public void setTask(String task){
+    this.task=task;
+}
+public String getStartTime() {
+    return startTime;
+}}
 
 
 

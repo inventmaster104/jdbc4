@@ -1,13 +1,7 @@
-/*when the java code runs, first it has to retrieve a simple boolean data from the database to
+package ProjectEMS;/*when the java code runs, first it has to retrieve a simple boolean data from the database to
 set the sign up button visible or not
  */
 
-import java.sql.ResultSet;
-
-import java.sql.Connection;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.Statement;
 import java.sql.*;
 import java.util.Scanner;
 public class test {
@@ -33,11 +27,14 @@ public class test {
     }
 
     public static void main(String[] args) throws SQLException{
-
-        Employee_Login elogin=new Employee_Login();
-EmployeeAdmin check=new EmployeeAdmin();
+PasswordHash has=new PasswordHash();
+String s=has.encode("iamme");
+        System.out.println(s);
+        System.out.println(new Employee_Login().date());
+        //ProjectEMS.Employee_Login elogin=new ProjectEMS.Employee_Login();
+//ProjectEMS.EmployeeAdmin check=new ProjectEMS.EmployeeAdmin();
 //check.registerEmployee();
-     //   test.employeemanipulate();
+     //   ProjectEMS.test.employeemanipulate();
 
        // Scanner input=new Scanner(System.in);
 
@@ -68,7 +65,13 @@ EmployeeAdmin check=new EmployeeAdmin();
         // fornthe attendance. give permission for teh employee ot live the work place.
         //the code must differentiate between the password of the admin and the employees
         //
-        db.dtcConnectmethod(basic_detail,"retriev employee datal");
+        db.setTempAdmin("getDepartment");
+        db.dtcConnectmethod(basic_detail,"adminSetDt");
+        String [] n=db.getAsetData();
+        for (int i=0;i<n.length;i++){
+            System.out.println(n[i]);
+        }
+
         System.out.print("operation successful");
         // write code for taking inputs here
 

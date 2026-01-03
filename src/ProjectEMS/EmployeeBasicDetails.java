@@ -1,6 +1,6 @@
-// write a method that lets the employee enter his bank accoutn if he gets accepted.
+package ProjectEMS;// write a method that lets the employee enter his bank accoutn if he gets accepted.
 // this class has the potential to be an abstract class
-import java.util.Scanner;
+
 public class EmployeeBasicDetails {
     private String table_name;//investigata whether this variable should be written here
     private int id;
@@ -23,7 +23,7 @@ public class EmployeeBasicDetails {
     private String skills;
     private int postal_code;
     private String department;
-    private char gender;
+    private String gender;
     private String qualification;
     private double salary;
     private int bank_account;
@@ -31,6 +31,9 @@ public class EmployeeBasicDetails {
     private String password;
     private int MaximumAge;
     private int MinimumAge;
+    private String country;
+    private String city;
+    private String kebele;
 
 
     String name=first_name+middle_name+last_name;
@@ -46,11 +49,14 @@ public EmployeeBasicDetails(String password, String email_address){
 }
 
 public EmployeeBasicDetails( String first_name, String middle_name, String last_name, int birth_day, int birth_month, int birth_year,
-                          String phone_number, String marital_status, String address, String employee_type, String skills, int postal_code,
-                             char gender, String qualification, String email_address,String password){// this is called during registration
+                          String phone_number, String marital_status, String Country,String City,String Kebele, String employee_type, String skills, int postal_code,
+                             String gender, String qualification, String email_address,String password){// this is called during registration
 //this.id;
 this.first_name=first_name;
 this.middle_name=middle_name;
+this.country=Country;
+this.city=City;
+this.kebele=Kebele;
 this.last_name=last_name;
 this.birth_day=birth_day;
 this.birth_month=birth_month;
@@ -67,12 +73,18 @@ this.qualification=qualification;
 this.password=password;
 this.email_address=email_address;
 }
+    public EmployeeBasicDetails(int salary,  String employee_type, String department, int id, String skills) {
+        this.employee_type=employee_type;
+        this.department=department;
+        this.id=id;
+        this.skills=skills;
+
+    }
 public EmployeeBasicDetails(int start_date,int start_month, int start_year, double salary){
     // this is called only if the employee has successfully been accepted
     this.start_date=start_date;
     this.start_month=start_month;
     this.start_year=start_year;
-
     this.salary=salary;
 }
 public EmployeeBasicDetails(int MaximumAge, int MinimumAge){
@@ -129,6 +141,13 @@ this.MinimumAge=MinimumAge;}
         public void setPassword(String password){
     this.password=password;
         }
+        public int getEnd_date(){return end_date;}
+    public int getEnd_month(){
+    return end_month;
+    }
+    public int getEnd_year(){
+    return end_year;
+    }
 
 
     public String getPassword() {
@@ -183,7 +202,7 @@ this.MinimumAge=MinimumAge;}
         this.end_year = end_year;
     }
 
-    public void setGender(char gender) {
+    public void setGender(String gender) {
         this.gender = gender;
     }
 
@@ -263,8 +282,16 @@ this.MinimumAge=MinimumAge;}
     public String getDepartment(){
     return department;
     }
-    public char getGender(){
+    public String getGender(){
     return gender;
+    }
+    public String getCountry(){
+    return country;
+    }
+    public String getCity(){
+    return city;}
+    public String getKebele(){
+    return kebele;
     }
     public String getQualification(){
     return qualification;
@@ -272,19 +299,23 @@ this.MinimumAge=MinimumAge;}
     public double getSalary(){
     return salary;
     }
-    public EmployeeBasicDetails(int salary,  String employee_type, String department, int id, String skills) {
-this.employee_type=employee_type;
-this.department=department;
-this.id=id;
-this.skills=skills;
-
+    public EmployeeBasicDetails(int start_date,int start_month, int start_year, int end_date, int end_month,int end_year, double salary,String department){
+    this.start_date=start_date;
+    this.start_month= start_month;
+    this.start_year=start_year;
+    this.end_date= end_date;
+    this.end_month= end_month;
+    this.end_year= end_year;
+    this.salary=salary;
+    this.department=department;
     }
+
     public void display() {
         System.out.println("ID: " + id + " | Name: " + name + " | Department: " + department + " | Salary: " + salary);
     }
     //public static void main(String [] args){
     //Scanner scanner=new Scanner(System.in);
-   // EmployeeBasicDetails registration=new EmployeeBasicDetails();
+   // ProjectEMS.EmployeeBasicDetails registration=new ProjectEMS.EmployeeBasicDetails();
        // System.out.print("Enter your first name: ");
 //registration.first_name=scanner.nextLine();
         //System.out.print("Enter your middle name: ");
