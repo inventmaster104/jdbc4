@@ -301,8 +301,7 @@ this.MinimumAge=MinimumAge;}
     }
     public EmployeeBasicDetails(int start_date,int start_month, int start_year, int end_date, int end_month,int end_year, double salary,String department){
     this.start_date=start_date;
-    this.start_month= start_month;
-    this.start_year=start_year;
+    this.start_month= start_month;            this.start_year=start_year;
     this.end_date= end_date;
     this.end_month= end_month;
     this.end_year= end_year;
@@ -312,6 +311,9 @@ this.MinimumAge=MinimumAge;}
 
     public void display() {
         System.out.println("ID: " + id + " | Name: " + name + " | Department: " + department + " | Salary: " + salary);
+    }
+
+    public void dtcC() {
     }
     //public static void main(String [] args){
     //Scanner scanner=new Scanner(System.in);

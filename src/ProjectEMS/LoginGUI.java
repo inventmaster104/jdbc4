@@ -1,28 +1,42 @@
 package ProjectEMS;
 
+import jdk.jfr.Percentage;
+
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import java.sql.Date;
 
 //
 // go to line around 1080 and connect the data gathered with database
 public class LoginGUI extends JFrame implements DatabasemethodsInterface, EmployeeMInterface {
-private String[] taskArray;
-    private String[] titls;
+    JButton jobTitles;
+    private ArrayList<String> titl=new ArrayList<>();
+    private ArrayList<String > iD=new ArrayList<>();
+    private JPanel rP;
+    private JPanel show;
+    private CardLayout rC;
+    private JPanel rcP;
+    private String[] description=new String[0];
+    private String[] date=new String[0];
+private String[] taskArray=new String[0];
+    private String[] titls=new String[0];
     private JPanel Set;
     private String[] settitles=new String[0];
-    private JRadioButton addManager;
-    private JRadioButton deleteManager;
-    private JRadioButton setVacancy;// to add existing job titles
-    private JRadioButton deleteVacancy;
-    private JRadioButton addNewVacancy;
+    private JButton addManager;
+    private JButton deleteManager;
+   private JButton Vacancy;
+
+    private JButton addNewVacancy;
 private String ms="";
     private String g="";
     private String [] titles=new String[0];
@@ -40,6 +54,7 @@ private String ms="";
     private JMenuItem Back;
     private JPanel cardPanel;
     private JPanel mPanel;
+    private JPanel m2;
     private CardLayout cardLayout;
     private CardLayout empshow;
     private CardLayout mcardLayout;
@@ -53,11 +68,11 @@ private String[] inemail=new String[0];
     private JTextField colLen;
     private JTextField colDataType;
     private JComboBox tables;
-    private JRadioButton setRegistration;
+    private JButton setRegistration;
     private JTextField newCol;
    private JLabel sTChoose;
     private JPanel Employee;
-    private JPanel File;
+   // private JPanel File;
     private JMenuItem logout;
     private JButton back;
 private JTable employeeTable;
@@ -65,16 +80,16 @@ private JTable employeeTable;
     private JMenu Registration;
     private JMenu sendEmail;
     private JMenuBar adminMenuBar;
-    private JRadioButton addColumn;
-    private JRadioButton addTable;
-    private JRadioButton viewEmployees;
+
+
+    private JButton viewEmployees;
     // employee menu variables
-    private JRadioButton addemployee;
-    private JRadioButton updateEmployee;
-    private JRadioButton deleteEmployee;
-    private JRadioButton deleteColumn;
-    private JRadioButton save;
-    private JRadioButton AcceptEmployee;
+    private JButton addemployee;
+    private JButton updateEmployee;
+    private JButton deleteEmployee;
+   // private JRadioButton deleteColumn;
+   // private JRadioButton save;
+    private JButton AcceptEmployee;
     // applicant menu variables
     private JRadioButton viewApplicants;
     private JButton register;
@@ -190,6 +205,7 @@ cardPanel.add(firstPanel,"firstPanel");
 //while(!(value.length()==0))
 
 firstPanel.setLayout(null);
+
 firstPanel.setBackground(new Color(153,255,51));
 firstPanel.setBorder(new TitledBorder("Log in"));
 //cardPanel.add(firstPanel,BorderLayout.CENTER);
@@ -223,64 +239,12 @@ password.addActionListener(new SecondAction());
 submit.addActionListener(new SecondAction());
 firstPanel.setVisible(true);
 
-
-//constrainb.fill=GridBagConstraints.HORIZONTAL;
-//constrainb.weightx=1.0;
-//constrainb.gridx=1;
-//constrainb.gridy=0;
-
-//email=new JTextField();//email in
-
-
-//constrainb.gridx=0;
-///constrainb.gridy=1;
-//constrainb.anchor=GridBagConstraints.EAST;//put the label to the left
-/*constrainb.weightx=0;
-constrainb.weighty=0;
-constrainb.fill=GridBagConstraints.NONE;// extend horizontally
-
-constrainb.gridx=1;//set the column and rows
-constrainb.gridy=1;
-constrainb.weightx=1.0;// identify whether the label or textfield will expand to its maximum possible
-constrainb.fill=GridBagConstraints.HORIZONTAL;*/
-
-//firstPanel.add(email);
-
-
-
-//ProjectEMS.Employee_Login Login=new ProjectEMS.Employee_Login();
-/*Login.login(email.getText().toString(),password.getText().toString());
-if (value.equals("invalid email address! Enter a valid email address: ")){
-    error=new JLabel(value);
-   /* constrainb.gridy=3;
-    constrainb.fill=GridBagConstraints.HORIZONTAL;
-    constrainb.weighty=0.0;
-    constrainb.weightx=1.0;
-    firstPanel.add(error);
-}*/
-
-// to call the employee login class
-
-//loginPanel.hide();
-               /* email=new JTextField(7);
-                email.setText("hello");
-                container.add(loginPanel);
-                loginPanel.setLayout(new GridLayout(1,1,0,0));
-                loginPanel.add(email);*/
-               /* email=new JTextField("Email");
-
-                password=new JTextField("password");
-                 loginPanel=new JPanel();
-                 loginPanel.setLayout(new GridLayout(2,1,0,0));
-                container.add(loginPanel);
-                loginPanel.add(email);
-                loginPanel.add(password);
-                container.add(email);*/
             }
         }
 
     }
 public void managerInterface(){
+        Manager man=new Manager();
         managerInterface=new JPanel();
     mcardLayout=new CardLayout();
         managerInterface.setLayout(new BorderLayout());
@@ -295,11 +259,12 @@ public void managerInterface(){
 
     mPanel=new JPanel(mcardLayout);
     JPanel m1=new JPanel();// for the buttons
-    JPanel m2=new JPanel();// for showing tables and notices
+    JPanel mhome=new JPanel();// for showing tables and notices
+
     JPanel m3=new JPanel();//for saying hello to the manager
     JPanel m4=new JPanel(); // to contain both m1 and m2
-    mPanel.add(m2,"m2");
-    mcardLayout.show(mPanel,"m2");
+    mPanel.add(mhome,"home");
+
     JTextArea tm=new JTextArea();
     tm.setText("Today's News");
     tm.setFont(new Font("Times New Roman",Font.BOLD,20));
@@ -309,6 +274,7 @@ public void managerInterface(){
     managerBar.add(logout);
     logout.setBackground(Color.red);
     //panel components
+    mhome.setLayout(new BorderLayout());
     m1.setLayout(new FlowLayout());
     m1.setBackground(new Color(23,233,80));
     m1.add(home);
@@ -317,10 +283,9 @@ public void managerInterface(){
     m1.add(viewOverallPerformance);
     m4.setLayout(new BorderLayout());
     m4.add(m1,BorderLayout.NORTH);
-    m4.add(m2,BorderLayout.CENTER);
-   mcardLayout=new CardLayout();
-    m2=new JPanel(mcardLayout);
-    m2.setBackground(Color.gray);
+    m4.add(mPanel,BorderLayout.CENTER);
+
+    mcardLayout.show(mPanel,"home");
     managerInterface.add(m4,BorderLayout.CENTER);
     managerInterface.add(m3,BorderLayout.EAST);
 // actionlisteners
@@ -329,12 +294,20 @@ public void managerInterface(){
        cardLayout.show(cardPanel,"firstPanel");
    });
    roles.addActionListener((es)->{
+       JPanel m5=new JPanel();
+
        conn.setTemp_in("View id, name and email");
-       conn.dtcConnectmethod(bd,"retrieve employee data");
-       String[] cols=conn.getEcolumnNames();
+       conn.dtcConnectmethod(bd,"retriev employee datal");
+       String[] cols= {"Id","Name","Email"};
        String[] emails=conn.getEmployeeEml();
+       System.out.println(emails[0]);
+
+
         empName=conn.getViewEmployeeName();
+
+       System.out.println(empName[0]);
         String[] ids=conn.getIds();
+       System.out.println(ids[0]);
         Object[][] edata=new Object[empName.length][3];
         for (int i=0;i<empName.length;i++){
             edata[i][0]=ids[i];
@@ -343,15 +316,32 @@ public void managerInterface(){
         }
         JTable showt=new JTable(edata,cols);
         JScrollPane p1=new JScrollPane(showt);
-        p1.getViewport();
-        p1.setBackground(Color.orange);
+
+
+
+        m5.setLayout(new BorderLayout());
+        m5.add(p1,BorderLayout.CENTER);
+       p1.getViewport();
+       showt.setBackground(Color.black);
+       showt.setForeground(Color.white);
+       mPanel.add(m5,"m5");
+       mcardLayout.show(mPanel,"m5");
+       Back=new JMenuItem("Back");
+       managerBar.add(Back);
+       Back.setBackground(Color.magenta);
+       Back.addActionListener((e6)->{
+           managerBar.remove(Back);
+           mcardLayout.show(mPanel,"mhome");
+       });
        ListSelectionModel model=showt.getSelectionModel();
        model.addListSelectionListener(new ListSelectionListener() {
            @Override
            public void valueChanged(ListSelectionEvent e) {
                if(!model.isSelectionEmpty()){
-                   conn.setId(String.valueOf(model.getMinSelectionIndex()));
+                  // man.setId(String.valueOf(ids[model.getMinSelectionIndex()]));
+                   System.out.println("the id is gui is"+String.valueOf(ids[model.getMinSelectionIndex()]));
                   taskArray=new String[0];
+                  titles=new String[0];
                    JPanel tsk=new JPanel();
                    JPanel po=new JPanel();// contain the label and the text field
                    JPanel bcont=new JPanel();// contain the buttons
@@ -371,46 +361,50 @@ public void managerInterface(){
                    JTextField f3=new JTextField();// description
                    // menu bars
                    Back=new JMenuItem("Back");
+                   managerBar.add(Back);
+
                    // structure
                    tsk.setLayout(new BorderLayout());
-                   tsk.add(po,BorderLayout.WEST);
-                   po.setLayout(new GridLayout(3,2,10,10));
+                   tsk.add(po,BorderLayout.CENTER);
+                   po.setLayout(new GridLayout(3,2,5,20));
                    po.add(l1);po.add(f1);
                    po.add(l2);po.add(f2);
                    po.add(l3);po.add(f3);
-                   bcont.setLayout(new GridLayout(1,2,20,20));
+                   bcont.setLayout(new GridLayout(1,2,5,20));
                    bcont.add(addtsk); bcont.add(setTask);
                    tsk.add(bcont,BorderLayout.SOUTH);
+                   //home
+                   JTextArea t1=new JTextArea();
+                   String name=conn.getloginName();
+                   t1.setText("Welcome Back   "+name+"\n");
+                   t1.append("Notice: ");
+                   t1.setFont(new Font("Times New Roman",Font.BOLD,20));
+                   JScrollPane p0=new JScrollPane(t1);
+                   mhome.add(p0);
                    // colors
                    addtsk.setBackground(Color.cyan);
                    setTask.setBackground(new Color(150,200,250));
                    // actionlisteners
+                   Back.addActionListener((e5)->{
+                       managerBar.remove(Back);
+                       mcardLayout.show(mPanel,"m5");
+                   });
                    addtsk.addActionListener((et)->{
-                       if((f1.getText().toString())!=null && (f1.getText().toString()).length()!=0){
-                           String temp[]=new String[taskArray.length+1];
-                           for(int i=0;i<taskArray.length;i++){
-                               temp[i]=taskArray[i];
-                           }
-                           temp[taskArray.length]=f1.getText().toString();
-                           taskArray=temp;
-                           f1.setText("");
+                      man.setTaskinfo(f1.getText().toString(),f3.getText().toString(),f2.getText().toString());
 
-                       }
-                       else{
-                           JOptionPane.showMessageDialog(null,"Invalid");
-                       }
-
-
+//JOptionPane.showMessageDialog(null,man.result);
+                       f1.setText("");
+                       f2.setText("");
+                       f3.setText("");
                    });
                    setTask.addActionListener((e2)->{
-for (int i=0;i<taskArray.length;i++){
-    conn.setTask(taskArray[i]);
-    conn.dtcConnectmethod(bd,"add task");
-}
+
+    man.setTaskinfo(f1.getText().toString(),f3.getText().toString(),f2.getText().toString());
+    date=man.date;taskArray=man.title;description=man.des;
+  Manager man0=new Manager(taskArray,description,date,String.valueOf(ids[model.getMinSelectionIndex()]));
+ JOptionPane.showMessageDialog(null,man0.result);
+f1.setText("");f2.setText("");f3.setText("");
                    });
-
-
-
 
                }
            }
@@ -428,22 +422,19 @@ for (int i=0;i<taskArray.length;i++){
         //firstPanel.setVisible(false);
         employeeInterface=new JPanel();
         empshow=new CardLayout();
-        JPanel ePanel1=new JPanel();
-        JPanel ePanel2=new JPanel();
+        JPanel ePanel1=new JPanel();                  JPanel ePanel2=new JPanel();
         JPanel ePanel3=new JPanel(empshow);
-        JPanel noticeBoard=new JPanel();
-JPanel ePanel4=new JPanel();
-        JPanel ePanel5=new JPanel();
+        JPanel ePanel4=new JPanel();                  JPanel ePanel5=new JPanel();
 
         JLabel welcome=new JLabel("Welcome to Your Portal "+conn.getloginName());
         logout=new JMenuItem("Signout");
-        JButton home=new JButton("Home");
-        JButton attendance=new JButton("Attendance");
-        JButton vacation=new JButton("Vacation");
-        JButton resign=new JButton("Resign");
-        JButton task=new JButton("Tasks");
-        JButton personaFile= new JButton("Personal File");
-        JButton Performance=new JButton("Performance Score");
+        JButton home=new JButton("Home"); home.setBackground(Color.cyan);
+        JButton attendance=new JButton("Attendance");attendance.setBackground(Color.cyan);
+        JButton vacation=new JButton("Vacation");vacation.setBackground(Color.cyan);
+        JButton resign=new JButton("Resign");resign.setBackground(Color.cyan);
+        JButton task=new JButton("Tasks");task.setBackground(Color.cyan);
+        JButton personaFile= new JButton("Personal File");personaFile.setBackground(Color.cyan);
+        JButton Performance=new JButton("Performance Score");Performance.setBackground(Color.cyan);
         JTextArea notice=new JTextArea();
         notice.setFont(new Font("Times New Roman",Font.BOLD,18));
         notice.setText("Notice Board");
@@ -454,48 +445,73 @@ JPanel ePanel4=new JPanel();
         employeeAdminBar=new JMenuBar();
        // employeeAdminBar.add(back);
         cardLayout.show(cardPanel,"employeeInterface");
-        loggedin=new JLabel("hello Frans");
-        employeeInterface.setBackground(Color.YELLOW);
+
         ePanel2.setLayout(new BorderLayout());
         setJMenuBar(employeeAdminBar);
      employeeInterface.setLayout(new GridLayout());
-ePanel4.add(welcome);
+     ePanel4.setLayout(new GridLayout(7,1,0,10));
+//ePanel4.add(welcome);
      ePanel1.setBackground(Color.red);
 ePanel1.setLayout(new FlowLayout());
-     ePanel1.add(home);
-     ePanel1.add(attendance);
-     ePanel1.add(vacation);
-     ePanel1.add(resign);
-     ePanel1.add(task);
-     ePanel1.add(personaFile);
-     ePanel1.add(Performance);
-     ePanel3.add(notice,"notice");
+     ePanel4.add(home);              ePanel4.add(attendance);
+     ePanel4.add(vacation);          ePanel4.add(resign);
+     ePanel4.add(task);              ePanel4.add(personaFile);
+     ePanel4.add(Performance);        ePanel3.add(notice,"notice");
+
      empshow.show(ePanel3,"notice");
      JScrollPane p1=new JScrollPane(ePanel3);
      // panel colors
         ePanel1.setBackground(new Color(39,108,245));
         ePanel3.setBackground(new Color(10,200,80));
 
-
-ePanel5.setLayout(new BorderLayout());
-ePanel5.add(ePanel1,BorderLayout.NORTH);
-ePanel5.add(p1,BorderLayout.CENTER);
-ePanel2.add(ePanel5,BorderLayout.CENTER);
-ePanel2.add(ePanel4, BorderLayout.EAST);
-ePanel4.setBackground(Color.orange);
+ePanel5.setLayout(new BorderLayout());               ePanel5.add(ePanel1,BorderLayout.NORTH);
+ePanel5.add(p1,BorderLayout.CENTER);                 ePanel2.add(ePanel5,BorderLayout.CENTER);
+ePanel2.add(ePanel4, BorderLayout.WEST);             ePanel4.setBackground(Color.MAGENTA);
 //ePanel4.setBounds(300,400,300,400);
 
-     //employeeInterface.add(ePanel1);
      employeeInterface.add(ePanel2);
-      //  employeeInterface.setLocation(300,300);
-        employeeInterface.revalidate();
-        employeeInterface.repaint();
-        employeeInterface.setVisible(true);
+     employeeInterface.revalidate();
+     employeeInterface.repaint();
+     employeeInterface.setVisible(true);
 
         // button actionlisteners
-        attendance.addActionListener((e1)->{
+home.addActionListener((eh)->{
+    JTextArea tA=new JTextArea();
+    conn.dtcConnectmethod(bd,"getNotice");
+    tA.setText(conn.getNotice());
+
+});
+        Performance.addActionListener((ep)->{
+            conn.dtcConnectmethod(bd,"getTasks");
+            conn.dtcConnectmethod(bd,"calculate time");
+            JPanel performannce=new JPanel();
+            performannce.setLayout(new GridLayout(3,1,0,20));
+
+            int daysPresent=conn.getdaysPresent();             int taskC=conn.getTaskComplete();
+            JProgressBar prog=new JProgressBar(0,30);          prog.setValue(daysPresent);
+            prog.setStringPainted(true);                       prog.setForeground(Color.GREEN);
+            performannce.add(new JLabel("Attendance"));   performannce.add(prog);
+            int totalTasks=conn.getTaskInfo().length/conn.getTaskCol().length;
+            prog=new JProgressBar(0,totalTasks);               prog.setValue(taskC);
+            prog.setStringPainted(true);                       prog.setForeground(Color.CYAN);
+            performannce.add(new JLabel("Task Progress: "));performannce.add(prog);
+            String timeNow=String.valueOf(LocalDateTime.now());
+            int dateNow=Integer.parseInt(timeNow.substring(8,10));
+            System.out.println(dateNow);
+            double overallP= (((double) taskC)/totalTasks)+(((double)daysPresent)/dateNow);
+          prog=new JProgressBar(0,100);                       prog.setValue((int)(overallP*50));
+          prog.setStringPainted(true);                        prog.setForeground(Color.magenta);
+          performannce.add(new JLabel("Overall Performance"));performannce.add(prog);
+            ePanel3.add(performannce,"performance");
+            empshow.show(ePanel3,"performance");
+
 
         });
+
+
+
+
+
         home.addActionListener((e)->{
            String name=conn.getloginName();
             notice.setText("Welcome Back   "+name+"\n");
@@ -528,7 +544,37 @@ attendance.addActionListener((e1)->{
     conn.dtcConnectmethod(bd,"calculate time");});
 
 });
+task.addActionListener((e4)->{
+    JPanel taskPanel=new JPanel();
+    ePanel3.add(taskPanel,"taskPanel");
+    conn.dtcConnectmethod(bd,"getTasks");
+String[] taskInfo=conn.getTaskInfo();
+String[] taskCol=conn.getTaskCol();
+    System.out.println("columns: "+taskCol.length);
+    System.out.println("tasks: "+taskInfo.length);
+Object[][] taskd=new Object[taskInfo.length/taskCol.length][taskCol.length];
+int count=0;
+for (int i=0;i<taskInfo.length/taskCol.length;i++){
+    for (int j=0;j<taskCol.length;j++){
+        taskd[i][j]=taskInfo[count];
+        count++;
+    }
+}
+JTable table1=new JTable(taskd,taskCol);
+JScrollPane ptable=new JScrollPane(table1);
+ptable.getViewport();
+taskPanel.setLayout(new BorderLayout());
+Back=new JMenuItem("Back");
+employeeAdminBar.add(Back);
+Back.addActionListener((e5)->{
+   employeeAdminBar.remove(Back);
+   empshow.show(ePanel3,"notice");
+});
+taskPanel.add(ptable,BorderLayout.CENTER);
+empshow.show(ePanel3,"taskPanel");
 
+
+});
 
 
 
@@ -536,37 +582,92 @@ attendance.addActionListener((e1)->{
     }
 
     public void AdminInterface(){
-     // firstPanel.setVisible(false);
-
-        //container.removeAll();
+       // JButton Notice=new JButton("Notice settings");
         adminInterface=new JPanel();
         cardPanel.add(adminInterface,"adminInterface");
         cardLayout.show(cardPanel,"adminInterface");
-adminInterface.setLayout(new GridLayout(1,3,6,6));
-back=new JButton("Back");
-//file1=new JPanel();
-//file1.setLayout(new GridLayout(2,1,5,5));
-        File=new JPanel();
-        Set=new JPanel();
-        Set.setBackground(Color.cyan);
-        setRegistration=new JRadioButton("set Max Applications");
-        //setRegistration.setLayout(new GridLayout(2,2));
+adminInterface.setLayout(new BorderLayout());
+        show=new JPanel();                         JPanel buttonP=new JPanel();
+       JButton registration=new JButton("Registration Settings");    JButton home=new JButton("Home");
+       JButton salary=new JButton("Salary");        JButton employee=new JButton("Employee");
+       JButton notice=new JButton("Notice");
+     // layout
+        buttonP.setLayout(new GridLayout(5,1,5,5));
+        buttonP.setBackground(new Color(30,30,40));  buttonP.setForeground(Color.white);
+        //add buttons
+        buttonP.add(home);                   buttonP.add(registration);
+        buttonP.add(employee);               buttonP.add(salary);           buttonP.add(notice);
+        // actionListeners
+        home.addActionListener((e1)->{
+            show.removeAll();
+            conn.setTemp_in("View id, name and email");
+            JTextArea noticeT=new JTextArea();
+            show.setLayout(new GridLayout(1,3,5,5));
+            conn.dtcConnectmethod(bd,"retriev employee datal");
+            conn.dtcConnectmethod(bd,"getDepartment");
+            String[] dept=conn.getAtitles();        int totDep=dept.length;
+            String[] email= conn.getEmployeeEml();    int totEmp=email.length;
+            System.out.println(email[0]);
+            JProgressBar totS=new JProgressBar();
+            totS.setString("Employees: "+totEmp);          totS.setStringPainted(true);
+                     totS.setValue(totEmp);      totS.setForeground(Color.black);
+            show.add(totS);
+// department show
+             totS=new JProgressBar();   totS.setString("Departments"+totDep);
+                       totS.setValue(totDep);      totS.setStringPainted(true);
+             show.add(totS);
+show.revalidate();
+show.repaint();
+        });
+registration.addActionListener((e3)->{
+    show.removeAll();
+    JPanel regSetting=new JPanel();
+ rP=new JPanel();
+    setRegistration=new JButton("set Max Applications");
+    Vacancy=new JButton("Add/remove vacancy job titles");
+    jobTitles=new JButton("Job Titles");
+    addNewVacancy=new JButton("Add new job titles");
+    show.setLayout(new BorderLayout());
+
+    setRegistration.setMaximumSize(new Dimension(Integer.MAX_VALUE,80));
+    Vacancy.setMaximumSize(new Dimension(Integer.MAX_VALUE,80));
+    addNewVacancy.setMaximumSize(new Dimension(Integer.MAX_VALUE,80));
+    jobTitles.setMaximumSize(new Dimension(Integer.MAX_VALUE,80));
+    JLabel regS=new JLabel("Registration Settings");
+    regS.setFont(new Font("Arial",Font.ITALIC,50));
+    regSetting.add(regS);
+    rP.setLayout(new BoxLayout(rP,BoxLayout.Y_AXIS));
+    rP.add(setRegistration);
+    rP.add(Vacancy);
+    rP.add(addNewVacancy);
+    rP.add(jobTitles);
+    Vacancy.addActionListener(new EmployeeeManipulate());
+    setRegistration.addActionListener(new EmployeeeManipulate());
+    addNewVacancy.addActionListener(new EmployeeeManipulate());
+    jobTitles.addActionListener(new EmployeeeManipulate());
+    show.add(rP,BorderLayout.WEST);
+    rP.setBackground(new Color(40,50,60));
+    show.add(regSetting,BorderLayout.SOUTH);
+show.repaint();
+show.revalidate();
+
+});
+
+
+
+
         Registration=new JMenu("Registration");
         reg=new JMenuItem("Open");
         close=new JMenuItem("close");
-       File.setBorder(new TitledBorder("Registration settings "));
+      // registration.setBorder(new TitledBorder("Registration settings "));
        //File.setBorder(new TitledBorder(""))
-        File.setBackground(new Color(255,153,153));
+        //File.setBackground(new Color(255,153,153));
         Employee=new JPanel();
         Employee.setBackground(new Color(255,153,153));
         Employee.setBorder(new TitledBorder("Employee"));
-       // Registration=new JPanel();
-        Registration.setBackground(new Color(255,153,153));
-       // Registration.setBorder(new TitledBorder("Registration"));
         adminMenuBar=new JMenuBar();
 
-        adminInterface.add(File);
-        File.add(setRegistration);
+      //  File.add(setRegistration);
 
 
         // setRegistration components
@@ -577,44 +678,34 @@ back=new JButton("Back");
 
 
 
-        adminInterface.add(Employee);
-        adminInterface.add(Set);
-       // adminInterface.add(Registration);
-        File.setLayout(new BoxLayout(File,BoxLayout.Y_AXIS));
-       // Registration.setLayout(new BoxLayout(Registration,BoxLayout.Y_AXIS));
+        adminInterface.add(buttonP,BorderLayout.WEST);
+        adminInterface.add(show,BorderLayout.CENTER);
+
         Employee.setLayout(new BoxLayout(Employee,BoxLayout.Y_AXIS));
         loggedin=new JLabel();
         setJMenuBar(adminMenuBar);
-        //adminInterface.setBackground(Color.GREEN);
-       // adminInterface.setLayout(new BorderLayout());
+
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-       // adminInterface.add(adminMenuBar);
+
 
 
 
         sendEmail=new JMenu("send Emails");
 
-        addemployee=new JRadioButton("Add Employee");
-        updateEmployee=new JRadioButton("Update Employee Data");
-        deleteEmployee=new JRadioButton("Delete Employees");
-        AcceptEmployee=new JRadioButton("Accept Employee");
-        save=new JRadioButton("Save");
-        addNewVacancy=new JRadioButton("Add new job titles");
-        deleteVacancy=new JRadioButton("Delete selected Job positions");
-        setVacancy=new JRadioButton("Add selected job positions");
-        viewEmployees=new JRadioButton("View Employees");
-        addManager=new JRadioButton("Add a Manager");
-        deleteManager=new JRadioButton("delete Manager");
+        addemployee=new JButton("Add Employee");
+        updateEmployee=new JButton("Update Employee Data");
+        deleteEmployee=new JButton("Delete Employees");
+        AcceptEmployee=new JButton("Accept Employee");
+       // save=new JButton("Save");
+
+
+        viewEmployees=new JButton("View Employees");
+        addManager=new JButton("Add a Manager");
+        deleteManager=new JButton("delete Manager");
         logout=new JMenuItem("Sign Out");
 
 
-        //adminInterface.add(Employee);
-        //adminInterface.add(Registration);
-       // adminInterface.add(File);
-       // adminMenuBar.add(File);
-      //  adminMenuBar.add(sendEmail);
-      //  adminMenuBar.add(Employee);
         adminMenuBar.add(logout);
         Registration.add(reg);
         Registration.add(close);
@@ -625,12 +716,7 @@ back=new JButton("Back");
         Employee.add(viewEmployees);
         Employee.add(addManager);
         Employee.add(deleteManager);
-        File.add(save);
-        //File.add(setRegistration);
-      //  File.add(viewEmployees);
-        File.add(setVacancy);
-        File.add(deleteVacancy);
-        File.add(addNewVacancy);
+
         reg.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -651,13 +737,13 @@ back=new JButton("Back");
               }
           }
       });
-setRegistration.addActionListener(new EmployeeeManipulate());
+
+
         logout.addActionListener(new EmployeeeManipulate());
         viewEmployees.addActionListener(new EmployeeeManipulate());
-        addNewVacancy.addActionListener(new EmployeeeManipulate());
-        deleteVacancy.addActionListener(new EmployeeeManipulate());
-        setVacancy.addActionListener(new EmployeeeManipulate());
-        save.addActionListener(new EmployeeeManipulate());
+
+
+
         updateEmployee.addActionListener(new EmployeeeManipulate());
         deleteEmployee.addActionListener(new EmployeeeManipulate());
         addemployee.addActionListener(new EmployeeeManipulate());
@@ -673,7 +759,7 @@ setRegistration.addActionListener(new EmployeeeManipulate());
     class EmployeeeManipulate implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent em){
-if (em.getSource()==addColumn){
+/*if (em.getSource()==addColumn){
     File.removeAll();
     File.setLayout(new BorderLayout());
     sTChoose=new JLabel("Choose Table");
@@ -696,32 +782,35 @@ File.revalidate();
 File.repaint();
 
 
-}
-else if(em.getSource()==setRegistration){
-   // Set=new JPanel();
-    Set.removeAll();
+}*/
+ if(em.getSource()==setRegistration){
+     BorderLayout layout=(BorderLayout) show.getLayout();
+     Component comp1=layout.getLayoutComponent(BorderLayout.CENTER);
+     Component comp2=layout.getLayoutComponent(BorderLayout.SOUTH);
+     if(comp1!=null){
+         show.remove(comp1);
+         show.repaint();  show.revalidate();
+     }
+     if(comp2!=null){
+         show.remove(comp2);
+         show.repaint();  show.revalidate();
+     }
     JPanel p1=new JPanel();
     JPanel p2=new JPanel();
-
-    Set.setLayout(new GridLayout(2,1));
-    Set.add(p1);
-    Set.add(p2);
-    p1.setBackground(new Color(100,200,255));
-    p2.setBackground(new Color(255,128,0));
-    p1.setLayout(new GridLayout(1,2));
-    p2.setLayout(new BorderLayout());
-
-    JLabel set=new JLabel("set Amount");
-    JTextField retxt=new JTextField();
+    JPanel submitP=new JPanel();
+    rC=new CardLayout();
+rcP=new JPanel(rC);
+show.add(rcP,BorderLayout.CENTER);
+p2.setLayout(new GridLayout(2,1,20,20));
+    p1.setBackground(new Color(100,100,255));
+    p1.setLayout(new BoxLayout(p1,BoxLayout.X_AXIS));
+    submitP.setLayout(new FlowLayout(FlowLayout.CENTER,0,50));
+    JLabel set=new JLabel("set Amount");//flowlayout contents
+    JTextField retxt=new JTextField();// flowlaout contents p1
+     retxt.setMaximumSize(new Dimension(150,30));
     JButton summit=new JButton("Submit");
-
-    Set.setBorder(new TitledBorder("Registration"));
-    //Set.setBackground();
-
-    p1.add(set);
-   p1.add(retxt);
-    p2.add(summit,BorderLayout.SOUTH);
     summit.setBackground(Color.gray);
+    summit.setPreferredSize(new Dimension(150,30));
     summit.addActionListener((e)->{
         String no=retxt.getText().toString();
         boolean c=true;
@@ -736,69 +825,162 @@ else if(em.getSource()==setRegistration){
             JOptionPane.showMessageDialog(null,"Invalid");
         }
     });
-Set.revalidate();
-Set.repaint();
+submitP.add(summit);
+     p1.add(set);
+     p1.add(retxt);
+     p2.add(p1);
+     p2.add(submitP);
+     rcP.add(p2,"p2");
+     rC.show(rcP,"p2");
+     rP.revalidate();
+     rP.repaint();
 }
-else if (em.getSource()==setVacancy){
-    Set.removeAll();
-    //JPanel vac=new JPanel();
-   // cardPanel.add(vac,"vac");
-   // cardLayout.show(cardPanel,"vac");
-    Set.setLayout(new BorderLayout());
+ else if(em.getSource()==jobTitles){
+     titl=new ArrayList<>();
+     iD=new ArrayList<>();
+     BorderLayout layout=(BorderLayout) show.getLayout();
+     Component comp1= layout.getLayoutComponent(BorderLayout.CENTER);
+     Component comp2=layout.getLayoutComponent(BorderLayout.SOUTH);
+     if(comp1!=null){show.remove(comp1);}
+     if(comp2!=null){show.remove(comp2);}
+     conn.dtcConnectmethod(bd,"get all E titles");
+     JPanel tableP=new JPanel();
+     JPanel buttonP=new JPanel();
+     JButton delete=new JButton("Remove from list");
+     submit=new JButton("Add to Vacancy Jobs");
+     tableP.setLayout(new BorderLayout());
+     buttonP.setLayout(new FlowLayout(FlowLayout.CENTER,10,20));
+submit.setPreferredSize(new Dimension(170,50));
+delete.setPreferredSize(new Dimension(170,50));
+     buttonP.add(submit);buttonP.add(delete);
+submit.setBackground(Color.green);   delete.setBackground(Color.red);
+     String[] tit=conn.getEtitles();
+     String[] ids=conn.getIds();
+     String[] col={"Id","Titles"};
+     Object[][] data=new Object[tit.length][2];
+     for (int i=0;i<tit.length;i++){
+         data[i][0]=ids[i];
+         data[i][1]=tit[i];
+     }
+     JTable tabl=new JTable(data,col);
+     JScrollPane p0=new JScrollPane(tabl);
+tableP.add(p0,BorderLayout.CENTER);
+tableP.add(buttonP,BorderLayout.SOUTH);
+show.add(tableP,BorderLayout.CENTER);
+show.repaint(); show.revalidate();
+// actionlisteners
+     ListSelectionModel model=tabl.getSelectionModel();
+     model.addListSelectionListener((li)->{
+int ind=tabl.getSelectedRow();
+if (titl.size()==0){
+    titl.add(tit[ind]);
+    iD.add(ids[ind]);
+}
+for (int i=0;i<titl.size();i++){
+    if(!(titl.get(i).equals(tit[ind]))){
+        titl.add(tit[ind]);
+        iD.add(ids[ind]);}}
+     });
+     delete.addActionListener((de)->{
+         int input=JOptionPane.showConfirmDialog(null,"Are you sure you want to completely delete the selected job titles?", "Warning",JOptionPane.YES_NO_CANCEL_OPTION);
+         if (input==JOptionPane.YES_OPTION){
+             for (int i=0;i<iD.size();i++){
+                 conn.setId(iD.get(i));
+                 System.out.println(iD.get(i));
+                 conn.dtcConnectmethod(bd,"delete job title");
+             }
+         }
 
-    Set.setBackground(Color.ORANGE);
-
-    conn.dtcConnectmethod(bd,"get all E titles");
-    //titls=new String[0];
-    titls=conn.getAtitles();
-    String[] ta={"Names"};
-    Object[][] atitles=new Object[titls.length][1];
+         JOptionPane.showMessageDialog(null,conn.getResult());
+     });
+submit.addActionListener((as)->{
+    conn.dtcConnectmethod(bd,"getAdminTitles");
+    String[] chc=conn.getEtitles();
+    int count=0;
+    for (int i=0;i<titl.size();i++){
+        boolean chk=true;
+        for(int j=0;j<chc.length;j++){
+            if(chc[j].equals(titl.get(i))){
+                chk=false; break;
+            }
+        }
+        if(chk==true){    conn.setVacanyadd(titl.get(i));
+            conn.dtcConnectmethod(bd,"setAdminTitles");
+            JOptionPane.showMessageDialog(null,conn.getResult());
+            count++;
+            break;}
+        else{
+            JOptionPane.showMessageDialog(null,"some of the selected titles have already been added. Number of titles added: "+count);
+            break;}
+    }
+});
+ }
+else if (em.getSource()==Vacancy){
+     titl=new ArrayList<>();
+     iD=new ArrayList<>();
+    BorderLayout layout=(BorderLayout) show.getLayout();
+    Component comp1=layout.getLayoutComponent(BorderLayout.CENTER);
+    Component comp2=layout.getLayoutComponent(BorderLayout.SOUTH);
+    if (comp1!=null){show.remove(comp1); }
+    if(comp2!=null){show.remove(comp2);}
+     show.revalidate();show.repaint();
+   JPanel vacancySet=new JPanel();
+    JButton delete=new JButton("remove");
+     JPanel bP=new JPanel();
+    vacancySet.setLayout(new BorderLayout());
+  bP.setLayout(new FlowLayout(FlowLayout.CENTER,10,50));
+    conn.dtcConnectmethod(bd,"getAdminTitles");
+    titls=conn.getEtitles();
+    String[] ids=conn.getIds();
+    String[] ta={"Id","Names"};
+    Object[][] atitles=new Object[titls.length][2];
     for (int i=0;i<titls.length;i++){
-        atitles[i][0]=titls[i];
+        atitles[i][0]=ids[i];
+        atitles[i][1]=titls[i];
     }
     JTable titleTable=new JTable(atitles,ta);
     titleTable.getTableHeader().setBounds(0,0,400,30);
     JScrollPane titlePane=new JScrollPane(titleTable);
-    Set.add(titlePane,BorderLayout.CENTER);
-submit=new JButton("add the selected Titles");
-Set.add(submit,BorderLayout.SOUTH);
+    vacancySet.add(titlePane,BorderLayout.CENTER);
+//submit=new JButton("add the selected Titles");
+//bP.add(submit);
+bP.add(delete);
+delete.setPreferredSize(new Dimension(150,70));
+submit.setPreferredSize(new Dimension(150,70));
+//submit.setBackground(Color.green);
+delete.setBackground(Color.red);            delete.setForeground(Color.white);
+vacancySet.add(bP,BorderLayout.SOUTH);
+
+
 ListSelectionModel model=titleTable.getSelectionModel();
 model.addListSelectionListener(new ListSelectionListener() {
     @Override
     public void valueChanged(ListSelectionEvent e) {
         if(!model.isSelectionEmpty()){
-            JOptionPane.showMessageDialog(null,"You have selected "+titls[model.getMinSelectionIndex()]);
-          //  count+=1;
-            for (int i=0;i<titls.length+1;i++){
-                int ind=model.getMaxSelectionIndex();
-                String temptitle=titls[ind];
-                // int start=tempemail.indexOf("E");
-              //  String temp2=temptitle;
-                String[] tempo=new String[settitles.length+1];
-                for (int j=0;j<settitles.length;j++){
-                    if(settitles.length==0){
-                        break;
-                    }
-                    else{ tempo[j]=settitles[j];}
-                }
-                tempo[settitles.length]=temptitle;
-                settitles=tempo;
-             //   System.out.println(ititls[i]);
+            int ind=titleTable.getSelectedRow();
+            JOptionPane.showMessageDialog(null,"You have selected "+titls[ind]);
+            if (titl.size()==0){
+                titl.add(titls[ind]);
+                iD.add(ids[ind]);
             }
-        }
-    }
-});
-submit.addActionListener((ec)->{
-    for (int i=0;i<settitles.length;i++){
+            for (int i=0;i<titls.length+1;i++){
+if(!(titl.contains(titls[ind]))){
+                    iD.add(String.valueOf(ids[ind]));
+                    titl.add(titls[ind]);
+
+                }
+            }}}});
+/*submit.addActionListener((ec)->{
+    for (int i=0;i<titl.size();i++){
         conn.dtcConnectmethod(bd,"getAdminTitles");
         String[] chc=conn.getEtitles();
         boolean chk=true;
         for(int j=0;j<chc.length;j++){
-            if(chc[j].equals(settitles[i])){
+            if(chc[j].equals(titl.get(i))){
                 chk=false;
             }
         }
-        if(chk==true){    conn.setVacanyadd(settitles[i]);
+        if(chk==true){    conn.setVacanyadd(titl.get(i));
             conn.dtcConnectmethod(bd,"setAdminTitles");
         JOptionPane.showMessageDialog(null,conn.getResult());
         break;}
@@ -808,16 +990,69 @@ submit.addActionListener((ec)->{
         }
     }
 
+});*/
+delete.addActionListener((de)->{
+    int input=JOptionPane.showConfirmDialog(null,"Are you sure you want to completely delete the selected job titles?", "Warning",JOptionPane.YES_NO_CANCEL_OPTION);
+if (input==JOptionPane.YES_OPTION){
+    for (int i=0;i<iD.size();i++){
+        conn.setId(iD.get(i));
+        System.out.println(iD.get(i));
+    conn.dtcConnectmethod(bd,"delete vacancy");
+}
+}
+
+    JOptionPane.showMessageDialog(null,conn.getResult());
 });
-Set.repaint();
-Set.revalidate();
-}
-else if (em.getSource()==deleteColumn){
+show.add(vacancySet,BorderLayout.CENTER);
+vacancySet.repaint();
+vacancySet.revalidate();
 
 }
-else if (em.getSource()==save){
+else if(em.getSource()==addNewVacancy){
+    BorderLayout layout=(BorderLayout) show.getLayout();
+    Component comp1=layout.getLayoutComponent(BorderLayout.CENTER);
+    Component comp2=layout.getLayoutComponent(BorderLayout.SOUTH);
+    if(comp1!=null){
+        show.remove(comp1);
+        show.repaint();  show.revalidate();
+    }
+     if(comp2!=null){
+         show.remove(comp2);
+         show.repaint();  show.revalidate();
+     }
+    JTextField newV=new JTextField();              JLabel vacL=new JLabel("Name");
+JPanel fieldP=new JPanel();
+JPanel bPcont=new JPanel();                        JPanel bP=new JPanel();
+JPanel top=new JPanel();
+submit=new JButton("Add");
 
-}
+     // layouts
+     fieldP.setLayout(new FlowLayout());
+     fieldP.setBackground(new Color(100,100,255));
+     bPcont.setLayout(new GridLayout(3,1,10,10));
+     bP.setLayout(new FlowLayout(FlowLayout.CENTER,0,50));
+     fieldP.add(vacL); fieldP.add(newV);
+     submit.setBackground(Color.green);
+     newV.setPreferredSize(new Dimension(200,30));
+     submit.setPreferredSize(new Dimension(150,40));
+     bP.add(submit);bPcont.add(top);
+     bPcont.add(fieldP);bPcont.add(bP);
+     submit.addActionListener((es)->{
+         if ((newV.getText().toString())!=null) {
+             conn.dtcConnectmethod(bd,"get all E titles");
+             String newTitle=newV.getText().toString();
+             String [] alltitles=conn.getAtitles();
+            for (int i=0;i<alltitles.length;i++){
+                if(alltitles[i].equals(newTitle)){
+                    JOptionPane.showMessageDialog(null,"The job title already exists");
+                    break;}
+                else{conn.setTitle(newTitle);
+                    conn.dtcConnectmethod(bd,"add new title");
+                    JOptionPane.showMessageDialog(null,conn.getResult());
+                break;}}
+         }else{JOptionPane.showMessageDialog(null,"Invalid entry");}});
+     show.add(bPcont,BorderLayout.CENTER);            show.revalidate();show.repaint();}
+
 else if (em.getSource()==addManager){
 
 }
@@ -1415,9 +1650,7 @@ indeces[indeces.length-1]=indexholder;
     deleteInterface.add(dpane,BorderLayout.CENTER);
     deleteInterface.add(submit, BorderLayout.SOUTH);
     deleteInterface.setVisible(true);
-            } else if (em.getSource() == addTable) {
-
-            } else if (em.getSource() == viewEmployees) {
+            }  else if (em.getSource() == viewEmployees) {
 
             } else if (em.getSource() == logout) {
     adminMenuBar.removeAll();
@@ -1432,7 +1665,7 @@ indeces[indeces.length-1]=indexholder;
         @Override
         public void actionPerformed(ActionEvent e){
 
-if (e.getSource()==tables){
+/*if (e.getSource()==tables){
     JComboBox cb=(JComboBox) e.getSource();
     conn.setChooseTable((String) cb.getSelectedItem());
 
@@ -1477,7 +1710,7 @@ File.setVisible(true);
 
 
 
-}
+}*/
         }}
 
     private class SecondAction implements ActionListener{
@@ -1762,17 +1995,7 @@ String p=hash.encode(password.getText().toString());
          });
      });
 
-
-
-
-        // write the code for calling addemployee down below
-
-     //JTextField employeetype=new JTextField("")
-
     }
-   // public static void ErrorShow(){
-
- //   }
 public static void main(String [] args){
         new LoginGUI();
 }}
