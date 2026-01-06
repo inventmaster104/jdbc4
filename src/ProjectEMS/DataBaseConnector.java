@@ -11,6 +11,8 @@ import java.sql.DriverManager;
 import java.sql.Statement;
 import java.sql.*;
 public class DataBaseConnector implements DatabasemethodsInterface {
+    private String managerEmail;
+    private String adminEmail;
     private String setNotice;
     private String notice;
     private ArrayList<Integer> dayPresent=new ArrayList<Integer>();
@@ -764,7 +766,7 @@ for (int j=1;j<=metaData.getColumnCount();j++){
                     }
                 }
             }
-            else if(value.equals("retrieve work details")){
+           /* else if(value.equals("retrieve work details")){
                 ecolumnNames=new String[0];
                 ewordData=new String[0];
                 boolean check=true;
@@ -817,7 +819,7 @@ if (check==true){String coln=metaData.getColumnName(i);
 
                     }check=false;
                 }
-            }
+            }*/
             //the below else if is to retrieve data of registered employee, but it is not complete yet.
             else if (value.equals("retrieve applicant data")) {
                 Emails=new String[0];
@@ -867,6 +869,7 @@ if (check==true){String coln=metaData.getColumnName(i);
             else if (value.equals("delete job title")) {
                 String sql="update admin_set_data set AllTitles=null where Id="+id;
                 statement.executeUpdate(sql);
+                result="deleted successfully";
 
             } else if (value.equals("delete vacancy")){
                 String sql="update admin_set_data set Vacancies=null where Id="+id;
@@ -874,13 +877,31 @@ if (check==true){String coln=metaData.getColumnName(i);
                 result="deleted successfully";
 
             }
+            else if(value.equals("retrieve admin/manager contact")){
+                String sql="select * from employee_basic_details";
+                ResultSet resultSet=statement.executeQuery(sql);
+                final var metaData=resultSet.getMetaData();
+                while(resultSet.next()){
+                    for(int i=1;i<metaData.getColumnCount();i++){
+                        if(resultSet.getString("Employee_Type").equals("Admin")&& resultSet.getString("Email_Address")!=null){
+                            adminEmail=resultSet.getString("Email_Address");
+                        }
+                        if(resultSet.getString("Employee_Type").equals("Manager")&& resultSet.getString("Email_Address")!=null){
+
+                            managerEmail=resultSet.getString("Email_Address");
+                        }
+
+                    }
+                }
+            }
             else if (value.equals("retriev employee datal")) {
+                dtcConnectmethod(mp,"retrieve admin/manager contact");
                 employeeEml=new String[0];
                 ecolumnNames=new String[0];
                 ids=new String[0];
                 empdatas=new String[0];
                 viewEmployeeName=clearData();
-                String retrieve = "select * from employee_basic_details";
+                String retrieve = "select * from employee_basic_details where Email_address !='"+adminEmail+"'";
                 ResultSet resultSet = statement.executeQuery(retrieve);
                 final var metaData=resultSet.getMetaData();
                 System.out.println("gurwa");

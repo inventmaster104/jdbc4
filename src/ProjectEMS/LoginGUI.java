@@ -19,6 +19,10 @@ import java.sql.Date;
 //
 // go to line around 1080 and connect the data gathered with database
 public class LoginGUI extends JFrame implements DatabasemethodsInterface, EmployeeMInterface {
+    CardLayout cdl;
+    JPanel cdP;
+    private JButton promoteEmployee;
+    private JButton demoteEmployee;
     JButton jobTitles;
     private ArrayList<String> titl=new ArrayList<>();
     private ArrayList<String > iD=new ArrayList<>();
@@ -619,15 +623,17 @@ adminInterface.setLayout(new BorderLayout());
 show.revalidate();
 show.repaint();
         });
+
 registration.addActionListener((e3)->{
     show.removeAll();
+    show.setLayout(new BorderLayout());
     JPanel regSetting=new JPanel();
  rP=new JPanel();
     setRegistration=new JButton("set Max Applications");
     Vacancy=new JButton("Add/remove vacancy job titles");
     jobTitles=new JButton("Job Titles");
     addNewVacancy=new JButton("Add new job titles");
-    show.setLayout(new BorderLayout());
+    show.removeAll();
 
     setRegistration.setMaximumSize(new Dimension(Integer.MAX_VALUE,80));
     Vacancy.setMaximumSize(new Dimension(Integer.MAX_VALUE,80));
@@ -656,32 +662,313 @@ show.revalidate();
 
 
 
+
+        employee.addActionListener((em)->{
+            show.removeAll();
+show.setLayout(new BorderLayout());
+            JLabel employeeL=new JLabel();
+            employeeL.setFont(new Font("Arial",Font.BOLD,50));
+            show.add(employeeL,BorderLayout.SOUTH);
+            JPanel butonP=new JPanel();
+            butonP.setLayout(new BoxLayout(butonP,BoxLayout.Y_AXIS));
+
+
+            addemployee=new JButton("Add Employee");
+            updateEmployee=new JButton("Update Employee Data");
+            deleteEmployee=new JButton("Delete Employees");
+            AcceptEmployee=new JButton("Accept Employee");
+            viewEmployees=new JButton("View Employees");
+            promoteEmployee=new JButton("Promote Employee");
+            demoteEmployee=new JButton("Demote Employee");                                 sendEmail=new JMenu("send Emails");
+            butonP.add(addemployee);
+            butonP.add(updateEmployee);
+            butonP.add(deleteEmployee);
+            butonP.add(viewEmployees);
+            butonP.add(promoteEmployee);
+            butonP.add(demoteEmployee);
+
+            addemployee.setMaximumSize(new Dimension(Integer.MAX_VALUE,80));
+            updateEmployee.setMaximumSize(new Dimension(Integer.MAX_VALUE,80));
+            deleteEmployee.setMaximumSize(new Dimension(Integer.MAX_VALUE,80));
+            viewEmployees.setMaximumSize(new Dimension(Integer.MAX_VALUE,80));
+            promoteEmployee.setMaximumSize(new Dimension(Integer.MAX_VALUE,80));
+            demoteEmployee.setMaximumSize(new Dimension(Integer.MAX_VALUE,80));
+
+            show.add(butonP,BorderLayout.WEST);
+
+            butonP.setBackground(new Color(50,60,70));
+
+
+            deleteEmployee.addActionListener(new EmployeeeManipulate());
+            addemployee.addActionListener(new EmployeeeManipulate());
+            promoteEmployee.addActionListener(new EmployeeeManipulate());
+            demoteEmployee.addActionListener(new EmployeeeManipulate());
+
+
+            show.revalidate();show.repaint();
+
+            cdl=new CardLayout();              cdP=new JPanel();
+            cdP.setLayout(cdl);
+
+       viewEmployees.addActionListener((ve)->{
+           BorderLayout layout=(BorderLayout) show.getLayout();
+           Component comp=layout.getLayoutComponent(BorderLayout.CENTER);
+           if(comp!=null){show.remove(comp);}
+           show.revalidate(); show.repaint();
+           JPanel view=new JPanel();
+           cdP.add(view,"viewE");
+          cdl.show(cdP,"viewE");
+          show.add(cdP,BorderLayout.CENTER);
+           view.setBackground(Color.green);
+           JPanel cont1=new JPanel();
+           JButton viewALl=new JButton("View All");
+           JButton viewSp=new JButton("View Specific Employee");
+           cont1.setLayout(new FlowLayout(FlowLayout.CENTER,10,10));
+          view.setLayout(new GridLayout(2,1));
+          viewALl.setPreferredSize(new Dimension(200,40));
+          viewSp.setPreferredSize(new  Dimension(200,40));
+           cont1.add(viewALl);
+           cont1.add(viewSp);
+           view.add(cont1);
+        viewSp.addActionListener((ep)->{
+            {JPanel cont2=new JPanel();
+                cont2.setLayout(new GridLayout(2,1));
+                JTextField id=new JTextField();
+                JLabel eid=new JLabel("Enter the Id of the employee");
+                JButton btn=new JButton("Search");
+                JPanel spemp=new JPanel();
+                spemp.setLayout(new GridBagLayout());
+                GridBagConstraints gbc=new GridBagConstraints();
+                gbc.insets=new Insets(5,5,5,5);
+                gbc.gridx=0;
+                gbc.gridy=0;
+
+                spemp.setBackground(Color.CYAN);
+                spemp.add(eid,gbc);
+
+                gbc.gridx=1;
+                gbc.weightx=1.0;
+                gbc.fill=GridBagConstraints.HORIZONTAL;
+                spemp.add(id,gbc);
+                gbc.gridx=2;
+                gbc.weightx=0.0;
+                gbc.fill=GridBagConstraints.NONE;
+                spemp.add(btn,gbc);
+                cont2.add(spemp);
+                cdP.add(cont2,"cont2");
+                cdl.show(cdP,"cont2");
+                id.setMaximumSize(new Dimension(150,30));
+                btn.setMaximumSize(new Dimension(150,30));
+                btn.addActionListener((ac)->{
+                    conn.setId(id.getText().toString());
+                    conn.setTemp_in("View Specific Employee");
+                    conn.dtcConnectmethod(bd, "retriev employee datal");
+                    String[] columnN=conn.getEcolumnNames();
+
+                    String employdata[]=conn.getEmpdatas();
+                    if (employdata!=null && employdata.length!=0) {
+                        JPanel spe=new JPanel();
+                        spe.setLayout(new BorderLayout());
+                        spe.setBackground(new Color(100,150,200));
+                        cdP.add(spe,"spe");
+                        cdl.show(cdP,"spe");
+                        Object[][] spempdata = new Object[columnN.length][2];
+                        for (int i = 0; i < employdata.length; i++) {
+                            spempdata[i][0] = columnN[i];
+                            spempdata[i][1]=employdata[i];
+                        }
+                        String[] colname={"Data","Values"};
+                        JTable viewspemp = new JTable(spempdata, colname);
+                        viewspemp.getTableHeader().setBounds(0, 0, 400, 30);
+                        viewspemp.setBounds(0, 50, 400, 200);
+                        JScrollPane spempane = new JScrollPane(viewspemp);
+                        spempane.getViewport().setBackground(Color.orange);
+                        spe.add(spempane);
+
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(null,"The employee does not exist");
+                    }
+        });}
+
+
+            viewALl.addActionListener((all)->{
+                   conn.setTemp_in("View id, name and email");
+                   JPanel viewall=new JPanel();
+                   viewall.setLayout(new BorderLayout(5,5));
+                   cdP.add(viewall,"viewall");
+                   cdl.show(cdP,"viewall");
+                   conn.setTemp_in("View id, name and email");
+                   conn.dtcConnectmethod(bd,"retriev employee datal");
+
+                   String[] names=conn.getViewEmployeeName();
+                   System.out.println("hello");
+                   String[] emails=conn.getEmployeeEml();
+                   String[] ids=conn.getIds();
+                   String[] columnNmes={"Id","Name","Email"};
+                   Object[][] edata=new Object[ids.length][3];
+                   for (int i=0;i<ids.length;i++){
+                       edata[i][0]=ids[i];
+                       edata[i][1]=names[i];
+                       edata[i][2]=emails[i];
+                   }
+                   JTable viewtable=new JTable(edata,columnNmes);
+                   viewtable.getTableHeader().setBounds(0,0,400,30);
+                   JScrollPane viewpane=new JScrollPane(viewtable);
+                   viewpane.getViewport().setBackground(Color.MAGENTA);
+                   Back=new JMenuItem("Back");
+                   Back.addActionListener((ev)->{
+                       cdl.show(cdP,"viewE");
+                   });
+
+
+
+                   viewall.add(viewpane);
+
+
+
+               });
+           });
+       });
+
+
+            updateEmployee.addActionListener((up)->{
+
+
+                show.add(cdP,BorderLayout.CENTER);
+                show.revalidate();show.repaint();
+                JPanel update=new JPanel();
+                update.setBackground(Color.orange);
+                cdP.add(update,"update");
+                cdl.show(cdP,"update");
+                update.setLayout(new GridLayout());
+                conn.setTemp_in("View id, name and email");
+                conn.dtcConnectmethod(bd,"retriev employee datal");
+                String[] col0= {"Id","Name","Email"};
+                String[] allEmail=conn.getEmployeeEml();
+                String [] names=conn.getViewEmployeeName();
+                String[] idss=conn.getIds();
+                Object[][] o1=new Object[allEmail.length][3];
+                for (int i=0;i<allEmail.length;i++){
+                    o1[i][0]=idss[i];
+                    o1[i][1]=names[i];
+                    o1[i][2]=allEmail[i];
+                }
+                JTable t1=new JTable(o1,col0);
+                JScrollPane p0=new JScrollPane(t1);
+                update.add(p0);
+                p0.getViewport().setBackground(Color.cyan);
+                ListSelectionModel model=t1.getSelectionModel();
+                model.addListSelectionListener(new ListSelectionListener() {
+                    @Override
+                    public void valueChanged(ListSelectionEvent e) {
+                        String[] dpts=getDepartment();
+                        JPanel p2=new JPanel();
+                        JPanel p3=new JPanel();
+                        JPanel p4=new JPanel();
+                        JPanel p5=new JPanel();
+                        cdP.add(p2,"p2");
+                        cdl.show(cdP,"p2");
+                        JButton btn1=new JButton("set salary");
+                        submit=new JButton("save changes");
+                        JTextField t0=new JTextField();// start date set
+                        JTextField t2=new JTextField();// start month set
+                        JTextField t3=new JTextField();// start year set
+                        JTextField t4=new JTextField();// end date set
+                        JTextField t5=new JTextField();//end month set
+                        JTextField t6= new JTextField();// end year set
+                        JComboBox d=new JComboBox(dpts); //set department
+
+                        JLabel l1=new JLabel("Start Date");
+                        JLabel l2= new JLabel("Start Month");
+                        JLabel l3= new JLabel("Start Year");
+                        JLabel l4= new JLabel("End Date");
+                        JLabel l5= new JLabel("End Month");
+                        JLabel l6= new JLabel("End Year");
+                        JLabel l7= new JLabel("Department");
+
+                        p2.setLayout(new GridLayout(3,1,10,10));
+                        p3.setLayout(new BorderLayout());// table panel
+                        p4.setLayout(new GridLayout(7,2));
+                        p5.setLayout(new GridLayout(1,2,20,20));
+
+                        p2.setBackground(Color.ORANGE);
+
+
+                        String []ids=conn.getIds();
+                        String id=ids[t1.getSelectedRow()];
+                        conn.setId(id);
+                        conn.dtcConnectmethod(bd,"retrieve workDetails");
+                        String[] wData=conn.getEwordData();
+                        String[] wCol=conn.getEcolumnNames();
+                        System.out.println(wData.length);
+                        System.out.println(wCol.length);
+                        int count=0;
+                        Object[][] wDta=new Object[wData.length/wCol.length][wCol.length];
+
+                        for (int i=0;i<(wData.length/wCol.length);i++){
+                            for (int j=0;j<wCol.length;j++){
+                                wDta[i][j]=wData[count];
+                                count++;
+                            }
+                            JTable tw=new JTable(wDta,wCol);
+                            tw.setBackground(Color.cyan);
+                            JScrollPane s1=new JScrollPane(tw);
+                            s1.getViewport();
+                            p3.add(s1,BorderLayout.CENTER);      p4.add(l1);p4.add(t0);
+                            p4.add(l2);p4.add(t2);               p4.add(l3);p4.add(t3);
+                            p4.add(l4);p4.add(t4);               p4.add(l5);p4.add(t5);
+                            p4.add(l6);p4.add(t6);               p4.add(l7);p4.add(d);
+
+                            p5.add(submit);p5.add(btn1);
+                            // button colors
+                            btn1.setBackground(Color.ORANGE);
+                            submit.setBackground(Color.MAGENTA);
+                            submit.addActionListener((evt)->{
+
+                                String dept=String.valueOf(d.getSelectedItem());
+                                double sal=0;
+                                /*
+                                 * here the salar actionlistener should be implemented
+                                 * */
+
+
+
+                                EmployeeBasicDetails dt1= new EmployeeBasicDetails(checkInput(t0.getText().toString()),checkInput(t2.getText().toString()),checkInput(t3.getText().toString()),checkInput(t4.getText().toString()),checkInput(t5.getText().toString()),checkInput(t6.getText().toString()),sal,dept);
+                                conn.dtcConnectmethod(dt1,"setWorkDetails");
+                                JOptionPane.showMessageDialog(null,conn.getResult());});
+
+                            p2.add(p3);p2.add(p4);p2.add(p5);
+                            p2.repaint();
+                            p2.revalidate();
+                        }
+                    }
+                });
+
+            });
+
+
+
+
+        });
+
+
+
+
+
+
+
+
+
+        adminMenuBar=new JMenuBar();
         Registration=new JMenu("Registration");
         reg=new JMenuItem("Open");
         close=new JMenuItem("close");
-      // registration.setBorder(new TitledBorder("Registration settings "));
-       //File.setBorder(new TitledBorder(""))
-        //File.setBackground(new Color(255,153,153));
-        Employee=new JPanel();
-        Employee.setBackground(new Color(255,153,153));
-        Employee.setBorder(new TitledBorder("Employee"));
-        adminMenuBar=new JMenuBar();
-
-      //  File.add(setRegistration);
-
-
-        // setRegistration components
-
-
-
-
-
 
 
         adminInterface.add(buttonP,BorderLayout.WEST);
         adminInterface.add(show,BorderLayout.CENTER);
 
-        Employee.setLayout(new BoxLayout(Employee,BoxLayout.Y_AXIS));
         loggedin=new JLabel();
         setJMenuBar(adminMenuBar);
 
@@ -690,19 +977,6 @@ show.revalidate();
 
 
 
-
-        sendEmail=new JMenu("send Emails");
-
-        addemployee=new JButton("Add Employee");
-        updateEmployee=new JButton("Update Employee Data");
-        deleteEmployee=new JButton("Delete Employees");
-        AcceptEmployee=new JButton("Accept Employee");
-       // save=new JButton("Save");
-
-
-        viewEmployees=new JButton("View Employees");
-        addManager=new JButton("Add a Manager");
-        deleteManager=new JButton("delete Manager");
         logout=new JMenuItem("Sign Out");
 
 
@@ -710,12 +984,7 @@ show.revalidate();
         Registration.add(reg);
         Registration.add(close);
         adminMenuBar.add(Registration);
-        Employee.add(addemployee);
-        Employee.add(updateEmployee);
-        Employee.add(deleteEmployee);
-        Employee.add(viewEmployees);
-        Employee.add(addManager);
-        Employee.add(deleteManager);
+
 
         reg.addActionListener(new ActionListener() {
             @Override
@@ -740,15 +1009,7 @@ show.revalidate();
 
 
         logout.addActionListener(new EmployeeeManipulate());
-        viewEmployees.addActionListener(new EmployeeeManipulate());
 
-
-
-        updateEmployee.addActionListener(new EmployeeeManipulate());
-        deleteEmployee.addActionListener(new EmployeeeManipulate());
-        addemployee.addActionListener(new EmployeeeManipulate());
-        addManager.addActionListener(new EmployeeeManipulate());
-        deleteManager.addActionListener(new EmployeeeManipulate());
 
 
 
@@ -759,30 +1020,6 @@ show.revalidate();
     class EmployeeeManipulate implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent em){
-/*if (em.getSource()==addColumn){
-    File.removeAll();
-    File.setLayout(new BorderLayout());
-    sTChoose=new JLabel("Choose Table");
-   // conn.dtcConnectmethod(bd,"retrieve table name");
-
-
-   //newcol=new JTextField();
-    conn.dtcConnectmethod(bd,"retrieve table name");
-    String [] tablenames=conn.getChoosetable();
-
-     tables=new JComboBox(tablenames);
-   // tables.addActionListener(this);
-   // File.add(newcol);// this line should be called from another actionlistener
-    File.add(sTChoose,BorderLayout.NORTH);
-    File.add(tables,BorderLayout.NORTH);
-    tables.addActionListener(new Selector());
-    //method  for showing the name of available databases should be isnerted here
-    newCol=new JTextField();
-File.revalidate();
-File.repaint();
-
-
-}*/
  if(em.getSource()==setRegistration){
      BorderLayout layout=(BorderLayout) show.getLayout();
      Component comp1=layout.getLayoutComponent(BorderLayout.CENTER);
@@ -817,7 +1054,7 @@ p2.setLayout(new GridLayout(2,1,20,20));
         try{int n=Integer.parseInt(no);}catch(IllegalArgumentException t){
             c=false;
         }
-        if(c==true){
+        if(c==true && no.length()!=0){
             conn.setMaxApp(Integer.parseInt(no));
             conn.dtcConnectmethod(bd,"setMaxApplications");
             JOptionPane.showMessageDialog(null,conn.getResult());}
@@ -854,7 +1091,7 @@ submit.setPreferredSize(new Dimension(170,50));
 delete.setPreferredSize(new Dimension(170,50));
      buttonP.add(submit);buttonP.add(delete);
 submit.setBackground(Color.green);   delete.setBackground(Color.red);
-     String[] tit=conn.getEtitles();
+     String[] tit=conn.getAtitles();
      String[] ids=conn.getIds();
      String[] col={"Id","Titles"};
      Object[][] data=new Object[tit.length][2];
@@ -882,29 +1119,39 @@ for (int i=0;i<titl.size();i++){
         iD.add(ids[ind]);}}
      });
      delete.addActionListener((de)->{
-         int input=JOptionPane.showConfirmDialog(null,"Are you sure you want to completely delete the selected job titles?", "Warning",JOptionPane.YES_NO_CANCEL_OPTION);
-         if (input==JOptionPane.YES_OPTION){
-             for (int i=0;i<iD.size();i++){
-                 conn.setId(iD.get(i));
-                 System.out.println(iD.get(i));
-                 conn.dtcConnectmethod(bd,"delete job title");
+         if(titl.size()==0){
+             JOptionPane.showMessageDialog(null,"Nothing has been selected");}
+         else{ int input=JOptionPane.showConfirmDialog(null,"Are you sure you want to completely delete the selected job titles?", "Warning",JOptionPane.YES_NO_CANCEL_OPTION);
+             if (input==JOptionPane.YES_OPTION){
+                 for (int i=0;i<iD.size();i++){
+                     conn.setId(iD.get(i));
+                     System.out.println(iD.get(i));
+                     conn.dtcConnectmethod(bd,"delete job title");
+                 }
              }
-         }
 
-         JOptionPane.showMessageDialog(null,conn.getResult());
+             JOptionPane.showMessageDialog(null,conn.getResult());}
+
      });
 submit.addActionListener((as)->{
     conn.dtcConnectmethod(bd,"getAdminTitles");
     String[] chc=conn.getEtitles();
     int count=0;
-    for (int i=0;i<titl.size();i++){
-        boolean chk=true;
-        for(int j=0;j<chc.length;j++){
-            if(chc[j].equals(titl.get(i))){
-                chk=false; break;
+    if(titl.size()==0){
+        JOptionPane.showMessageDialog(null,"Nothing has been selected");}
+    else{
+        for (int i=0;i<titl.size();i++){
+            boolean chk=true;
+            for(int j=0;j<chc.length;j++){
+                if(chc[j].equals(titl.get(i))){
+                    chk=false; break;
+                }
             }
-        }
-        if(chk==true){    conn.setVacanyadd(titl.get(i));
+
+
+        if(chk==true){
+
+            conn.setVacanyadd(titl.get(i));
             conn.dtcConnectmethod(bd,"setAdminTitles");
             JOptionPane.showMessageDialog(null,conn.getResult());
             count++;
@@ -912,7 +1159,9 @@ submit.addActionListener((as)->{
         else{
             JOptionPane.showMessageDialog(null,"some of the selected titles have already been added. Number of titles added: "+count);
             break;}
-    }
+    }}
+
+
 });
  }
 else if (em.getSource()==Vacancy){
@@ -970,29 +1219,11 @@ if(!(titl.contains(titls[ind]))){
 
                 }
             }}}});
-/*submit.addActionListener((ec)->{
-    for (int i=0;i<titl.size();i++){
-        conn.dtcConnectmethod(bd,"getAdminTitles");
-        String[] chc=conn.getEtitles();
-        boolean chk=true;
-        for(int j=0;j<chc.length;j++){
-            if(chc[j].equals(titl.get(i))){
-                chk=false;
-            }
-        }
-        if(chk==true){    conn.setVacanyadd(titl.get(i));
-            conn.dtcConnectmethod(bd,"setAdminTitles");
-        JOptionPane.showMessageDialog(null,conn.getResult());
-        break;}
-        else{
-            JOptionPane.showMessageDialog(null,"some of the selected titles have already been added");
-            break;
-        }
-    }
 
-});*/
 delete.addActionListener((de)->{
-    int input=JOptionPane.showConfirmDialog(null,"Are you sure you want to completely delete the selected job titles?", "Warning",JOptionPane.YES_NO_CANCEL_OPTION);
+    if(iD.size()==0){
+        JOptionPane.showMessageDialog(null,"Nothing has been selected");}
+ else{   int input=JOptionPane.showConfirmDialog(null,"Are you sure you want to completely delete the selected job titles?", "Warning",JOptionPane.YES_NO_CANCEL_OPTION);
 if (input==JOptionPane.YES_OPTION){
     for (int i=0;i<iD.size();i++){
         conn.setId(iD.get(i));
@@ -1001,7 +1232,7 @@ if (input==JOptionPane.YES_OPTION){
 }
 }
 
-    JOptionPane.showMessageDialog(null,conn.getResult());
+    JOptionPane.showMessageDialog(null,conn.getResult());}
 });
 show.add(vacancySet,BorderLayout.CENTER);
 vacancySet.repaint();
@@ -1027,15 +1258,15 @@ JPanel top=new JPanel();
 submit=new JButton("Add");
 
      // layouts
-     fieldP.setLayout(new FlowLayout());
+     fieldP.setLayout(new BoxLayout(fieldP,BoxLayout.X_AXIS));
      fieldP.setBackground(new Color(100,100,255));
-     bPcont.setLayout(new GridLayout(3,1,10,10));
+     bPcont.setLayout(new GridLayout(2,1,10,10));
      bP.setLayout(new FlowLayout(FlowLayout.CENTER,0,50));
      fieldP.add(vacL); fieldP.add(newV);
      submit.setBackground(Color.green);
-     newV.setPreferredSize(new Dimension(200,30));
+     newV.setMaximumSize(new Dimension(150,30));
      submit.setPreferredSize(new Dimension(150,40));
-     bP.add(submit);bPcont.add(top);
+     bP.add(submit);
      bPcont.add(fieldP);bPcont.add(bP);
      submit.addActionListener((es)->{
          if ((newV.getText().toString())!=null) {
@@ -1053,295 +1284,31 @@ submit=new JButton("Add");
          }else{JOptionPane.showMessageDialog(null,"Invalid entry");}});
      show.add(bPcont,BorderLayout.CENTER);            show.revalidate();show.repaint();}
 
-else if (em.getSource()==addManager){
 
-}
-else if(em.getSource()==deleteManager){
-
-}
 else if(em.getSource()==updateEmployee){
-CardLayout cdl=new CardLayout();
-JPanel changes=new JPanel(cdl);
-Set.removeAll();
-Set.add(changes);
-JPanel update=new JPanel();
-update.setBackground(Color.orange);
-    changes.add(update,"update");
-    cdl.show(changes,"update");
-    update.setLayout(new GridLayout());
-    conn.setTemp_in("View id, name and email");
-conn.dtcConnectmethod(bd,"retriev employee datal");
-String[] col0= {"Id","Name","Email"};
-String[] allEmail=conn.getEmployeeEml();
-String [] names=conn.getViewEmployeeName();
-String[] idss=conn.getIds();
-Object[][] o1=new Object[allEmail.length][3];
-for (int i=0;i<allEmail.length;i++){
-    o1[i][0]=idss[i];
-    o1[i][1]=names[i];
-    o1[i][2]=allEmail[i];
-    }
-JTable t1=new JTable(o1,col0);
-t1.getTableHeader().setBounds(0,0,200,30);
-JScrollPane p0=new JScrollPane(t1);
-update.add(p0);
-p0.getViewport().setBackground(Color.cyan);
-ListSelectionModel model=t1.getSelectionModel();
-model.addListSelectionListener(new ListSelectionListener() {
-    @Override
-    public void valueChanged(ListSelectionEvent e) {
-        String[] dpts=getDepartment();
-        JPanel p2=new JPanel();
-        JPanel p3=new JPanel();
-        JPanel p4=new JPanel();
-        JPanel p5=new JPanel();
-        JButton btn1=new JButton("set salary");
-        submit=new JButton("save changes");
-        JTextField t1=new JTextField();// start date set
-        JTextField t2=new JTextField();// start month set
-        JTextField t3=new JTextField();// start year set
-        JTextField t4=new JTextField();// end date set
-        JTextField t5=new JTextField();//end month set
-        JTextField t6= new JTextField();// end year set
-        JComboBox d=new JComboBox(dpts); //set department
 
-        JLabel l1=new JLabel("Start Date");
-        JLabel l2= new JLabel("Start Month");
-        JLabel l3= new JLabel("Start Year");
-        JLabel l4= new JLabel("End Date");
-        JLabel l5= new JLabel("End Month");
-        JLabel l6= new JLabel("End Year");
-      JLabel l7= new JLabel("Department");
-
-        p2.setLayout(new GridLayout(3,1,10,10));
-        p3.setLayout(new BorderLayout());// table panel
-        p4.setLayout(new GridLayout(7,2));
-        p5.setLayout(new GridLayout(1,2,20,20));
-
-        p2.setBackground(Color.ORANGE);
-        cardPanel.add(p2,"p2");
-        cardLayout.show(cardPanel,"p2");
-
-
-String []ids=conn.getIds();
-String id=ids[model.getMinSelectionIndex()];
-conn.setId(id);
-conn.dtcConnectmethod(bd,"retrieve workDetails");
-String[] wData=conn.getEwordData();
-String[] wCol=conn.getEcolumnNames();
-        System.out.println(wData.length);
-        System.out.println(wCol.length);
-        int count=0;
-    Object[][] wDta=new Object[wData.length/wCol.length][wCol.length];
-
-    for (int i=0;i<(wData.length/wCol.length);i++){
-        for (int j=0;j<wCol.length;j++){
-            wDta[i][j]=wData[count];
-            count++;
-        }
-        JTable tw=new JTable(wDta,wCol);
-        tw.setBackground(Color.cyan);
-    JScrollPane s1=new JScrollPane(tw);
-    s1.getViewport();
-    p3.add(s1,BorderLayout.CENTER);
-    p4.add(l1);p4.add(t1);
-    p4.add(l2);p4.add(t2);
-    p4.add(l3);p4.add(t3);
-    p4.add(l4);p4.add(t4);
-    p4.add(l5);p4.add(t5);
-    p4.add(l6);p4.add(t6);
-    p4.add(l7);p4.add(d);
-
-    p5.add(submit);p5.add(btn1);
-    // button colors
-        btn1.setBackground(Color.ORANGE);
-        submit.setBackground(Color.MAGENTA);
-        submit.addActionListener((evt)->{
-
-            String dept=String.valueOf(d.getSelectedItem());
-            double sal=0;
-           /*
-           * here the salar actionlistener should be implemented
-           * */
-
-
-
-EmployeeBasicDetails dt1= new EmployeeBasicDetails(checkInput(t1.getText().toString()),checkInput(t2.getText().toString()),checkInput(t3.getText().toString()),checkInput(t4.getText().toString()),checkInput(t5.getText().toString()),checkInput(t6.getText().toString()),sal,dept);
-       conn.dtcConnectmethod(dt1,"setWorkDetails");
-        JOptionPane.showMessageDialog(null,conn.getResult());});
-
-  p2.add(p3);p2.add(p4);p2.add(p5);
-    p2.repaint();
-    p2.revalidate();
-}
-
-
-
-
-
-JLabel salary=new JLabel();
-JLabel startDate=new JLabel();
-JLabel startMonth=new JLabel();
-JLabel endDate=new JLabel();
-JLabel endMonth=new JLabel();
-JLabel endYear=new JLabel();
-JLabel dept=new JLabel();
-//conn.setTemp_in("View Specific Employee");
-//String[] colmnname=conn.getEcolumnNames();
-//String [] empdata=conn.getEmpdatas();
-
-
-//reslt.result();
-    }
-});
-
-// the below code is after the employee has been chosen.
-String[] updata=conn.getEcolumnNames();
-String [] databaseData=conn.getEmpdatas();
-Object[][] upd= new Object[updata.length][2];
-Set.revalidate();
-Set.repaint();
-
-}
-else if(em.getSource()==viewEmployees){
-   // conn.dtcConnectmethod(bd,"retrieve employee data");
-    JPanel view=new JPanel();
-   // view.setLayout(new GridLayout());
-    cardPanel.add(view,"viewE");
-    cardLayout.show(cardPanel,"viewE");
-    view.setBackground(Color.green);
-   // String firstchoice=conn.getResult();
-
-
-
-    //conn.dtcConnectmethod(bd,"hi");
-    String[] choices={"View all","View Specific Employee"};
-
-    JComboBox box=new JComboBox(choices);
-    view.add(box);
-box.addActionListener((e)->{
-    JComboBox b= (JComboBox) e.getSource();
-    String select=(String) b.getSelectedItem();
-    if (select.equals("View Specific Employee")){
-
-
-        JTextField id=new JTextField();
-        JLabel eid=new JLabel("Enter the Id of the employee");
-
-        JPanel spemp=new JPanel();
-        spemp.setLayout(null);
-        spemp.setBackground(Color.CYAN);
-        spemp.add(eid);
-        spemp.add(id);
-        cardPanel.add(spemp,"spemp");
-        cardLayout.show(cardPanel,"spemp");
-        eid.setBounds(0,50,200,40);
-        id.setBounds(200,50,200,40);
-        JButton btn=new JButton("Search");
-
-        Back =new JMenuItem("Back");
-        Back.addActionListener((act)->{ adminMenuBar.remove(Back);// if this code is not executed first, the back button will emerge infinite no times
-            cardLayout.show(cardPanel,"viewE");
-        });
-        adminMenuBar.add(Back);
-        btn.addActionListener((ac)->{
-            conn.setId(id.getText().toString());
-            conn.setTemp_in("View Specific Employee");
-            conn.dtcConnectmethod(bd, "retriev employee datal");
-            String[] columnN=conn.getEcolumnNames();
-
-            String employdata[]=conn.getEmpdatas();
-            if (employdata!=null && employdata.length!=0) {
-                JPanel spe=new JPanel();
-                spe.setLayout(new BorderLayout());
-                spe.setBackground(new Color(100,150,200));
-                cardPanel.add(spe,"spe");
-                cardLayout.show(cardPanel,"spe");
-
-                Object[][] spempdata = new Object[columnN.length][2];
-                for (int i = 0; i < employdata.length; i++) {
-                    spempdata[i][0] = columnN[i];
-                    spempdata[i][1]=employdata[i];
-                }
-                String[] colname={"Data","Values"};
-                JTable viewspemp = new JTable(spempdata, colname);
-                viewspemp.getTableHeader().setBounds(0, 0, 400, 30);
-                viewspemp.setBounds(0, 50, 400, 200);
-                JScrollPane spempane = new JScrollPane(viewspemp);
-                spempane.getViewport().setBackground(Color.orange);
-                spe.add(spempane);
-
-
-            }
-            else{
-                JOptionPane.showMessageDialog(null,"The employee does not exist");
-            }
-        });
-        spemp.add(btn);
-        btn.setBounds(500,500,100,50);
-        btn.setBackground(Color.red); }
-   else if(select.equals("View all")){
-        conn.setTemp_in("View id, name and email");
-        JPanel viewall=new JPanel();
-        viewall.setLayout(new BorderLayout(5,5));
-        cardPanel.add(viewall,"viewall");
-        cardLayout.show(cardPanel,"viewall");
-       // conn.setTemp_in("View id, name and email");
-        conn.setTemp_in("View id, name and email");
-        conn.dtcConnectmethod(bd,"retriev employee datal");
-
-        String[] names=conn.getViewEmployeeName();
-        System.out.println("hello");
-        String[] emails=conn.getEmployeeEml();
-        String[] ids=conn.getIds();
-        String[] columnNmes={"Id","Name","Email"};
-        Object[][] edata=new Object[ids.length][3];
-        for (int i=0;i<ids.length;i++){
-            edata[i][0]=ids[i];
-            edata[i][1]=names[i];
-            edata[i][2]=emails[i];
-        }
-        JTable viewtable=new JTable(edata,columnNmes);
-        viewtable.getTableHeader().setBounds(0,0,400,30);
-        viewtable.setBounds(0,50,400,200);
-        JScrollPane viewpane=new JScrollPane(viewtable);
-        viewpane.getViewport().setBackground(Color.MAGENTA);
-        Back=new JMenuItem("Back");
-        Back.addActionListener((ev)->{
-            cardLayout.show(cardPanel,"viewE");
-        });
-
-
-
-        viewall.add(viewpane);
-
-
-
-    }
-});
-
-    // adding to view
-
-  //  view.setVisible(true);
 
 }
 else if (em.getSource()==addemployee){
+    cdP=new JPanel();
+    cdl=new CardLayout();
+    cdP.setLayout(cdl);
+     BorderLayout layout=(BorderLayout) show.getLayout();
+    Component comp=layout.getLayoutComponent(BorderLayout.CENTER);
+    if(comp!=null){show.remove(comp);}
+    show.repaint(); show.revalidate();
+    show.add(cdP,BorderLayout.CENTER);
     Back=new JMenuItem("Back");
-    reload=new JMenuItem("Reload");
-    reload.setBackground(Color.RED);
-    adminMenuBar.add(reload);
     adminMenuBar.add(Back);
     Back.setBackground(Color.GREEN);
     JPanel addemployeeP=new JPanel();
-    cardPanel.add(addemployeeP,"addemployeeP");
-    cardLayout.show(cardPanel,"addemployeeP");
-    addemployeeP.setLayout(new BorderLayout());
+     addemployeeP.setLayout(new BorderLayout());
+    cdP.add(addemployeeP,"addemployeeP");
+    cdl.show(cdP,"addemployeeP");
+
     conn.dtcConnectmethod(bd,"retrieve applicant");
     String [] columns={"Name","Email"};
-
-
     empName=conn.getApplicantName();
-    // System.out.println(addemp[0]);
     empEmail=conn.getApplicantEmail();
     String[] tobeused=new String[empEmail.length];
     Object [][] emdata=new Object[empName.length][2];
@@ -1349,17 +1316,6 @@ else if (em.getSource()==addemployee){
 emdata[i][0]=empName[i];
 emdata[i][1]=empEmail[i];
         tobeused[i]=empName[i]+"      Email: "+empEmail[i];}
-
-//container.removeAll();
-//container.setLayout(new BorderLayout(2,10));
-//container.setBackground(Color.CYAN);
-
-//addemployeeP.setLayout(new BorderLayout());
-    // employeeTable.getTableHeader().setBounds(0,0,30,30);
-    //addemployeeP.add(employeeTable.getTableHeader());
-    // addemployeeP.add(employeeTable.getTableHeader());
-//addemployeeP.add(pane);
-//addemployeeP.add(employeeTable);
 
     Back.addActionListener(new ActionListener() {
         @Override
@@ -1432,14 +1388,7 @@ emdata[i][1]=empEmail[i];
     //addemployeeP.add(employeeTable);
     //addemployeeP.add(employeeTable.getTableHeader());
     addemployeeP.setVisible(true);
-    reload.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            empName=conn.getApplicantName();// this is an employee email, not applicant email here
-            empEmail =conn.getEmployeeEml();
 
-        }
-    });
 /*empl.addListSelectionListener(new ListSelectionListener() {
         @Override
         public void valueChanged(ListSelectionEvent e) {
@@ -1779,6 +1728,7 @@ File.setVisible(true);
                 }
 
                 else{
+                  if((error)!=null){error.setText("");} ;
                     error=new JLabel(value);
                     firstPanel.add(error);
                     error.setBounds(100,100,300,100);
@@ -1793,7 +1743,7 @@ File.setVisible(true);
       cardLayout.show(cardPanel,"RegistrationInterface");
       RegistrationInterface.setBackground(Color.ORANGE);
         employeeAdminBar =new JMenuBar();
-        RegistrationInterface.add(employeeAdminBar);
+
       JTextField fName=new JTextField();JLabel Fname=new JLabel("First Name");
 
       JTextField mName=new JTextField();JLabel Mname=new JLabel("Middle Name");
@@ -1824,19 +1774,24 @@ File.setVisible(true);
      String[] gend={"M","F"};JLabel gen=new JLabel("Gender");
      JComboBox Gender=new JComboBox(gend);
      JTextField Qualifications=new JTextField();JLabel qualification=new JLabel("Qualifications");
-     RegistrationInterface.setLayout(new BoxLayout(RegistrationInterface,1));
+     RegistrationInterface.setLayout(new GridLayout(14,2));
+        JPanel spac=new JPanel();
 
 
-
-     RegistrationInterface.add(Fname);RegistrationInterface.add(fName);RegistrationInterface.add(Mname);
-     RegistrationInterface.add(mName);RegistrationInterface.add(Lname);RegistrationInterface.add(lName);
-     RegistrationInterface.add(Emal);RegistrationInterface.add(email);RegistrationInterface.add(Bday);
-     RegistrationInterface.add(bDay);RegistrationInterface.add(Bmonth);RegistrationInterface.add(bMonth);
-        RegistrationInterface.add(Byear);RegistrationInterface.add(bYear);RegistrationInterface.add(Phoneno);
-     RegistrationInterface.add(phoneNumber);RegistrationInterface.add(Maritalst);RegistrationInterface.add(maritalStatus);
-     RegistrationInterface.add(country);RegistrationInterface.add(AddressCountry);RegistrationInterface.add(city);RegistrationInterface.add(City);
-     RegistrationInterface.add(Keble);RegistrationInterface.add(kebele);RegistrationInterface.add(type);RegistrationInterface.add(employeetype);
+         RegistrationInterface.add(Fname);RegistrationInterface.add(fName);
+         RegistrationInterface.add(Mname);RegistrationInterface.add(mName); RegistrationInterface.add(Lname);
+        RegistrationInterface.add(lName); RegistrationInterface.add(Emal);RegistrationInterface.add(email);
+   RegistrationInterface.add(Bday);RegistrationInterface.add(bDay);RegistrationInterface.add(Bmonth);
+        RegistrationInterface.add(bMonth);RegistrationInterface.add(Byear);
+        RegistrationInterface.add(bYear);  RegistrationInterface.add(Phoneno);RegistrationInterface.add(phoneNumber);RegistrationInterface.add(Maritalst);
+    RegistrationInterface.add(maritalStatus);     RegistrationInterface.add(country);RegistrationInterface.add(AddressCountry);
+        RegistrationInterface.add(city); RegistrationInterface.add(City);RegistrationInterface.add(Keble);RegistrationInterface.add(kebele);
+        RegistrationInterface.add(type); RegistrationInterface.add(employeetype);RegistrationInterface.add(spac);
      JButton nextPage=new JButton("Next Page");
+        RegistrationInterface.add(nextPage);
+        nextPage.setBackground(Color.ORANGE);
+     nextPage.setBackground(Color.green);
+       // RegistrationInterface.add(spac);
      Gender.addActionListener((e)->{
          Object a=e.getSource();
          g=((JComboBox)a).getSelectedItem().toString();
@@ -1866,21 +1821,21 @@ AddressCountry.addActionListener((e -> {
 
 
 
-     RegistrationInterface.add(nextPage);
-     nextPage.setBackground(Color.ORANGE);
+
      nextPage.addActionListener((eve)->{
          JMenuBar regBar=new JMenuBar();
          JPanel r2=new JPanel();
-         r2.setLayout(new BoxLayout(r2,1));
+         r2.setLayout(new GridLayout(12,1,10,10));
          cardPanel.add(r2,"r2");
          cardLayout.show(cardPanel,"r2");
          JButton subit=new JButton("Submit");
          Back=new JMenuItem("Back");
-         r2.add(skill);r2.add(Skills);
-         r2.add(postal);r2.add(postal_code);r2.add(gen);r2.add(Gender);
-         r2.add(qualification);r2.add(Qualifications);r2.add(passw);r2.add(password);
+         Back.setBackground(Color.cyan);
+        r2.add(skill); r2.add(Skills);
+         r2.add(postal); r2.add(postal_code);r2.add(gen);r2.add(Gender); r2.add(qualification);r2.add(Qualifications);r2.add(passw);
+        r2.add(password); r2.add(confPass);r2.add(confpassw);
          r2.setBackground(Color.ORANGE);
-         r2.add(confPass);r2.add(confpassw);
+
          //r2.add(adminMenuBar);
       setJMenuBar(regBar);
       regBar.add(Back);
@@ -1890,7 +1845,7 @@ AddressCountry.addActionListener((e -> {
 
 
         r2.add(subit);
-         subit.setBackground(Color.ORANGE);
+         subit.setBackground(Color.green);
          subit.addActionListener((e)->{
              String re1=checkName(fName.getText().toString());
              String re3=checkName(lName.getText().toString());
