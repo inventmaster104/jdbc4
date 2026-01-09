@@ -19,6 +19,8 @@ import java.sql.Date;
 //
 // go to line around 1080 and connect the data gathered with database
 public class LoginGUI extends JFrame implements DatabasemethodsInterface, EmployeeMInterface {
+
+
     CardLayout cdl;
     JPanel cdP;
     private JButton promoteEmployee;
@@ -144,12 +146,15 @@ cardPanel=new JPanel(cardLayout);
 
 
 
+        Image image=new ImageIcon("C:\\Users\\admin\\Downloads\\company-building-min.jpg").getImage();
+        loginPanel=new JPanel(new BorderLayout()){
+            @Override
+            protected void paintComponent(Graphics g){
+                super.paintComponents(g);
+                g.drawImage(image,0,0,getWidth(),getHeight(),this);
+            }
+        };
 
-
-        loginPanel=new JPanel();
-        loginPanel.setBackground(Color.CYAN);
-       // container.add(cardLayout);
-        //container.add(loginPanel);
  loginbutton=new JButton("Login");
 
     if (conn.getResult().equals("Open") && checkMaxApplications(conn.getResult())==true){
@@ -172,22 +177,26 @@ cardPanel=new JPanel(cardLayout);
         //loginPanel.setLayout(new BorderLayout());
 
         JPanel logNorth=new JPanel();
+        JPanel butP=new JPanel();
 
         logNorth.setBackground(Color.orange);
-loginPanel.setLayout(null);
-        //loginPanel=new JPanel();
-        loginPanel.setBackground(Color.MAGENTA);
-      //  loginPanel.add(logcen,BorderLayout.CENTER);
-        loginPanel.add(logNorth);
-        logNorth.setBounds(0,0,1800,50);
+//loginPanel.setLayout(new BorderLayout());
+butP.setLayout(new GridBagLayout());
+GridBagConstraints gbc=new GridBagConstraints();
+gbc.insets=new Insets(0,20,0,20);
+
+loginbutton.setPreferredSize((new Dimension(150,100)));
+register.setPreferredSize(new Dimension(150,100));
+
+butP.add(loginbutton,gbc); butP.add(register,gbc);
+butP.setOpaque(false);
+        loginPanel.add(logNorth,BorderLayout.NORTH);
+        loginPanel.add(butP,BorderLayout.CENTER);
         loginbutton.setBackground(Color.GREEN);
-     // logcen.setLayout(null);
-        loginbutton.setBounds(200,300,300,100);
-        loginPanel.add(loginbutton);
+       // loginPanel.add(loginbutton);
 
         cardPanel.add(loginPanel,"loginView");
-       // cardPanel.add(firstPanel,"firstPanel");
-        //  cardPanel.add(adminInterface,"adminInterface");
+
         container.add(cardPanel);
         loginbutton.addActionListener(new actiontaken());
 setVisible(true);
@@ -592,34 +601,65 @@ empshow.show(ePanel3,"taskPanel");
         cardLayout.show(cardPanel,"adminInterface");
 adminInterface.setLayout(new BorderLayout());
         show=new JPanel();                         JPanel buttonP=new JPanel();
+
        JButton registration=new JButton("Registration Settings");    JButton home=new JButton("Home");
        JButton salary=new JButton("Salary");        JButton employee=new JButton("Employee");
        JButton notice=new JButton("Notice");
      // layout
         buttonP.setLayout(new GridLayout(5,1,5,5));
+
         buttonP.setBackground(new Color(30,30,40));  buttonP.setForeground(Color.white);
         //add buttons
         buttonP.add(home);                   buttonP.add(registration);
         buttonP.add(employee);               buttonP.add(salary);           buttonP.add(notice);
+        home.setBackground(new Color(50,100,250)); employee.setBackground(new Color(50,100,250));
+        registration.setBackground(new Color(50,100,250)); notice.setBackground(new Color(50,100,250));
+        salary.setBackground(new Color(50,100,250));
         // actionListeners
         home.addActionListener((e1)->{
             show.removeAll();
             conn.setTemp_in("View id, name and email");
             JTextArea noticeT=new JTextArea();
-            show.setLayout(new GridLayout(1,3,5,5));
+            noticeT.setText("Notice\n"+"The US will control sales of sanctioned Venezuelan oil \"indefinitely\" as it prepares to roll back restrictions on the country's crude in global markets, the White House said.\n" +
+                    "\n" +
+                    "Officials said sales were expected to start with 30 million to 50 million barrels of oil and the revenue would be controlled by the US government in order to maintain clout over the Venezuelan government.\n" +
+                    "\n" +
+                    "\"We need to have that leverage and control of those oil sales to drive the changes that simply must happen in Venezuela,\" Energy Secretary Chris Wright said.\n" +
+                    "\n" +
+                    "It is not clear what portion of the revenues from the sale - which analysts expect to raise about $2.8bn (£2.1bn) - would be shared with Venezuela.\n" +
+                    "\n" +
+                    "While White House press secretary Karoline Leavitt said the two sides had struck a deal, Venezuela's state-run oil company PDVSA said in a statement that negotiations over oil sales were ongoing within the framework that exists between the two countries.\n" +
+                    "\n" +
+                    "\"This process is based on similar rules to those in force with international companies,\" it said.\n" +
+                    "\n" +
+                    "The comments came after US President Donald Trump announced on social media on Tuesday that Venezuela would be \"turning over\" up to 50 million barrels of oil to the US, and it would be sold at its market price");
+            noticeT.setFont(new Font("Arial",Font.BOLD,16));
+            JScrollPane tP=new JScrollPane(noticeT);
+            noticeT.setLineWrap(true);
+            noticeT.setWrapStyleWord(true);
+            JPanel totP=new JPanel();
+            totP.setLayout(new FlowLayout(0,10,10));
+            show.setLayout(new GridLayout(2,1,5,5));
             conn.dtcConnectmethod(bd,"retriev employee datal");
             conn.dtcConnectmethod(bd,"getDepartment");
             String[] dept=conn.getAtitles();        int totDep=dept.length;
             String[] email= conn.getEmployeeEml();    int totEmp=email.length;
             System.out.println(email[0]);
             JProgressBar totS=new JProgressBar();
+            totS.setFont(new Font("Arial",Font.BOLD,16));
             totS.setString("Employees: "+totEmp);          totS.setStringPainted(true);
-                     totS.setValue(totEmp);      totS.setForeground(Color.black);
-            show.add(totS);
+                     totS.setValue(totEmp);      totS.setForeground(new Color(100,150,150));
+                     totS.setPreferredSize(new Dimension(300,100));
+            totP.add(totS);
 // department show
-             totS=new JProgressBar();   totS.setString("Departments"+totDep);
+             totS=new JProgressBar();   totS.setString("Departments: "+totDep);
+            totS.setFont(new Font("Arial",Font.BOLD,16));
                        totS.setValue(totDep);      totS.setStringPainted(true);
-             show.add(totS);
+                       totS.setPreferredSize(new Dimension(300,100));
+                       totS.setForeground(Color.magenta);
+                       totP.add(totS);totP.setBackground(new Color(40,50,60));
+             show.add(totP);
+             show.add(tP);
 show.revalidate();
 show.repaint();
         });

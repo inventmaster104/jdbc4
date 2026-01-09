@@ -11,6 +11,8 @@ import java.sql.DriverManager;
 import java.sql.Statement;
 import java.sql.*;
 public class DataBaseConnector implements DatabasemethodsInterface {
+    private ArrayList<String> pending;
+    private ArrayList<String> reason;
     private String managerEmail;
     private String adminEmail;
     private String setNotice;
@@ -158,6 +160,7 @@ public String getLoginEmail(){
                 if(count==1){result = "added successfully";}else{result="registered successfully";}
 
             }
+
             else if(value.equals("setNotice")){
                 String sql="ALTER TABLE admin_set_data set Notice="+setNotice;
             }
@@ -877,6 +880,19 @@ if (check==true){String coln=metaData.getColumnName(i);
                 result="deleted successfully";
 
             }
+            else if(value.equals("get total leave requests")){
+                pending=new ArrayList<>();
+                reason=new ArrayList<>();
+                String sql="select * from leave_requests";
+                ResultSet resultSet=statement.executeQuery(sql);
+                final var metaData=resultSet.getMetaData();
+                while(resultSet.next()){
+                    for (int i=1;i<metaData.getColumnCount();i++){
+                        String[] temp1=new String[pending.size()+1];
+                        String[] temp2=new String[reason.size()+1];
+                        pending.add(resultSet.getString("Status"));
+                        reason.add(resultSet.getString("Reason"));
+                    }}}
             else if(value.equals("retrieve admin/manager contact")){
                 String sql="select * from employee_basic_details";
                 ResultSet resultSet=statement.executeQuery(sql);
@@ -1162,6 +1178,12 @@ public int getdaysPresent(){return dayPresent.size();}
         this.setNotice = notice;
     }
 public int getTaskComplete(){return taskComplete;}
+    public ArrayList<String> getPending(){
+    return pending;
+    }
+    public ArrayList<String> getReason(){
+    return reason;
+    }
 public String getStartTime() {
     return startTime;
 }}

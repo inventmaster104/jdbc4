@@ -47,11 +47,12 @@ public class Manager {
                 date=temp3;
             }catch(IllegalArgumentException exc){
                 result="Invalid! Please use year-month-day structure";
+
             }
 
 
         }else{
-            result="invalid entry";
+            result="Invalid! Please use year-month-day structure";
         }
     }
 
