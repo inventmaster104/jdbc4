@@ -211,10 +211,17 @@ private ArrayList<String> pending;
                 conn.dtcConnectmethod(bd,"get total leave requests");
 
                 gArray=conn.getReason();
+                System.out.println(gArray.get(0));
                 Aname=conn.getAname();
+                System.out.println("aname");
+                System.out.println(Aname.get(0));
                 Id=conn.getIds();
+                System.out.println("id");
+                System.out.println(Id[0]);
                 pending=conn.getPending();
-
+                System.out.println("penidn");
+                System.out.println(pending.get(0));
+                System.out.println(Id.length);
                 Object[][] leavedata=new Object[Id.length][4];
                 for (int i=0;i<Id.length;i++){
                     leavedata[i][0]=Id[i];
@@ -235,6 +242,8 @@ model.addListSelectionListener((ls)->{
 if(JOptionPane.YES_OPTION==choice){
     tobeUpdate.add(Id[ltable.getSelectedRow()]);
 }
+    showP.repaint();
+    showP.revalidate();
 });
      approve.addActionListener((ap)->{
          for (int i=0;i<tobeUpdate.size();i++){

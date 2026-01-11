@@ -11,7 +11,7 @@ import java.sql.DriverManager;
 import java.sql.Statement;
 import java.sql.*;
 public class DataBaseConnector implements DatabasemethodsInterface {
-    private ArrayList<String> Aname;
+    private static ArrayList<String> Aname;
     private double salaryRate;
     private double salary;
    private String wFormat;
@@ -125,13 +125,11 @@ public String getLoginEmail(){
     String sql="";
     for (int i=0;i<lst.length;i++){
         if(i==0){
-            sql=sql+lst[i];
+            sql=lst[i];
         }
-        else if(i==(lst.length-1)){
-            sql=sql+lst[i];
-        }
+
         else{
-            sql=sql+lst[i];
+            sql=sql+","+lst[i];
         }
 
     }
@@ -909,6 +907,7 @@ if (check==true){String coln=metaData.getColumnName(i);
                     paymentType=resultSet.getString("PaymentType");
                     System.out.println(paymentType);
                    Aname.add(resultSet.getString("First_Name")+" "+resultSet.getString("Middle_Name")+" "+resultSet.getString("Last_Name")) ;
+                    System.out.println("Aname is"+Aname.get(0));
                     employeeType=resultSet.getString("Employee_Type");
                     wFormat=resultSet.getString("WorkFormat");
                     employeeType=resultSet.getString("Employee_Type");
@@ -924,15 +923,16 @@ if (check==true){String coln=metaData.getColumnName(i);
             else if(value.equals("get total leave requests")){
                 pending=new ArrayList<>();
                 reason=new ArrayList<>();
+                ids=new String[0];
                 String sql="select * from leave_requests where Status='Pending'";
                 ResultSet resultSet=statement.executeQuery(sql);
                 final var metaData=resultSet.getMetaData();
                 while(resultSet.next()){
-                    for (int i=1;i<metaData.getColumnCount();i++){
-                        String[] temp1=new String[ids.length+1];
+
+
                         pending.add(resultSet.getString("Status"));
                         reason.add(resultSet.getString("Reason"));
-                    }String temp[]=new String[ids.length+1];
+                    String temp[]=new String[ids.length+1];
                     for(int j=0;j<ids.length;j++){
                         temp[j]=ids[j];
                     }
