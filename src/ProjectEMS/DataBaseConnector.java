@@ -11,8 +11,18 @@ import java.sql.DriverManager;
 import java.sql.Statement;
 import java.sql.*;
 public class DataBaseConnector implements DatabasemethodsInterface {
+    private ArrayList<String> Aname;
+    private double salaryRate;
+    private double salary;
+   private String wFormat;
+   private String employeeType;
+    private String paymentType;
+    private double overtime;
+    private String department;
     private ArrayList<String> pending;
     private ArrayList<String> reason;
+    private String employeeml;
+
     private String managerEmail;
     private String adminEmail;
     private String setNotice;
@@ -106,10 +116,26 @@ public String getLoginEmail(){
         String edit = "update employee_work_details set"+" "+data_type+"= "+edited+" where id="+id;
         return edit;
     }
-    catch(IllegalArgumentException e){ String edit = "update employee_work_details set"+" "+data_type+"= '"+edited+"' where id="+id;
+    catch(IllegalArgumentException e){ String edit = "update employee_basic_details set"+" "+data_type+"= '"+edited+"' where id="+id;
         return edit;}
 
 
+    }
+    public void generalEmpData(String[] lst){
+    String sql="";
+    for (int i=0;i<lst.length;i++){
+        if(i==0){
+            sql=sql+lst[i];
+        }
+        else if(i==(lst.length-1)){
+            sql=sql+lst[i];
+        }
+        else{
+            sql=sql+lst[i];
+        }
+
+    }
+    dtcConnectmethod(new EmployeeBasicDetails(sql),"get the resign requests info");
     }
     public void dtcConnectmethod(EmployeeBasicDetails mp, String value){
 
@@ -120,6 +146,7 @@ public String getLoginEmail(){
         try {
             Connection connection = DriverManager.getConnection(url, username, password);
             Statement statement = connection.createStatement();
+
 
 
             // ResultSet resultSet=statement.executeQuery();
@@ -136,15 +163,18 @@ public String getLoginEmail(){
                         "'Addis_Ababa_4k',2,3,2024,'Fulltime','repairing computers',1234,'Electrical engineering','M','Highschool graduate', 1300,'" + hashpasdword.encode("12345f") + "', 'naruto@gmail.com')";
                if(admintrue==true){ if (chek.equals("special")){
                    sqladmin = "INSERT INTO special_table(`First_Name`, `Middle_Name`, `Last_Name`, `Day_of_Birth`,`Month_of_Birth`,`Year_of_Birth`, Phone_Number, " +
-                           "Marital_Status, Employee_Type, Skills, Postal_Code,Country,City,Kebele, Gender,Qualifications,Email_Address,Password) VALUES("+"'"+mp.getFirst_name()+"', '"+mp.getMiddle_name()+"', '"+mp.getLast_name()+"', "+mp.getBirth_day()+", "+mp.getBirth_month()+", "+
-                           mp.getBirth_year()+", '"+mp.getPhone_number()+"', '"+mp.getMarital_status()+"', '"+mp.getEmployee_type()+"', '"+mp.getSkills()+"', "+mp.getPostal_code()+",'"+mp.getCountry()+"', '"+mp.getCity()+"', '"+mp.getKebele()+"','"+mp.getGender()+"','"+mp.getQualification()+"','"+mp.getEmail_address()+"','"+  mp.getPassword()+"')";count=1;}
+                           "Marital_Status, Employee_Type, Skills, Postal_Code,Country,City,Kebele, Gender,Qualifications,Email_Address,Password,WorkFormat) VALUES("+"'"+mp.getFirst_name()+"', '"+mp.getMiddle_name()+"', '"+mp.getLast_name()+"', "+mp.getBirth_day()+", "+mp.getBirth_month()+", "+
+                           mp.getBirth_year()+", '"+mp.getPhone_number()+"', '"+mp.getMarital_status()+"', '"+mp.getEmployee_type()+"', '"+mp.getSkills()+"', "+mp.getPostal_code()+",'"+mp.getCountry()+"', '"+mp.getCity()+"', '"+mp.getKebele()+"','"+mp.getGender()+"','"+mp.getQualification()+"','"+mp.getEmail_address()+"','"+  mp.getPassword()+
+                           "','"+mp.getwFormat()+"')";count=1;}
                else{sqladmin = "INSERT INTO employee_basic_details(`First_Name`, `Middle_Name`, `Last_Name`, `Day_of_Birth`,`Month_of_Birth`,`Year_of_Birth`, Phone_Number, " +
-                       "Marital_Status, Employee_Type, Skills, Postal_Code,Country,City,Kebele, Gender,Qualifications,Email_Address,Password) VALUES("+"'"+mp.getFirst_name()+"', '"+mp.getMiddle_name()+"', '"+mp.getLast_name()+"', "+mp.getBirth_day()+", "+mp.getBirth_month()+", "+
-                       mp.getBirth_year()+", '"+mp.getPhone_number()+"', '"+mp.getMarital_status()+"', '"+mp.getEmployee_type()+"', '"+mp.getSkills()+"', "+mp.getPostal_code()+",'"+mp.getCountry()+"', '"+mp.getCity()+"', '"+mp.getKebele()+"','"+mp.getGender()+"','"+mp.getQualification()+"','"+mp.getEmail_address()+"','"+  mp.getPassword()+"')";count=1;}}
+                       "Marital_Status, Employee_Type, Skills, Postal_Code,Country,City,Kebele, Gender,Qualifications,Email_Address,Password,WorkFormat) VALUES("+"'"+mp.getFirst_name()+"', '"+mp.getMiddle_name()+"', '"+mp.getLast_name()+"', "+mp.getBirth_day()+", "+mp.getBirth_month()+", "+
+                       mp.getBirth_year()+", '"+mp.getPhone_number()+"', '"+mp.getMarital_status()+"', '"+mp.getEmployee_type()+"', '"+mp.getSkills()+"', "+mp.getPostal_code()+",'"+mp.getCountry()+"', '"+mp.getCity()+"', '"+mp.getKebele()+"','"+mp.getGender()+"','"+mp.getQualification()+"','"+mp.getEmail_address()+"','"+  mp.getPassword()+
+                       "','"+mp.getwFormat()+"')";count=1;}}
                    // this code is for admin to accept employee, so change the lower case to upper case whn needed
                else  {sqladmin="INSERT INTO `applicant basic details`(`First Name`, `Middle Name`, `Last Name`, `Day of Birth`,`Month of Birth`,`Year of Birth`, Phone_Number, " +
-                        "Marital_Status, Employee_Type, Skills, Postal_Code,Country,City,Kebele, Gender,Qualifications,Email,Password) VALUES("+"'"+mp.getFirst_name()+"', '"+mp.getMiddle_name()+"', '"+mp.getLast_name()+"', "+mp.getBirth_day()+", "+mp.getBirth_month()+", "+
-                        mp.getBirth_year()+", '"+mp.getPhone_number()+"', '"+mp.getMarital_status()+"', '"+mp.getEmployee_type()+"', '"+mp.getSkills()+"', "+mp.getPostal_code()+",'"+mp.getCountry()+"', '"+mp.getCity()+"', '"+mp.getKebele()+"','"+mp.getGender()+"','"+mp.getQualification()+"','"+mp.getEmail_address()+"','"+  mp.getPassword()+"')";}
+                        "Marital_Status, Employee_Type, Skills, Postal_Code,Country,City,Kebele, Gender,Qualifications,Email,Password,WorkFormat) VALUES("+"'"+mp.getFirst_name()+"', '"+mp.getMiddle_name()+"', '"+mp.getLast_name()+"', "+mp.getBirth_day()+", "+mp.getBirth_month()+", "+
+                        mp.getBirth_year()+", '"+mp.getPhone_number()+"', '"+mp.getMarital_status()+"', '"+mp.getEmployee_type()+"', '"+mp.getSkills()+"', "+mp.getPostal_code()+",'"+mp.getCountry()+"', '"+mp.getCity()+"', '"+mp.getKebele()+"','"+mp.getGender()+"','"+mp.getQualification()+"','"+mp.getEmail_address()+"','"+  mp.getPassword()+
+                       "','"+mp.getwFormat()+"')";}
 
                 //"(Deptid int not NULL, Department varchar(40), primary key(Deptid))";*/
                 PasswordHash hashobject = new PasswordHash();
@@ -160,7 +190,13 @@ public String getLoginEmail(){
                 if(count==1){result = "added successfully";}else{result="registered successfully";}
 
             }
-
+else if(value.equals("set department salary")){
+    if(mp.gethSalary()!=0.0){
+    PreparedStatement st2=connection.prepareStatement("ALTER TABLE salary set HourlySalary="+mp.gethSalary()+" where Department="+mp.getDepartment());}
+    if(mp.getmSalary()!=0){
+        PreparedStatement st1=connection.prepareStatement("ALTER TABLE salary set MonthlySalary="+mp.getmSalary()+" where Department="+mp.getDepartment());
+    }
+            }
             else if(value.equals("setNotice")){
                 String sql="ALTER TABLE admin_set_data set Notice="+setNotice;
             }
@@ -190,31 +226,38 @@ public String getLoginEmail(){
                 while(resultSet.next()){
                     String stime=resultSet.getString("Start_Time");
                     String etime=resultSet.getString("End_Time");
-                    int Y1=Integer.parseInt(stime.substring(0,4));
-                    int M1=Integer.parseInt(stime.substring(5,7));
-                    int D1=Integer.parseInt(stime.substring(8,10)) ;
-                    double h1=Double.parseDouble(stime.substring(11,13));
-                    double m1=Double.parseDouble(stime.substring(14,16))/60.0;
-                    double s1=Double.parseDouble(stime.substring(17))/3600.0;
+                    if(!(etime==null)&&!(stime==null)){
+                        int Y1=Integer.parseInt(stime.substring(0,4));
+                        int M1=Integer.parseInt(stime.substring(5,7));
+                        int D1=Integer.parseInt(stime.substring(8,10)) ;
+                        double h1=Double.parseDouble(stime.substring(11,13));
+                        double m1=Double.parseDouble(stime.substring(14,16))/60.0;
+                        double s1=Double.parseDouble(stime.substring(17))/3600.0;
 
-                    int Y2=Integer.parseInt(etime.substring(0,4));
-                    int M2=Integer.parseInt(etime.substring(5,7));
-                    int D2=Integer.parseInt(etime.substring(8,10)) ;
-                    double h2=Double.parseDouble(etime.substring(11,13));
-                    double m2=Double.parseDouble(etime.substring(14,16))/60.0;
-                    double s2=Double.parseDouble(etime.substring(17))/3600.0;
-                    if(Y1==Y2 && D1==D2 && M1==M2){
-                        totalTime+=(h2-h1)+(m2-m1)+(s2-s1);
-                        if(!(dayPresent.contains(D1))){
-                            dayPresent.add(D1);
+                        int Y2=Integer.parseInt(etime.substring(0,4));
+                        int M2=Integer.parseInt(etime.substring(5,7));
+                        int D2=Integer.parseInt(etime.substring(8,10)) ;
+                        double h2=Double.parseDouble(etime.substring(11,13));
+                        double m2=Double.parseDouble(etime.substring(14,16))/60.0;
+                        double s2=Double.parseDouble(etime.substring(17))/3600.0;
+                        if(Y1==Y2 && D1==D2 && M1==M2){
+                            totalTime+=(h2-h1)+(m2-m1)+(s2-s1);
+                            if(!(dayPresent.contains(D1))){
+                                dayPresent.add(D1);
+                            }
+
+                            System.out.println("calculate time check");
                         }
 
-                        System.out.println("calculate time check");
                     }
-
+                    dtcConnectmethod(new EmployeeBasicDetails(),"setTotalTime");}
                 }
-                dtcConnectmethod(new EmployeeBasicDetails(),"setTotalTime");
 
+
+
+            else if (value.equals("save leave request")){
+                statement.executeUpdate("INSERT INTO leave_requests(Reason,Employee_Id,Status) VALUES('"+mp.getValueS()+"',"+loginid+","+"'Pending'"+")");
+                result="submitted";
             }
             else if(value.equals("addWorkDetails")){
                 System.out.println(id);
@@ -227,7 +270,14 @@ public String getLoginEmail(){
                 while(resultSet.next()){
                     id=String.valueOf(resultSet.getInt("Id"));
                 }
-            }else if(value.equals("getStartTime")){
+            }
+            else if(value.equals("get overtime hour")){
+                ResultSet resultSet=statement.executeQuery("select OverTime from salary where Department='"+department+"'");
+                while(resultSet.next()){
+                    overtime=resultSet.getDouble("OverTime");
+                }
+            }
+            else if(value.equals("getStartTime")){
                 String sql="select Start_Time from attendance_details";
                 ResultSet resultSet=statement.executeQuery(sql);
                 while(resultSet.next()){
@@ -256,7 +306,7 @@ public String getLoginEmail(){
                 String edits="update employee_work_details set "+data_type+"='"+edited+"' where id="+id;
                 String edit = "update employee_work_details set"+" "+data_type+"= "+edited+" where id="+id;
                 double i1=mp.getSalary();int i2=mp.getStart_date(); int i3=mp.getStart_month(); int i4=mp.getStart_year(); int i5=mp.getEnd_date();
-                int i6= mp.getEnd_month(); int i7=mp.getEnd_year(); String dpt=mp.getDepartment();
+                int i6= mp.getEnd_month(); int i7=mp.getEnd_year(); String dpt=mp.getDepartment();String paymentFormat=mp.getPaymentF();
               /*  String set="INSERT INTO employee_work_details(id,Salary,Start_Date, Start_Month,Start_Year, End_Date,End_Month,End_Year,Department) " +
                         "VALUES("+Integer.parseInt(id)+","+mp.getSalary()+","+mp.getStart_date()+","+mp.getStart_month()+","+mp.getStart_year()+","+mp.getEnd_date()+","+
                         mp.getEnd_month() +","+mp.getEnd_year()+",'"+mp.getDepartment()+"'"+")";*/
@@ -298,6 +348,11 @@ public String getLoginEmail(){
                 if(dpt.length()!=0){
                     edited=dpt;
                     data_type="Department";
+                    statement.executeUpdate(editData(id,data_type,edited));
+                }
+                if(paymentFormat!=null){
+                    edited=paymentFormat;
+                    data_type="PaymentType";
                     statement.executeUpdate(editData(id,data_type,edited));
                 }
 
@@ -461,80 +516,7 @@ public String getLoginEmail(){
                     result = "Employee doesn't exist";
 
                 }
-            } else if (value.equals("retrieve table name")) {
-
-                String retrieve = "select * from admin_set_data";
-                ResultSet resultSet = statement.executeQuery(retrieve);
-                final var metaData = resultSet.getMetaData();
-
-                int count = 1;
-                while (resultSet.next()) {
-
-                    for (int i = 1; i <= metaData.getColumnCount(); i++) {
-                        if (metaData.getColumnName(i).equals("TableName")) {
-                            String[] newtable = new String[count];
-                            String[] temptable = new String[tableNames.length+1];
-                            //tableNames = newtable;
-                            for (int m=0;m<tableNames.length;m++){
-                                temptable[m]=tableNames[m];
-                            }
-                            temptable[tableNames.length]=metaData.getColumnName(i);
-                            tableNames=temptable;
-                        }
-                    }
-                }
-                System.out.println(tableNames.length);
-                for (int i = 0; i < tableNames.length; i++) {
-                    System.out.println(tableNames[i]);
-                }
-            } else if (value.equals("add column")) {
-
-
-                //newCol="enter the column name: ";
-                String tablechosen = "select * from " + chooseTable;
-                System.out.println("enter its length: ");
-                System.out.println(chooseTable);
-                System.out.println(colDatatype);
-                System.out.println(newCol);
-                System.out.println(ColumnLength);
-                // String dataLength=scanner.nextLine();
-                String add_column = "ALTER TABLE " + chooseTable + " " + "ADD COLUMN " + newCol + " " + colDatatype + "(" + ColumnLength + ")";
-                statement.executeUpdate(add_column);
-                result = "Successfully added";
-            } else if (value.equals("create table")) {//the names must not have white space
-// the table name cannot be duplicated
-                System.out.print("Enter a  name for the table: ");
-                String tablename = scanner.nextLine();
-                System.out.print("Enter the number of columns you wish to add into your table: ");
-                statement.executeUpdate("INSERT INTO admin_set_data(TableName) VALUES('" + tablename + "')");
-                int columns = Integer.parseInt(scanner.nextLine());
-                mp.setTable_name(tablename);
-                String column_name;
-                String column_type;
-                int size;
-                String create_table = "";
-                for (int i = 0; i < columns; i++) {
-                    int count = i + 1;
-                    System.out.print("Enter the name of the " + count + " column you wish to add: ");
-                    column_name = scanner.nextLine();
-
-                    System.out.print("Enter the datatype for the column: ");
-                    column_type = scanner.nextLine();
-
-                    System.out.print("Enter its size(maximum characters you wish it to contain): ");
-                    size = Integer.parseInt(scanner.nextLine());
-                    String comma_deleter;
-                    if (i == columns - 1) {
-                        comma_deleter = "";
-                    } else {
-                        comma_deleter = ",";
-                    }
-                    create_table = create_table + column_name + " " + column_type + " " + "(" + size + ")" + comma_deleter;// this needs to be fixed
-                }
-                String sqlt = "CREATE TABLE " + mp.getTable_name() + "(" + create_table + ")";
-                System.out.print(sqlt);
-                statement.executeUpdate(sqlt);
-            } else if (value.equals("set adminsetdata")) {
+            }   else if (value.equals("set adminsetdata")) {
                 System.out.print("set the maximum year: ");
                 String ageMa = scanner.nextLine();
                 System.out.print("Set the minimum year: ");
@@ -547,18 +529,20 @@ public String getLoginEmail(){
                 } catch (IllegalArgumentException e) {
                     System.out.println("Invalid entry! ");
                 }
-                String sqlset = "INSERT INTO Admin_Set_Data(Max_Applicant_No,Min_Applicant_No,Age_Limit) VALUES(" + Integer.parseInt(ageMa) + ","
+                String sqlset = "INSERT INTO admin_det_data(Max_Applicant_No,Min_Applicant_No,Age_Limit) VALUES(" + Integer.parseInt(ageMa) + ","
                         + Integer.parseInt(ageMi) + ", " + Integer.parseInt(agelimit) + ")";
                 statement.executeUpdate(sqlset);
             }
+                    else if(value.equals("set notice")){
+                        statement.executeUpdate("update admin_set_data set Notice='"+mp.getValueS()+"' where Id=1");
+                        result="notice set successfully";
+            }
             // retrieving section
             else if(value.equals("getNotice")){
-                String sql="select Notice from admin_set_data";
+                String sql="select Notice from admin_set_data where Id=1";
                 ResultSet resultSet=statement.executeQuery(sql);
                 while(resultSet.next()){
-                    if ((resultSet.getString("Notice"))!=null){
                         notice=resultSet.getString("Notice");
-                    }
                 }
             }
             else if(value.equals("retrieve workDetails")){
@@ -732,7 +716,23 @@ for (int j=1;j<=metaData.getColumnCount();j++){
                     e[Emails.length] = eml;
                     Emails = e;
                 }
-            } else if (value.equals("retrieve data for login")) {
+            }
+            else if(value.equals("get employee general data")){
+                System.out.println("entered");
+                System.out.println("this is"+loginEmail);
+                ResultSet resultSet=statement.executeQuery("select * from employee_basic_details where Email_Address='"+loginEmail+"'");
+                while(resultSet.next()){
+                    loginid=resultSet.getInt("Id");
+                    paymentType=resultSet.getString("PaymentType");
+                    System.out.println(paymentType);
+                    name=resultSet.getString("First_Name")+" "+resultSet.getString("Middle_Name")+" "+resultSet.getString("Last_Name");
+                    employeeType=resultSet.getString("Employee_Type");
+                    wFormat=resultSet.getString("WorkFormat");
+                    employeeType=resultSet.getString("Employee_Type");
+                    department=resultSet.getString("Department");
+                }
+            }
+            else if (value.equals("retrieve data for login")) {
                 PasswordHash hashobject = new PasswordHash();
                 // String retrieve="select * from"+mp.getTable_name();
                 String retrieve = "select * from employee_basic_details";
@@ -854,7 +854,28 @@ if (check==true){String coln=metaData.getColumnName(i);
 
                 }
 
-            } else if (value.equals("getDepartment")){
+            }
+            else if(value.equals("retrieve salary rate")){
+                System.out.println("salary entered");
+                System.out.println(paymentType);
+                System.out.println(employeeType);
+                if(paymentType.equals("Monthly")){
+                    ResultSet resultSet=statement.executeQuery("select MonthlySalary from salary where EmployeeType='"+employeeType+"'");
+                    while(resultSet.next()){
+                        salary=resultSet.getDouble("MonthlySalary");
+                    }
+                }
+                else if(paymentType.equals("Hourly")){
+                    ResultSet resultSet=statement.executeQuery("select * from salary where EmployeeType='"+employeeType+"'");
+                    while(resultSet.next()){
+                        salaryRate=resultSet.getDouble("HourlySalary");
+                        salary=resultSet.getDouble("BaseSalary");
+
+                    }
+                }
+
+            }
+            else if (value.equals("getDepartment")){
                 Atitles=new String[0];
                 String sql="select AllTitles from admin_set_data";
                 ResultSet resultSet=statement.executeQuery(sql);
@@ -880,19 +901,45 @@ if (check==true){String coln=metaData.getColumnName(i);
                 result="deleted successfully";
 
             }
+            else if(value.equals("get the resign requests info")){
+                Aname=new ArrayList<>(0);
+                ResultSet resultSet=statement.executeQuery("select * from employee_basic_details where Id IN("+mp.getValueS()+")");
+                while (resultSet.next()){
+                    loginid=resultSet.getInt("Id");
+                    paymentType=resultSet.getString("PaymentType");
+                    System.out.println(paymentType);
+                   Aname.add(resultSet.getString("First_Name")+" "+resultSet.getString("Middle_Name")+" "+resultSet.getString("Last_Name")) ;
+                    employeeType=resultSet.getString("Employee_Type");
+                    wFormat=resultSet.getString("WorkFormat");
+                    employeeType=resultSet.getString("Employee_Type");
+                    department=resultSet.getString("Department");
+                }
+            }
+            else if(value.equals("approve resignation")){
+                statement.executeUpdate("update leave_requests set Status='Approved' where Employee_Id="+mp.getValueS()+"");
+            }
+            else if(value.equals("reject resignation")){
+                statement.executeUpdate("update leave_requests set Status='Rejected' where Employee_Id="+mp.getValueS()+"");
+            }
             else if(value.equals("get total leave requests")){
                 pending=new ArrayList<>();
                 reason=new ArrayList<>();
-                String sql="select * from leave_requests";
+                String sql="select * from leave_requests where Status='Pending'";
                 ResultSet resultSet=statement.executeQuery(sql);
                 final var metaData=resultSet.getMetaData();
                 while(resultSet.next()){
                     for (int i=1;i<metaData.getColumnCount();i++){
-                        String[] temp1=new String[pending.size()+1];
-                        String[] temp2=new String[reason.size()+1];
+                        String[] temp1=new String[ids.length+1];
                         pending.add(resultSet.getString("Status"));
                         reason.add(resultSet.getString("Reason"));
-                    }}}
+                    }String temp[]=new String[ids.length+1];
+                    for(int j=0;j<ids.length;j++){
+                        temp[j]=ids[j];
+                    }
+                    temp[ids.length]=String.valueOf(resultSet.getInt("Employee_Id"));
+                    ids=temp;}
+                generalEmpData(ids);
+            }
             else if(value.equals("retrieve admin/manager contact")){
                 String sql="select * from employee_basic_details";
                 ResultSet resultSet=statement.executeQuery(sql);
@@ -1184,6 +1231,40 @@ public int getTaskComplete(){return taskComplete;}
     public ArrayList<String> getReason(){
     return reason;
     }
+    public void setDepartment(String dept){
+     department=dept;
+    }
+    public double getOvertime(){
+    return overtime;
+    }
+    public String getDepartment(){
+    return department;
+    }
+    public String getEmployeeType(){
+    return employeeType;
+    }
+    public String getwFormat(){
+    return wFormat;
+    }
+    public String getPaymentType(){
+    return  paymentType;
+    }
+
+    public int getLoginid(){
+    return loginid;
+    }
+    public double getSalary(){
+    return  salary;
+    }
+    public double getSalaryRate(){
+    return  salaryRate;
+    }
+public double getTotalTime(){
+    return totalTime;
+}
+public ArrayList<String> getAname(){
+    return Aname;
+}
 public String getStartTime() {
     return startTime;
 }}

@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class LoginInterface extends  JFrame implements EmployeeMInterface{
+    public static String checkemail;
     private CardLayout cardLayout;
     private JPanel cardPanel;
    private JPanel loginPanel;
@@ -16,6 +17,7 @@ public class LoginInterface extends  JFrame implements EmployeeMInterface{
    private JMenuBar employeeAdminBar;
     private String g;private String ms;
     private String Etype;
+    private String wFormatt;
     private String contry;
     private String martlST;
     JMenuItem Back;
@@ -32,6 +34,9 @@ public class LoginInterface extends  JFrame implements EmployeeMInterface{
    private DataBaseConnector conn=new DataBaseConnector();
    private Employee_Login log=new Employee_Login();
    Container container=getContentPane();
+   AdminInterface admin=new AdminInterface();
+
+
 
     public LoginInterface(){
         super("Employee Management System");
@@ -188,9 +193,10 @@ public class LoginInterface extends  JFrame implements EmployeeMInterface{
         String[] gend={"M","F"};JLabel gen=new JLabel("Gender");
         JComboBox Gender=new JComboBox(gend);
         JTextField Qualifications=new JTextField();JLabel qualification=new JLabel("Qualifications");
-        RegistrationInterface.setLayout(new GridLayout(14,2));
-        JPanel spac=new JPanel();
+        RegistrationInterface.setLayout(new GridLayout(14,2,5,5));
 
+        String [] wFormat={"Intern","FullTime","Part Time"};
+        JComboBox wformat=new JComboBox(wFormat); JLabel wFORMAT=new JLabel("Work Format");
 
         RegistrationInterface.add(Fname);RegistrationInterface.add(fName);
         RegistrationInterface.add(Mname);RegistrationInterface.add(mName); RegistrationInterface.add(Lname);
@@ -200,7 +206,7 @@ public class LoginInterface extends  JFrame implements EmployeeMInterface{
         RegistrationInterface.add(bYear);  RegistrationInterface.add(Phoneno);RegistrationInterface.add(phoneNumber);RegistrationInterface.add(Maritalst);
         RegistrationInterface.add(maritalStatus);     RegistrationInterface.add(country);RegistrationInterface.add(AddressCountry);
         RegistrationInterface.add(city); RegistrationInterface.add(City);RegistrationInterface.add(Keble);RegistrationInterface.add(kebele);
-        RegistrationInterface.add(type); RegistrationInterface.add(employeetype);RegistrationInterface.add(spac);
+        RegistrationInterface.add(type); RegistrationInterface.add(employeetype);
         JButton nextPage=new JButton("Next Page");
         RegistrationInterface.add(nextPage);
         nextPage.setBackground(Color.ORANGE);
@@ -239,15 +245,16 @@ public class LoginInterface extends  JFrame implements EmployeeMInterface{
         nextPage.addActionListener((eve)->{
             JMenuBar regBar=new JMenuBar();
             JPanel r2=new JPanel();
-            r2.setLayout(new GridLayout(12,1,10,10));
+            r2.setLayout(new GridLayout(8,2,5,5));
             cardPanel.add(r2,"r2");
             cardLayout.show(cardPanel,"r2");
             JButton subit=new JButton("Submit");
             Back=new JMenuItem("Back");
             Back.setBackground(Color.cyan);
             r2.add(skill); r2.add(Skills);
-            r2.add(postal); r2.add(postal_code);r2.add(gen);r2.add(Gender); r2.add(qualification);r2.add(Qualifications);r2.add(passw);
-            r2.add(password); r2.add(confPass);r2.add(confpassw);
+            r2.add(postal); r2.add(postal_code);r2.add(gen);r2.add(Gender); r2.add(qualification);r2.add(Qualifications);r2.add(wFORMAT);r2.add(wformat);
+            r2.add(passw);
+            r2.add(password); r2.add(confPass);r2.add(confpassw); r2.add(subit);
             r2.setBackground(Color.ORANGE);
 
             //r2.add(adminMenuBar);
@@ -258,7 +265,10 @@ public class LoginInterface extends  JFrame implements EmployeeMInterface{
 
 
 
-            r2.add(subit);
+           wformat.addActionListener((es)->{
+               Object w=es.getSource();
+                wFormatt=((JComboBox)w).getSelectedItem().toString();
+           });
             subit.setBackground(Color.green);
             subit.addActionListener((e)->{
                 String re1=checkName(fName.getText().toString());
@@ -282,13 +292,13 @@ public class LoginInterface extends  JFrame implements EmployeeMInterface{
                     checkerror=false;
                 }
                 String checkBMonth=chckmonth(bMonth.getText().toString());
-                if(checkBMonth.equals("invalid Birth Date Entry")){
-                    Bmonth.setText("invalid Birth Date Entry");
+                if(checkBMonth.equals("invalid Birth Month Entry")){
+                    Bmonth.setText("invalid Birth Month Entry");
                     checkerror=false;
                 }
                 String chckBYear=checkBYear(bYear.getText().toString());
-                if(chckBYear.equals("invalid Birth Date Entry")){
-                    Byear.setText("invalid Birth Date Entry");
+                if(chckBYear.equals("invalid Birth Year Entry")){
+                    Byear.setText("invalid Birth Year Entry");
                     checkerror=false;
                 }
                 String phoneno=checkPhone(phoneNumber.getText().toString());
@@ -345,6 +355,7 @@ public class LoginInterface extends  JFrame implements EmployeeMInterface{
                             break;
                         }
                     }
+
                     if(check2==true){
                         PasswordHash hash=new PasswordHash();
                         String p=hash.encode(password.getText().toString());
@@ -353,7 +364,7 @@ public class LoginInterface extends  JFrame implements EmployeeMInterface{
                         EmployeeBasicDetails regi=new EmployeeBasicDetails( fName.getText().toString(), mName.getText().toString(), lName.getText().toString(),
                                 Integer.parseInt(bDay.getText().toString()), Integer.parseInt(bMonth.getText().toString()), Integer.parseInt(bYear.getText().toString()),
                                 phoneNumber.getText().toString(), ms, contry,City.getText().toString(),kebele.getText().toString(),Etype, Skills.getText().toString(), Integer.parseInt(postal_code.getText().toString()),
-                                g, Qualifications.getText().toString(), email.getText().toString(),p);
+                                g, Qualifications.getText().toString(), email.getText().toString(),p,wFormatt);
                         conn.dtcConnectmethod(regi,"add employee");
                         JOptionPane.showMessageDialog(null,conn.getResult());
                     }}
@@ -417,9 +428,20 @@ public class LoginInterface extends  JFrame implements EmployeeMInterface{
         public void actionPerformed(ActionEvent ev){
 
             if (ev.getSource()==submit){
+
+                //System.out.println(smail);
+
+
                 System.out.println("in");
-               String passwordin=password.getText().toString();
-                String checkemail=email.getText().toString();
+                String passwordin=password.getText().toString();
+
+
+                 checkemail=email.getText().toString();
+
+                System.out.println("the email is"+checkemail);
+                 String smail=checkemail;
+                System.out.println(checkemail);
+                System.out.println(smail);
                 String value=log.login(checkemail,passwordin);
                 String identity=log.getAdminChecker();
                 // String value=conn.getLoginvalue();// i am not receving any value
@@ -428,18 +450,20 @@ public class LoginInterface extends  JFrame implements EmployeeMInterface{
                 if(value.equals("Access Granted")){
                     switch(identity){
                         case "Admin":
-                            cardPanel.add(new AdminInterface(),"Admin");
+                            cardPanel.add(admin,"Admin");
                             cardLayout.show(cardPanel,"Admin");
+
                             break;
                         case "Manager":
                            cardPanel.add(new ManagerInterface(),"Manager");
-
                            cardLayout.show(cardPanel,"Manager");
+
                             break;
                         default:
 
                            cardPanel.add(new EmployeeGUI(),"Employee");
                            cardLayout.show(cardPanel,"Employee");
+
                             break;
                     }
                 }

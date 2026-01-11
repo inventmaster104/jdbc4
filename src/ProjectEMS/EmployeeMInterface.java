@@ -53,37 +53,37 @@ default String checkBDay(String bday){
 default String chckmonth(String month){
         String result="pass";
     if(month==null || month.length()==0){
-        result="invalid Birth Date Entry";
+        result="invalid Birth Month Entry";
     }
     try{int n=Integer.parseInt(month);}
     catch(IllegalArgumentException e){
-        result="invalid Birth Date Entry";
+        result="invalid Birth Month Entry";
         return result;
     }  if (month.length()>2){
-        result="invalid Birth Date Entry";return result;
+        result="invalid Birth Month Entry";return result;
 
     }
-    if(Integer.parseInt(month)>12){result="invalid Birth Date Entry";return result;}
-    for(int i=0;i<3;i++){if(month.charAt(i)=='+' || month.charAt(i)=='-'){result="invalid Birth Date Entry";}
+    if(Integer.parseInt(month)>12){result="invalid Birth Motnh Entry";return result;}
+    for(int i=0;i<3;i++){if(month.charAt(i)=='+' || month.charAt(i)=='-'){result="invalid Month Date Entry";}
         return result;}return result;}
 default String checkBYear(String year){
     String result="pass";
     if(year==null || year.length()==0){
         System.out.println("has zero yer");
-        result="invalid Birth Date Entry";
+        result="invalid Birth Year Entry";
     }
     try{int n=Integer.parseInt(year);}
     catch(IllegalArgumentException e){
-        result="invalid Birth Date Entry";
+        result="invalid Birth Year Entry";
         return result;
     }  if (year.length()!=4){
-        result="invalid Birth Date Entry";return result;
+        result="invalid Birth Year Entry";return result;
     }
     conn.dtcConnectmethod(det,"get maxYear");
-    if(Integer.parseInt(year)>conn.getAdminsetMaxYear() || Integer.parseInt(year)<conn.getMinYear()){result="invalid Birth Date Entry";return result;}
+    if(Integer.parseInt(year)>conn.getAdminsetMaxYear() || Integer.parseInt(year)<conn.getMinYear()){result="invalid Birth Year Entry";return result;}
     for(int i=0;i<3;i++){
         if(year.charAt(i)=='+' || year.charAt(i)=='-'){
-            result="invalid Birth Date Entry";}
+            result="invalid Birth Year Entry";}
         return result;}return result;}
     default String checkPhone(String phone){
         if(phone==null || phone.length()==0){

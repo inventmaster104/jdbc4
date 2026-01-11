@@ -45,6 +45,7 @@ public class Manager {
                     temp3[k]=date[k];}
                 temp3[date.length]=dt;
                 date=temp3;
+                result="good";
             }catch(IllegalArgumentException exc){
                 result="Invalid! Please use year-month-day structure";
 

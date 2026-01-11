@@ -974,7 +974,7 @@ show.setLayout(new BorderLayout());
 
 
 
-                                EmployeeBasicDetails dt1= new EmployeeBasicDetails(checkInput(t0.getText().toString()),checkInput(t2.getText().toString()),checkInput(t3.getText().toString()),checkInput(t4.getText().toString()),checkInput(t5.getText().toString()),checkInput(t6.getText().toString()),sal,dept);
+                                EmployeeBasicDetails dt1= new EmployeeBasicDetails(checkInput(t0.getText().toString()),checkInput(t2.getText().toString()),checkInput(t3.getText().toString()),checkInput(t4.getText().toString()),checkInput(t5.getText().toString()),checkInput(t6.getText().toString()),sal,dept,"wformat");
                                 conn.dtcConnectmethod(dt1,"setWorkDetails");
                                 JOptionPane.showMessageDialog(null,conn.getResult());});
 
@@ -1487,7 +1487,7 @@ emdata[i][1]=empEmail[i];
 
                     EmployeeBasicDetails ad=new EmployeeBasicDetails( adata[1], adata[2],adata[3], Integer.parseInt(adata[4]),
                             Integer.parseInt(adata[5]), Integer.parseInt(adata[6]), adata[7], adata[8], adata[12],adata[13],
-                            adata[14], adata[9],adata[10],Integer.parseInt(adata[11]), adata[15],adata[16],adata[17],adata[18]);
+                            adata[14], adata[9],adata[10],Integer.parseInt(adata[11]), adata[15],adata[16],adata[17],adata[18],adata[19]);
                     conn.dtcConnectmethod(ad,"add employee");
 
                     addWorkD(adata[17]);
@@ -1976,11 +1976,11 @@ PasswordHash hash=new PasswordHash();
 String p=hash.encode(password.getText().toString());
 
                  conn.setAdmintrue(false);
-                 EmployeeBasicDetails regi=new EmployeeBasicDetails( fName.getText().toString(), mName.getText().toString(), lName.getText().toString(),
+                     /*  EmployeeBasicDetails regi=new EmployeeBasicDetails( fName.getText().toString(), mName.getText().toString(), lName.getText().toString(),
                  Integer.parseInt(bDay.getText().toString()), Integer.parseInt(bMonth.getText().toString()), Integer.parseInt(bYear.getText().toString()),
                  phoneNumber.getText().toString(), ms, contry,City.getText().toString(),kebele.getText().toString(),Etype, Skills.getText().toString(), Integer.parseInt(postal_code.getText().toString()),
                  g, Qualifications.getText().toString(), email.getText().toString(),p);
-                 conn.dtcConnectmethod(regi,"add employee");
+                 conn.dtcConnectmethod(regi,"add employee");*/
                  JOptionPane.showMessageDialog(null,conn.getResult());
              }}
 

@@ -8,6 +8,20 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class ManagerInterface extends JPanel{
+    private ArrayList<String> Aname;
+   private ArrayList<String> gArray=new ArrayList<>(0);
+   private ArrayList<String> tobeUpdate;
+   private String[] name;
+   private String[] Id;
+private ArrayList<String> pending;
+    private String paymentType;
+    private  int loginid;
+    private String dept;
+    private String Name;
+    private String empType;
+    private JTextArea generalInfo;
+    private String wFormat;
+    private String email;
     String [] description;
     String [] taskArray;
     JMenuItem Back;
@@ -25,7 +39,47 @@ public class ManagerInterface extends JPanel{
         managerInterface=new JPanel();
         this.add(managerInterface);
 
+        conn.dtcConnectmethod(bd,"calculate time");
+        conn.dtcConnectmethod(bd,"getNotice");
+        System.out.println("empl");
 
+        email=LoginInterface.checkemail;
+        conn.setLoginEmail(email);
+        conn.dtcConnectmethod(bd,"get employee general data");
+        loginid=conn.getLoginid();
+        paymentType=conn.getPaymentType();
+        wFormat=conn.getwFormat();
+        Name=conn.getloginName();
+        dept=conn.getDepartment();
+        empType=conn.getEmployeeType();
+        generalInfo=new JTextArea();
+        System.out.println("this is payment"+paymentType);
+        System.out.println("this is anme"+Name);
+        System.out.println("this is dept"+dept);
+        System.out.println("this is emptype"+empType);
+
+
+        if(paymentType.equals("Monthly")){
+            //  conn.setEmployeeType(empType);
+            conn.dtcConnectmethod(bd,"retrieve salary rate");
+            double msalary=conn.getSalary();
+            System.out.println("this is ssalry"+msalary);
+            MonthlyPay monthlyPay=new MonthlyPay(Name,msalary,empType,dept,wFormat);
+            generalInfo.setText(monthlyPay.printData());
+            System.out.println(monthlyPay.printData());
+            generalInfo.setFont(new Font("Arial",Font.BOLD,14));
+        }
+        else if (paymentType.equals("Hourly")){
+            conn.dtcConnectmethod(bd,"retrieve salary rate");
+            conn.dtcConnectmethod(bd,"");
+            double hsalary=conn.getSalary();
+            double hrs=conn.getTotalTime();
+            System.out.println(hsalary);
+            HourlyPay hpay=new HourlyPay(Name,hsalary,hrs,wFormat,empType,dept);
+            System.out.println(hpay.printData());
+            generalInfo.setText(hpay.printData());
+            generalInfo.setFont(new Font("Arial",Font.BOLD,14));
+        }
 
 
             cardPanel=new JPanel(mcardLayout);
@@ -66,6 +120,7 @@ public class ManagerInterface extends JPanel{
         conn.dtcConnectmethod(bd,"retriev employee datal");
         conn.dtcConnectmethod(bd,"get total leave requests");
        String[] email=conn.getEmployeeEml();
+        System.out.println("this "+email.length);
         int tote=email.length;
         int totl=0;
         ArrayList<String> leave=conn.getPending();
@@ -87,7 +142,7 @@ public class ManagerInterface extends JPanel{
         totP.add(totShow);
         totShow=new JProgressBar();
         totShow.setFont(new Font("Arial",Font.BOLD,16));
-        totShow.setStringPainted(true);   totShow.setString("Pending leaves: ");
+        totShow.setStringPainted(true);   totShow.setString("Resign Requests: "+totl);
         totShow.setValue(totl);totShow.setForeground(new Color(100,150,200));
         totShow.setPreferredSize(new Dimension(300,100));
         totP.add(totShow);
@@ -128,6 +183,69 @@ public class ManagerInterface extends JPanel{
             logout.addActionListener((et)->{
                 managerBar.removeAll();
                // mcardLayout.show(cardPanel,"firstPanel");
+            });
+            dashBoard.addActionListener((ds)->{
+                cardPanel.add(showP,"show");
+                mcardLayout.show(cardPanel,"show");
+            });
+            leaveR.addActionListener((lr)->{
+                JButton approve=new JButton("Approve Request");
+                JButton reject=new JButton("Reject Request");
+                JPanel bP=new JPanel();
+                tobeUpdate=new ArrayList<>(0);
+                Aname=new ArrayList<>(0);
+                JPanel tableP=new JPanel();
+                tableP.setLayout(new BorderLayout());
+                bP.setLayout(new FlowLayout(FlowLayout.CENTER,50,0));
+                bP.add(approve);bP.add(reject);
+                approve.setPreferredSize(new Dimension(150,30));
+                reject.setPreferredSize(new Dimension(150,30));
+                approve.setBackground(Color.green);
+                reject.setBackground(Color.red);
+                cardPanel.add(tableP,"tablePanel");
+                mcardLayout.show(cardPanel,"tablePanel");
+                pending=new ArrayList<>(0);
+                gArray=new ArrayList<>(0);
+                name=new String[0];
+                Id=new String[0];
+                conn.dtcConnectmethod(bd,"get total leave requests");
+
+                gArray=conn.getReason();
+                Aname=conn.getAname();
+                Id=conn.getIds();
+                pending=conn.getPending();
+
+                Object[][] leavedata=new Object[Id.length][4];
+                for (int i=0;i<Id.length;i++){
+                    leavedata[i][0]=Id[i];
+                    leavedata[i][1]=Aname.get(i);
+                    leavedata[i][2]=pending.get(i);
+                    leavedata[i][3]=gArray.get(i);
+
+                }
+                String[] cols={"Employee Id","Name","Status","Reason for resign"};
+                JTable ltable=new JTable(leavedata,cols);
+                JScrollPane lpane=new JScrollPane(ltable);
+                lpane.getViewport();
+                tableP.add(lpane,BorderLayout.CENTER);
+                tableP.add(bP, BorderLayout.SOUTH);
+ListSelectionModel model=ltable.getSelectionModel();
+model.addListSelectionListener((ls)->{
+   int choice=JOptionPane.showConfirmDialog(null,"you have chosen "+Aname.get(ltable.getSelectedRow()),"Confirm your choice",JOptionPane.YES_NO_OPTION);
+if(JOptionPane.YES_OPTION==choice){
+    tobeUpdate.add(Id[ltable.getSelectedRow()]);
+}
+});
+     approve.addActionListener((ap)->{
+         for (int i=0;i<tobeUpdate.size();i++){
+             conn.dtcConnectmethod(new EmployeeBasicDetails(tobeUpdate.get(i)),"approve resignation");
+         }
+     });
+     reject.addActionListener((re)->{
+         for (int i=0;i<tobeUpdate.size();i++){
+             conn.dtcConnectmethod(new EmployeeBasicDetails(tobeUpdate.get(i)),"reject resignation");
+         }
+     });
             });
             roles.addActionListener((es)->{
                 JPanel m5=new JPanel();
@@ -252,5 +370,9 @@ public class ManagerInterface extends JPanel{
                         }
                     }
                 });
-            });}}
+            });}
+    public void setEmail(String eml){
+        email=eml;
+    }
+}
 

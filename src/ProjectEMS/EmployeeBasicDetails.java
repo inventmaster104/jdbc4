@@ -2,6 +2,7 @@ package ProjectEMS;// write a method that lets the employee enter his bank accou
 // this class has the potential to be an abstract class
 
 public class EmployeeBasicDetails {
+    private String value;
     private String table_name;//investigata whether this variable should be written here
     private int id;
     private String first_name;
@@ -34,10 +35,18 @@ public class EmployeeBasicDetails {
     private String country;
     private String city;
     private String kebele;
+    private double mSalary;
+    private double hSalary;
+    private String wFormat;
+    private String paymentF;
 
 
     String name=first_name+middle_name+last_name;
-
+public EmployeeBasicDetails(double s1, double s2,String dept){
+    mSalary=s1;
+    hSalary=s2;
+    department=dept;
+}
 public EmployeeBasicDetails(){
 
 }
@@ -50,8 +59,9 @@ public EmployeeBasicDetails(String password, String email_address){
 
 public EmployeeBasicDetails( String first_name, String middle_name, String last_name, int birth_day, int birth_month, int birth_year,
                           String phone_number, String marital_status, String Country,String City,String Kebele, String employee_type, String skills, int postal_code,
-                             String gender, String qualification, String email_address,String password){// this is called during registration
+                             String gender, String qualification, String email_address,String password,String wFormat){// this is called during registration
 //this.id;
+    this.wFormat=wFormat;
 this.first_name=first_name;
 this.middle_name=middle_name;
 this.country=Country;
@@ -73,6 +83,9 @@ this.qualification=qualification;
 this.password=password;
 this.email_address=email_address;
 }
+  public EmployeeBasicDetails(String value){
+    this.value=value;
+  }
     public EmployeeBasicDetails(int salary,  String employee_type, String department, int id, String skills) {
         this.employee_type=employee_type;
         this.department=department;
@@ -270,6 +283,12 @@ this.MinimumAge=MinimumAge;}
     return employee_type;
 
     }
+    public String getwFormat(){
+    return wFormat;
+    }
+    public String getValueS(){
+    return value;
+    }
     public String getEmail_address(){
     return email_address;
     }
@@ -288,6 +307,8 @@ this.MinimumAge=MinimumAge;}
     public String getCountry(){
     return country;
     }
+    public double getmSalary(){return  mSalary;}
+    public double gethSalary(){return hSalary;}
     public String getCity(){
     return city;}
     public String getKebele(){
@@ -299,16 +320,20 @@ this.MinimumAge=MinimumAge;}
     public double getSalary(){
     return salary;
     }
-    public EmployeeBasicDetails(int start_date,int start_month, int start_year, int end_date, int end_month,int end_year, double salary,String department){
+    public EmployeeBasicDetails(int start_date,int start_month, int start_year, int end_date, int end_month,int end_year, double salary,String department,String paymentFormat){
     this.start_date=start_date;
+    this.paymentF=paymentFormat;
     this.start_month= start_month;            this.start_year=start_year;
     this.end_date= end_date;
     this.end_month= end_month;
     this.end_year= end_year;
     this.salary=salary;
     this.department=department;
+    this.wFormat=wFormat;
     }
-
+public String getPaymentF(){
+    return  paymentF;
+}
     public void display() {
         System.out.println("ID: " + id + " | Name: " + name + " | Department: " + department + " | Salary: " + salary);
     }

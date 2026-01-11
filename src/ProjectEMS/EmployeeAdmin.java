@@ -157,57 +157,7 @@ public void Openregistration(){
 employee, id,start date, month,year
   */
     }
-    public static void fireEmployee(){
-        // here add the end date of the employee
-    }
 
-    // Check for duplicate ID
-       // for (ProjectEMS.EmployeeBasicDetails emp : employees) {
-      //  if (emp.getId() == e.getId()) {
-       //     System.out.println(" Employee ID already exists!");
-      //      return;
-     //   }
-   // }
-
-      //  employees.add(e);
-       // System.out.println(" Employee added successfully!");
-//}
-
-//public void viewAllEmployees() {
-   // if (employees.isEmpty()) {
-     //   System.out.println("️ No employees found.");
-       // return;
-   // }
-  //  System.out.println("\n--- Employee List ---");
-   // for(ProjectEMS.EmployeeBasicDetails e : employees){
-     //   e.display();
-   // }
-//}
-// make the below code so that specific employe data can be updated
-   // public void updateEmployee(int id, String newFirstName,String newMiddleName,String newLast_Name , String newDepartment, double newSalary) {
-       // for (ProjectEMS.EmployeeBasicDetails e : employees) {
-          //  if (e.getId() == id) {
-              //  e.setFirst_name(newFirstName);
-              //  e.setMiddle_name(newMiddleName);
-              //  e.setLast_name(newLast_Name);
-               // e.setDepartment(newDepartment);
-              //  e.setSalary(newSalary);
-               // System.out.println(" Employee updated successfully!");
-              //  return;
-           // }
-       // }
-      //  System.out.println("Employee not found!");
-   // }
-
-    //public void deleteEmployee(int id) {
-       // for (ProjectEMS.EmployeeBasicDetails e : employees) {
-          //  if (e.getId() == id) {
-              //  employees.remove(e);
-               // System.out.println("🗑 Employee deleted successfully!");
-               // return;
-           // }
-       // }
-       // System.out.println("❌ Employee not found!");
 
 }
 

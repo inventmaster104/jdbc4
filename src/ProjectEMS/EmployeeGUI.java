@@ -5,6 +5,9 @@ import java.awt.*;
 import java.time.LocalDateTime;
 
 public class EmployeeGUI extends JPanel {
+JTextArea generalInfo;
+    private  int loginid=0;
+     String email;
     private JMenuItem Back;
     private JPanel menuPanel;
     private JMenuBar employeeAdminBar;
@@ -14,7 +17,52 @@ public class EmployeeGUI extends JPanel {
     private Employee_Login log=new Employee_Login();
     private EmployeeBasicDetails bd=new EmployeeBasicDetails();
     private DataBaseConnector conn=new DataBaseConnector();
+    private String paymentType="";
+    private String name;
+    private String dept;
+    private String empType;
+    private String wFormat;
+
     public EmployeeGUI(){
+        conn.dtcConnectmethod(bd,"getTasks");
+        conn.dtcConnectmethod(bd,"calculate time");
+        conn.dtcConnectmethod(bd,"getNotice");
+        System.out.println("empl");
+
+        email=LoginInterface.checkemail;
+        conn.setLoginEmail(email);
+conn.dtcConnectmethod(bd,"get employee general data");
+loginid=conn.getLoginid();
+paymentType=conn.getPaymentType();
+name=conn.getloginName();
+wFormat=conn.getwFormat();
+dept=conn.getDepartment();
+empType=conn.getEmployeeType();
+generalInfo=new JTextArea();
+if(paymentType.equals("Monthly")){
+  //  conn.setEmployeeType(empType);
+   conn.dtcConnectmethod(bd,"retrieve salary rate");
+   double msalary=conn.getSalary();
+    System.out.println("this is ssalry"+msalary);
+    MonthlyPay monthlyPay=new MonthlyPay(name,msalary,empType,dept,wFormat);
+    generalInfo.setText(monthlyPay.printData());
+    System.out.println(monthlyPay.printData());
+    generalInfo.setFont(new Font("Arial",Font.BOLD,14));
+}
+else if (paymentType.equals("Hourly")){
+    conn.dtcConnectmethod(bd,"retrieve salary rate");
+    conn.dtcConnectmethod(bd,"");
+    double rate=conn.getSalaryRate();
+    double hsalary=conn.getSalary();
+    double hrs=conn.getTotalTime();
+            System.out.println(hsalary);
+            HourlyPay hpay=new HourlyPay(name,hsalary,hrs,wFormat,empType,dept);
+    System.out.println(hpay.printData());
+    generalInfo.setText(hpay.printData());
+    generalInfo.setFont(new Font("Arial",Font.BOLD,14));
+        }
+
+conn.dtcConnectmethod(bd,"get payment type");
         this.setLayout(new BorderLayout());
         employeeInterface=new JPanel();
 
@@ -33,16 +81,29 @@ public class EmployeeGUI extends JPanel {
 
 
 
-        conn.dtcConnectmethod(bd,"getTasks");
-        conn.dtcConnectmethod(bd,"calculate time");
-        conn.dtcConnectmethod(bd,"getNotice");
+
         JPanel performannce=new JPanel();
+        JPanel performanceCont=new JPanel();
+        JPanel perfTxt=new JPanel();
+        JTextArea perform=new JTextArea();
         JPanel dashBoard=new JPanel();
         JTextArea tA=new JTextArea();
         JScrollPane textP=new JScrollPane(tA);
+        JPanel infoP=new JPanel();
+        JPanel infoperfP=new JPanel();
+        infoP.setLayout(new GridLayout());
+        infoperfP.setLayout(new BorderLayout());
+        infoP.add(generalInfo);
+        generalInfo.setBackground(new Color(10,255,55));
+        perfTxt.setBackground(Color.orange);
+        infoperfP.add(infoP,BorderLayout.WEST);
        dashBoard.setLayout(new GridLayout(2,1,0,20));
+       perfTxt.setLayout(new FlowLayout(FlowLayout.CENTER));
+       performanceCont.setLayout(new BorderLayout());
        performannce.setLayout(new FlowLayout(0,10,30));
        // tA.setText(conn.getNotice());
+        perform.setText("Performance Details");
+        perform.setFont(new Font("Arial",Font.BOLD | Font.ITALIC,16));
         tA.setFont(new Font("Arial",Font.BOLD,16));
         tA.setText("Exactly 31 years ago to the day, two Kenyan pilots, Hussein Mohamed Anshuur and Mohamed Adan, received an unexpected visitor at their office at Wilson Airport near the capital, Nairobi.\n" +
                 "\n" +
@@ -58,46 +119,52 @@ public class EmployeeGUI extends JPanel {
                 "                \"\\n\" +\n" +
                                 "The comments came after US President Donald Trump announced on social media on Tuesday that Venezuela would be turning over up to 50 million barrels of oil to the US, and it would be sold at its market price");
        tA.setWrapStyleWord(true);tA.setLineWrap(true);
+        String timeNow=String.valueOf(LocalDateTime.now());
+        int dateNow=Integer.parseInt(timeNow.substring(8,10));
+        System.out.println(dateNow);
 
         int daysPresent=conn.getdaysPresent();             int taskC=conn.getTaskComplete();
-        JProgressBar prog=new JProgressBar(0,30);          prog.setValue(daysPresent);
+        JProgressBar prog=new JProgressBar(0,dateNow);          prog.setValue(daysPresent);
         prog.setStringPainted(true);                       prog.setForeground(Color.GREEN);
-        performannce.add(new JLabel("Attendance"));   performannce.add(prog);
+        performannce.add(new JLabel("Attendance "+daysPresent+" days"));   performannce.add(prog);
         prog.setPreferredSize(new Dimension(200,100));
         int totalTasks=conn.getTaskInfo().length/conn.getTaskCol().length;
         prog=new JProgressBar(0,totalTasks);               prog.setValue(taskC);
         prog.setStringPainted(true);                       prog.setForeground(Color.CYAN);
         prog.setPreferredSize(new Dimension(200,100));
         performannce.add(new JLabel("Task Progress: "));performannce.add(prog);
-        String timeNow=String.valueOf(LocalDateTime.now());
-        int dateNow=Integer.parseInt(timeNow.substring(8,10));
-        System.out.println(dateNow);
+
         double overallP= (((double) taskC)/totalTasks)+(((double)daysPresent)/dateNow);
         prog=new JProgressBar(0,100);                       prog.setValue((int)(overallP*50));
         prog.setStringPainted(true);                        prog.setForeground(Color.magenta);
         prog.setPreferredSize(new Dimension(200,100));
         performannce.add(new JLabel("Overall Performance"));performannce.add(prog);
-        dashBoard.add(performannce);dashBoard.add(textP);
+        perfTxt.add(perform);
+        performanceCont.add(perfTxt,BorderLayout.NORTH);
+        performanceCont.add(performannce,BorderLayout.CENTER);
+        infoperfP.add(performanceCont,BorderLayout.CENTER); dashBoard.add(infoperfP);
+        dashBoard.add(textP);
         ePanel3.add(dashBoard,"dashBoard");
         empshow.show(ePanel3,"dashBoard");
 
 
 
 
-        JLabel welcome=new JLabel("Hi "+conn.getloginName());
+
         logout=new JMenuItem("Signout");
         JButton home=new JButton("Home"); home.setBackground(Color.blue);
         JButton attendance=new JButton("Attendance");attendance.setBackground(Color.blue);
-        JButton vacation=new JButton("Vacation");vacation.setBackground(Color.blue);
-        JButton resign=new JButton("Resign");resign.setBackground(Color.blue);
         JButton task=new JButton("Tasks");task.setBackground(Color.blue);
         JButton personaFile= new JButton("Personal File");personaFile.setBackground(Color.blue);
-        JButton leaveR=new JButton("Request Leave");leaveR.setBackground(Color.blue);
-
+        JButton leaveR=new JButton("Resign");leaveR.setBackground(Color.blue);
+home.setForeground(Color.white);
+        attendance.setForeground(Color.white);
+        task.setForeground(Color.white);
+        personaFile.setForeground(Color.white);
+        leaveR.setForeground(Color.white);
         home.setMaximumSize(new Dimension(Integer.MAX_VALUE,50));
         attendance.setMaximumSize(new Dimension(Integer.MAX_VALUE,50));
-        vacation.setMaximumSize(new Dimension(Integer.MAX_VALUE,50));
-        resign.setMaximumSize(new Dimension(Integer.MAX_VALUE,50));
+        leaveR.setMaximumSize(new Dimension(Integer.MAX_VALUE,50));
         task.setMaximumSize(new Dimension(Integer.MAX_VALUE,50));
         personaFile.setMaximumSize(new Dimension(Integer.MAX_VALUE,50));
 
@@ -115,7 +182,6 @@ public class EmployeeGUI extends JPanel {
         ePanel1.setBackground(Color.red);
         ePanel1.setLayout(new FlowLayout());
         buttonP.add(home);              buttonP.add(attendance);
-        buttonP.add(vacation);          buttonP.add(resign);
         buttonP.add(task);              buttonP.add(personaFile);
         buttonP.add(leaveR);        ePanel3.add(notice,"notice");
 
@@ -141,9 +207,33 @@ public class EmployeeGUI extends JPanel {
 
         });
         leaveR.addActionListener((ep)->{
+JTextField leave=new JTextField();
+JLabel leaver=new JLabel("Reason");
+JButton submit=new JButton("Submit");
+JPanel leaveP=new JPanel();
+JPanel txtP=new JPanel();
+JPanel butnP=new JPanel();
+            ePanel3.add(leaveP,"leaveP");
+            empshow.show(ePanel3,"leaveP");
+            leaver.setForeground(Color.white);
+            leaver.setFont(new Font("Arial",Font.BOLD,14));
+leaveP.setLayout(new GridLayout(2,1,20,20));
+butnP.setLayout(new FlowLayout(FlowLayout.CENTER));
+txtP.setLayout(new BoxLayout(txtP,BoxLayout.X_AXIS));
+txtP.add(leaver);txtP.add(leave);
+leave.setMaximumSize(new Dimension(400,50));
+butnP.add(submit,BorderLayout.CENTER);
+leaveP.add(txtP,BorderLayout.CENTER);
+leaveP.add(butnP,BorderLayout.SOUTH);
+submit.setPreferredSize(new Dimension(200,30));
+txtP.setBackground(Color.blue);
+submit.setBackground(Color.red);
+submit.setForeground(Color.white);
 
-
-
+submit.addActionListener((sb)->{
+    conn.dtcConnectmethod(new EmployeeBasicDetails(leave.getText().toString()),"save leave request");
+    JOptionPane.showMessageDialog(null,conn.getResult());
+});
         });
 
 
@@ -216,5 +306,8 @@ public class EmployeeGUI extends JPanel {
 
 
 
+    }
+    public void setEmail(String email){
+       this.email=email;
     }
 }

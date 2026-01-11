@@ -1,8 +1,10 @@
 package ProjectEMS;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.xml.crypto.dsig.SignatureMethod;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdminInterface extends JPanel implements EmployeeMInterface {
+    private String paymentType;
     JPanel barCont;
     private int indeces[]=new int[0];
     private String[] inemail;
@@ -25,8 +28,6 @@ public class AdminInterface extends JPanel implements EmployeeMInterface {
     private JButton deleteEmployee;
     private JButton AcceptEmployee;
     private JButton viewEmployees;
-    private JButton promoteEmployee;
-    private JButton  demoteEmployee=new JButton("Demote Employee");
     private CardLayout cdl;
     private CardLayout rC;
     private JPanel rcP;
@@ -56,9 +57,27 @@ public class AdminInterface extends JPanel implements EmployeeMInterface {
         adminInterface=new JPanel();
         show=new JPanel(cardLayout);
         this.setLayout(new BorderLayout());
-        this.add(adminInterface);
+        this.add(adminInterface,BorderLayout.CENTER);
         JPanel buttonP=new JPanel();
         adminInterface.setLayout(new BorderLayout());
+        adminMenuBar=new JMenuBar();
+        barCont=new JPanel();
+        Registration=new JMenu("Registration");
+        JMenuItem reg=new JMenuItem("Open");
+        JMenuItem close=new JMenuItem("close");
+        barCont.setLayout(new BoxLayout(barCont,BoxLayout.X_AXIS));
+        barCont.add(adminMenuBar);
+        barCont.setBackground(Color.lightGray);
+this.add(barCont,BorderLayout.NORTH);
+
+        logout=new JMenuItem("Sign Out");
+        logout.setBackground(Color.red);
+        Registration.setBackground(Color.green);
+
+        adminMenuBar.add(logout);
+        Registration.add(reg);
+        Registration.add(close);
+        adminMenuBar.add(Registration);
 
 
         JButton registration=new JButton("Registration Settings");    JButton home=new JButton("Home");
@@ -117,7 +136,7 @@ public class AdminInterface extends JPanel implements EmployeeMInterface {
         totS.setValue(totDep);      totS.setStringPainted(true);
         totS.setPreferredSize(new Dimension(300,100));
         totS.setForeground(Color.magenta);
-        totP.add(totS);totP.setBackground(new Color(80,80,80));
+        totP.add(totS);totP.setBackground(Color.orange);
         show.add(totP);
         show.add(tP);
         show.revalidate();
@@ -130,11 +149,42 @@ public class AdminInterface extends JPanel implements EmployeeMInterface {
             show.add(totP);
             show.add(tP);
             show.revalidate();
-            show.repaint();
-
+            show.repaint();});
+        logout.addActionListener((e)->{
+            JPanel cardPanel=(JPanel) AdminInterface.this.getParent();
+            CardLayout layout=(CardLayout) cardPanel.getLayout();
+            layout.show(cardPanel,"loginView");
 
         });
+notice.addActionListener((n)->{
+    show.removeAll();
+    show.revalidate();show.repaint();
+    show.setLayout(new BorderLayout());
+    JPanel bPo=new JPanel();
+    JTextField txt=new JTextField();
+    JScrollPane p1=new JScrollPane(txt);
+    JLabel txtL=new JLabel("write the notice");
+    JButton setb=new JButton("Save");
+    JPanel ntP=new JPanel();
+    JPanel txtp=new JPanel();
+    bPo.setLayout(new FlowLayout(FlowLayout.CENTER));
 
+    ntP.setLayout(new BorderLayout());
+    txt.setMaximumSize(new Dimension(500,500));
+    setb.setPreferredSize(new Dimension(150,30));
+    bPo.add(setb);
+    ntP.add(txt,BorderLayout.CENTER);
+    ntP.add(txtL,BorderLayout.NORTH);
+    ntP.add(bPo,BorderLayout.SOUTH);
+    txtL.setFont(new Font("Arial",Font.BOLD | Font.ITALIC,26));
+
+    setb.addActionListener((set)->{
+        conn.dtcConnectmethod(new EmployeeBasicDetails(txt.getText().toString()),"set notice");
+JOptionPane.showMessageDialog(null,conn.getResult());
+    });
+
+            show.add(ntP,BorderLayout.CENTER);
+});
         registration.addActionListener((e3)->{
 
             show.removeAll();
@@ -146,7 +196,7 @@ public class AdminInterface extends JPanel implements EmployeeMInterface {
              Vacancy=new JButton("Add/remove vacancy job titles");
              jobTitles=new JButton("Job Titles");
              addNewVacancy=new JButton("Add new job titles");
-            //show.removeAll();
+
 
             setRegistration.setMaximumSize(new Dimension(Integer.MAX_VALUE,80));
             Vacancy.setMaximumSize(new Dimension(Integer.MAX_VALUE,80));
@@ -173,9 +223,6 @@ public class AdminInterface extends JPanel implements EmployeeMInterface {
         });
 
 
-
-
-
         employee.addActionListener((em)->{
             show.removeAll();
             show.setLayout(new BorderLayout());
@@ -191,14 +238,12 @@ public class AdminInterface extends JPanel implements EmployeeMInterface {
              deleteEmployee=new JButton("Delete Employees");
              AcceptEmployee=new JButton("Accept Employee");
              viewEmployees=new JButton("View Employees");
-             promoteEmployee=new JButton("Promote Employee");
-             demoteEmployee=new JButton("Demote Employee");
+
             butonP.add(addemployee);
             butonP.add(updateEmployee);
             butonP.add(deleteEmployee);
             butonP.add(viewEmployees);
-            butonP.add(promoteEmployee);
-            butonP.add(demoteEmployee);
+
 
           // upper buttons
            JButton sendEmail=new JButton("send Emails");
@@ -210,8 +255,7 @@ public class AdminInterface extends JPanel implements EmployeeMInterface {
             updateEmployee.setMaximumSize(new Dimension(Integer.MAX_VALUE,80));
             deleteEmployee.setMaximumSize(new Dimension(Integer.MAX_VALUE,80));
             viewEmployees.setMaximumSize(new Dimension(Integer.MAX_VALUE,80));
-            promoteEmployee.setMaximumSize(new Dimension(Integer.MAX_VALUE,80));
-            demoteEmployee.setMaximumSize(new Dimension(Integer.MAX_VALUE,80));
+
 
             show.add(butonP,BorderLayout.WEST);
 
@@ -220,8 +264,6 @@ public class AdminInterface extends JPanel implements EmployeeMInterface {
 
             deleteEmployee.addActionListener(new EmployeeeManipulate());
             addemployee.addActionListener(new EmployeeeManipulate());
-            promoteEmployee.addActionListener(new EmployeeeManipulate());
-            demoteEmployee.addActionListener(new EmployeeeManipulate());
 
 
             show.revalidate();show.repaint();
@@ -357,6 +399,7 @@ public class AdminInterface extends JPanel implements EmployeeMInterface {
                 conn.setTemp_in("View id, name and email");
                 conn.dtcConnectmethod(bd,"retriev employee datal");
                 String[] col0= {"Id","Name","Email"};
+                String[] types={"Monthly","Hourly"};
                 String[] allEmail=conn.getEmployeeEml();
                 String [] names=conn.getViewEmployeeName();
                 String[] idss=conn.getIds();
@@ -390,6 +433,7 @@ public class AdminInterface extends JPanel implements EmployeeMInterface {
                         JTextField t5=new JTextField();//end month set
                         JTextField t6= new JTextField();// end year set
                         JComboBox d=new JComboBox(dpts); //set department
+                        JComboBox paymetT=new JComboBox(types);
 
                         JLabel l1=new JLabel("Start Date");
                         JLabel l2= new JLabel("Start Month");
@@ -398,10 +442,11 @@ public class AdminInterface extends JPanel implements EmployeeMInterface {
                         JLabel l5= new JLabel("End Month");
                         JLabel l6= new JLabel("End Year");
                         JLabel l7= new JLabel("Department");
+                        JLabel l8=new JLabel("Payment Form");
 
                         p2.setLayout(new GridLayout(3,1,10,10));
                         p3.setLayout(new BorderLayout());// table panel
-                        p4.setLayout(new GridLayout(7,2));
+                        p4.setLayout(new GridLayout(8,2));
                         p5.setLayout(new GridLayout(1,2,20,20));
 
                         p2.setBackground(Color.ORANGE);
@@ -431,11 +476,17 @@ public class AdminInterface extends JPanel implements EmployeeMInterface {
                             p4.add(l2);p4.add(t2);               p4.add(l3);p4.add(t3);
                             p4.add(l4);p4.add(t4);               p4.add(l5);p4.add(t5);
                             p4.add(l6);p4.add(t6);               p4.add(l7);p4.add(d);
+                            p4.add(l8);p4.add(paymetT);
 
                             p5.add(submit);p5.add(btn1);
                             // button colors
                             btn1.setBackground(Color.ORANGE);
                             submit.setBackground(Color.MAGENTA);
+                            paymetT.addActionListener((ts)->{
+                                Object type=ts.getSource();
+                                paymentType=((JComboBox)type).getSelectedItem().toString();
+                                System.out.println(((JComboBox)type).getSelectedItem().toString());
+                            });
                             submit.addActionListener((evt)->{
 
                                 String dept=String.valueOf(d.getSelectedItem());
@@ -446,57 +497,31 @@ public class AdminInterface extends JPanel implements EmployeeMInterface {
 
 
 
-                                EmployeeBasicDetails dt1= new EmployeeBasicDetails(checkInput(t0.getText().toString()),checkInput(t2.getText().toString()),checkInput(t3.getText().toString()),checkInput(t4.getText().toString()),checkInput(t5.getText().toString()),checkInput(t6.getText().toString()),sal,dept);
+
+                                System.out.println(paymentType);
+                                EmployeeBasicDetails dt1= new EmployeeBasicDetails(checkInput(t0.getText().toString()),checkInput(t2.getText().toString()),checkInput(t3.getText().toString()),checkInput(t4.getText().toString()),
+                                        checkInput(t5.getText().toString()),checkInput(t6.getText().toString()),sal,dept,paymentType);
                                 conn.dtcConnectmethod(dt1,"setWorkDetails");
                                 JOptionPane.showMessageDialog(null,conn.getResult());});
 
                             p2.add(p3);p2.add(p4);p2.add(p5);
                             p2.repaint();
-                            p2.revalidate();
-                        }
-                    }
-                });
-
-            });
-
-
-
-
-        });
+                            p2.revalidate();}}});});});
 
 
 
 
 
-
-
-
-
-        adminMenuBar=new JMenuBar();
-        Registration=new JMenu("Registration");
-       JMenuItem reg=new JMenuItem("Open");
-       JMenuItem close=new JMenuItem("close");
 
 
         adminInterface.add(buttonP,BorderLayout.WEST);
         adminInterface.add(show,BorderLayout.CENTER);
 
         //loggedin=new JLabel();
-        barCont=new JPanel();
-        barCont.add(adminMenuBar);
 
 
 
 
-
-
-        logout=new JMenuItem("Sign Out");
-
-
-        adminMenuBar.add(logout);
-        Registration.add(reg);
-        Registration.add(close);
-        adminMenuBar.add(Registration);
 
 
         reg.addActionListener(new ActionListener() {
@@ -519,12 +544,102 @@ public class AdminInterface extends JPanel implements EmployeeMInterface {
                 }
             }
         });
+salary.addActionListener((sa)->{
+    BorderLayout layout=(BorderLayout) show.getLayout();
+    Component comp1=layout.getLayoutComponent(BorderLayout.CENTER);
+    Component comp2=layout.getLayoutComponent(BorderLayout.SOUTH);
+    if(!(comp1==null)){
+        show.remove((comp1));
+    }
+    if(!(comp2==null)){
+        show.remove(comp2);
+    }
+    show.repaint();show.revalidate();
+    JButton setSalary=new JButton("set salary");
+    JButton viewTotSalary=new JButton("View total salaries");
+    JPanel sbuttonP=new JPanel();
+    sbuttonP.setLayout(new BoxLayout(sbuttonP,BoxLayout.Y_AXIS));
 
+    setSalary.setMaximumSize(new Dimension(Integer.MAX_VALUE,50));
+    viewTotSalary.setMaximumSize(new Dimension(Integer.MAX_VALUE,50));
+    setSalary.setBackground(Color.green);
+
+    viewTotSalary.setBackground(Color.red);
+    setSalary.setForeground(Color.white);
+    viewTotSalary.setForeground(Color.white);
+
+    sbuttonP.add(setSalary);
+
+    sbuttonP.add(viewTotSalary);
+    // action listeners
+    setSalary.addActionListener((ms)->{
+        CardLayout salaryC=new CardLayout();
+        JPanel salaryP=new JPanel(salaryC);
+        show.add(salaryP,BorderLayout.CENTER);
+        JPanel tableP=new JPanel();
+        tableP.setLayout(new BorderLayout());
+      salaryP.add(tableP,"tableP");
+      salaryC.show(salaryP,"tableP");
+        conn.dtcConnectmethod(bd,"get AllTitles");
+        titls=new String[0];
+        titls=conn.getAtitles();
+        Object[][] titdata=new Object[titls.length][1];
+        for (int i=0;i<titls.length;i++){
+            titdata[i][0]=titls[i];
+        }
+        String[] name={"Name"};
+        JTable titlTable=new JTable(titdata,name);
+        JScrollPane pane=new JScrollPane(titlTable);
+        pane.getViewport();
+       tableP.add(pane);
+
+
+        ListSelectionModel model=titlTable.getSelectionModel();
+        model.addListSelectionListener((e)->{
+            JPanel txtP=new JPanel();
+            salaryP.add(txtP,"txt");
+            salaryC.show(salaryP,"txt");
+            int index=titlTable.getSelectedRow();
+            JTextField setm=new JTextField();
+            JTextField seth=new JTextField();
+            JLabel setM=new JLabel("New monthly salary");
+            JLabel setH=new JLabel("New hourly salary");
+            JButton save=new JButton("save");
+            JButton cancel=new JButton("cancel");
+
+            txtP.setLayout(new BoxLayout(txtP,BoxLayout.X_AXIS));
+            txtP.setBackground(Color.blue);
+            txtP.add(setM);txtP.add(setm);
+            txtP.add(setH);txtP.add(seth);
+            save.addActionListener((sv)->{
+                if((setm==null)&& seth==null){
+                    JOptionPane.showMessageDialog(null,"You didn't enter anything");
+                }else{
+
+                    try{
+                        double numcheck=Double.parseDouble(seth.getText().toString());
+                        double numcheck2=Double.parseDouble(setm.getText().toString());
+                        EmployeeBasicDetails sal=new EmployeeBasicDetails(numcheck2, numcheck,titls[index]);
+                        conn.dtcConnectmethod(sal,"set department salary");
+                        JOptionPane.showMessageDialog(null,conn.getResult());
+
+                    }catch(IllegalArgumentException el){
+                        JOptionPane.showMessageDialog(null,"Invalid entry! Please enter a valid number");
+                    }
+
+                }
+            });
+        });
+
+
+    });
+
+
+
+
+});
 
         logout.addActionListener(new EmployeeeManipulate());
-
-
-
         adminInterface.setVisible(true);
 
       }
@@ -621,6 +736,7 @@ public class AdminInterface extends JPanel implements EmployeeMInterface {
 // actionlisteners
                 ListSelectionModel model=tabl.getSelectionModel();
                 model.addListSelectionListener((li)->{
+                    JOptionPane.showMessageDialog(null,"you have selected "+titl.get(tabl.getSelectedRow()));
                     int ind=tabl.getSelectedRow();
                     if (titl.size()==0){
                         titl.add(tit[ind]);
@@ -799,6 +915,7 @@ submit=new JButton("add the selected Titles");
 
 
             else if (em.getSource()==addemployee){
+                inemail=new String[0];
                 cdP=new JPanel();
                 cdl=new CardLayout();
                 cdP.setLayout(cdl);
@@ -828,12 +945,6 @@ submit=new JButton("add the selected Titles");
                 employeeTable.setBounds(0,50,400,200);
                 JScrollPane pane=new JScrollPane(employeeTable);
 
-
-
-                //  JList<String> empl=new JList<>(tobeused);
-                //  JList<String> email=new JList<>(empEmail);
-                // empl.setBackground(new Color(23,255,133));
-                // empl.setFont(new Font("Arial",Font.PLAIN,14));
                 submit=new JButton("add all selected employees");
 
                 ListSelectionModel model=employeeTable.getSelectionModel();
@@ -842,15 +953,13 @@ submit=new JButton("add the selected Titles");
                     public void valueChanged(ListSelectionEvent e) {
                         if ( !model.isSelectionEmpty()){
 
-                            JOptionPane.showMessageDialog(null,"you have selected  "+empName[model.getMinSelectionIndex()]);
+                            JOptionPane.showMessageDialog(null,"you have selected  "+empName[employeeTable.getSelectedRow()]);
 
 
-                            // empl.getSelectedValuesList();
                         }
                         for (int i=0;i<inputs.size()+1;i++){
-                            int ind=model.getMaxSelectionIndex();
+                            int ind=employeeTable.getSelectedRow();
                             String tempemail=empEmail[ind];
-                            // int start=tempemail.indexOf("E");
                             String temp2=tempemail;
                             String[] tempo=new String[inemail.length+1];
                             for (int j=0;j<inemail.length;j++){
@@ -916,7 +1025,7 @@ submit=new JButton("add the selected Titles");
 
                                 EmployeeBasicDetails ad=new EmployeeBasicDetails( adata[1], adata[2],adata[3], Integer.parseInt(adata[4]),
                                         Integer.parseInt(adata[5]), Integer.parseInt(adata[6]), adata[7], adata[8], adata[12],adata[13],
-                                        adata[14], adata[9],adata[10],Integer.parseInt(adata[11]), adata[15],adata[16],adata[17],adata[18]);
+                                        adata[14], adata[9],adata[10],Integer.parseInt(adata[11]), adata[15],adata[16],adata[17],adata[18],adata[19]);
                                 conn.dtcConnectmethod(ad,"add employee");
 
                                 addWorkD(adata[17]);
@@ -934,17 +1043,21 @@ submit=new JButton("add the selected Titles");
 
             }
             else if (em.getSource()==deleteEmployee){
+                inemail=new String[0];
                 BorderLayout layout=(BorderLayout) show.getLayout();
                 Component comp1=layout.getLayoutComponent(BorderLayout.CENTER);
                 Component comp2=layout.getLayoutComponent(BorderLayout.SOUTH);
                 if (comp1!=null){show.remove(comp1); }
                 if(comp2!=null){show.remove(comp2);}
                 show.revalidate();show.repaint();
+
                 Back= new JMenuItem("Back");
                 JPanel deleteInterface=new JPanel();
+
+                show.add(deleteInterface,BorderLayout.CENTER);
                 deleteInterface.setLayout(new BorderLayout(5,5));
-                cdP.add(deleteInterface,"deleteEmp");
-                cdl.show(cdP,"deleteEmp");
+               // cdP.add(deleteInterface,"deleteEmp");
+               // cdl.show(cdP,"deleteEmp");
                 Back.setBackground(Color.GREEN);
                 conn.dtcConnectmethod(bd,"retrieve employee data for deleting");
                 empName=conn.getApplicantName();// change this method name to getName
@@ -1001,12 +1114,7 @@ submit=new JButton("add the selected Titles");
                                 }
                                 tempo[inemail.length]=temp;
                                 inemail=tempo;
-
-                            }
-                        }
-
-                    }
-                });
+                            }}}});
                 submit.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -1017,27 +1125,8 @@ submit=new JButton("add the selected Titles");
                                 System.out.println(inemail[i]);
                                 conn.setEmployeeEmail(takenemail);
                                 conn.dtcConnectmethod(bd,"delete applicant/employee data");
-                                //  String[] adata=conn.getApplicantdt();
-
                             }
-                            JOptionPane.showMessageDialog(null,conn.getResult());
+                            JOptionPane.showMessageDialog(null,conn.getResult());}}});
 
-
-                        }
-                    }
-                });
                 deleteInterface.add(dpane,BorderLayout.CENTER);
-                deleteInterface.add(submit, BorderLayout.SOUTH);
-                deleteInterface.setVisible(true);
-            }  else if (em.getSource() == viewEmployees) {
-
-            } else if (em.getSource() == logout) {
-                adminMenuBar.removeAll();
-
-
-                ;
-            }
-        }
-
-    }
-}
+                deleteInterface.add(submit, BorderLayout.SOUTH);}}}}

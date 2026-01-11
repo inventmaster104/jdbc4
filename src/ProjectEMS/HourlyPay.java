@@ -27,6 +27,6 @@ public class HourlyPay extends EmployeeSalaryData{
 
     @Override
     public String printData() {
-        return super.printData() +"\n Weekly Pay: " + getPay() + " ETB";
+        return super.printData() +"\n Hourly Pay: " + getPay() + " ETB";
     }
 }
